@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070a0e">
+<title>Ball Knowledge-Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Ball Knowledge-Play – eine Flutlicht-Arena, je Spielmodus eigene Farben:
+     Standard = All Timer (Grün/Bernstein, auch Startmenü), .theme-klassik = Klassik (Eisblau/Koralle),
+     .theme-gen = Born in the 2000s (Neon-Violett/Türkis), .theme-retro = Oldies but Goldies (Gold/Silber) */
+  :root {
+    --bg: #070a0e;
+    --surface: #11161a;
+    --surface-2: #1a2127;
+    --line: #242d35;
+    --line-strong: #2f6b49;
+    --text: #edf3ee;
+    --text-dim: #93a0a8;
+    --accent: #4fd987;
+    --accent-ink: #0b1a11;
+    --accent-2: #ffb454;
+    --accent-2-ink: #2a1600;
+    --bad: #ff8b78;
+    --good-bg: #102a1c;
+    --x-mark: #4fd987;
+    --o-mark: #ffb454;
+    --o-bg: #2c2112;
+    --o-line: #6b4f22;
+    --led: #ffb454;
+    --flood: rgba(214,232,255,0.13);
+    --dots: rgba(255,180,84,0.07);
+    --lamp: #eef5ff;
+    --led-dots: rgba(255,180,84,0.12);
+    --board: #050706;
+    --shadow: 0 30px 70px -24px rgba(0,0,0,0.9);
+    color-scheme: dark;
+  }
+  /* Oldies but Goldies: dieselbe Flutlicht-Arena, aber in Gold (X) und Silber (O) */
+  :root.theme-retro {
+    --bg: #0b0906;
+    --surface: #15110b;
+    --surface-2: #201a11;
+    --line: #372c1b;
+    --line-strong: #7a5d24;
+    --text: #f4eee2;
+    --text-dim: #b3a58c;
+    --accent: #e8b84a;
+    --accent-ink: #1e1503;
+    --accent-2: #cfd5dd;
+    --accent-2-ink: #14181d;
+    --bad: #ff8b78;
+    --good-bg: #2a2110;
+    --x-mark: #e8b84a;
+    --o-mark: #d3d9e1;
+    --o-bg: #1d2127;
+    --o-line: #4b5460;
+    --led: #e8b84a;
+    --flood: rgba(255,214,140,0.15);
+    --dots: rgba(232,184,74,0.08);
+    --lamp: #fff1d6;
+    --led-dots: rgba(232,184,74,0.12);
+    --board: #070604;
+  }
+  /* Klassik (Spieler ab den 2000ern): kühles Flutlicht, Eisblau (X) und Koralle (O) */
+  :root.theme-klassik {
+    --bg: #060a11;
+    --surface: #0f1620;
+    --surface-2: #17202c;
+    --line: #223043;
+    --line-strong: #2c6a8f;
+    --text: #eaf2fa;
+    --text-dim: #8fa2b6;
+    --accent: #5cc8ff;
+    --accent-ink: #04141f;
+    --accent-2: #ff7a6b;
+    --accent-2-ink: #2a0904;
+    --bad: #ff8b78;
+    --good-bg: #0e2433;
+    --x-mark: #5cc8ff;
+    --o-mark: #ff7a6b;
+    --o-bg: #2b1614;
+    --o-line: #6e3129;
+    --led: #9fe0ff;
+    --flood: rgba(190,225,255,0.15);
+    --dots: rgba(92,200,255,0.07);
+    --lamp: #e8f6ff;
+    --led-dots: rgba(92,200,255,0.12);
+    --board: #04070b;
+  }
+  /* Born in the 2000s: Neon-Arena, Violett (X) und Türkis (O) */
+  :root.theme-gen {
+    --bg: #09060f;
+    --surface: #140f1d;
+    --surface-2: #1d1629;
+    --line: #2e2440;
+    --line-strong: #6a3f9c;
+    --text: #f2edfa;
+    --text-dim: #a397b8;
+    --accent: #c77dff;
+    --accent-ink: #1a0630;
+    --accent-2: #3ee6cf;
+    --accent-2-ink: #032520;
+    --bad: #ff8b9a;
+    --good-bg: #26163a;
+    --x-mark: #c77dff;
+    --o-mark: #3ee6cf;
+    --o-bg: #0f2a28;
+    --o-line: #1f6b62;
+    --led: #3ee6cf;
+    --flood: rgba(199,125,255,0.16);
+    --dots: rgba(62,230,207,0.07);
+    --lamp: #f6ecff;
+    --led-dots: rgba(62,230,207,0.12);
+    --board: #07050b;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Work Sans", system-ui, sans-serif;
+    padding-inline: 16px;
+    padding-block: 28px 40px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 18px; }
+
+  .masthead { display: flex; flex-direction: column; gap: 4px; }
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+  h1 {
+    font-family: "Bebas Neue", "Work Sans", sans-serif;
+    font-size: clamp(34px, 9vw, 48px);
+    letter-spacing: 0.01em;
+    margin: 0;
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+  .sub { color: var(--text-dim); font-size: 14px; max-width: 46ch; }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .modebar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .segmented { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 3px; gap: 2px; }
+  .segmented button {
+    font: inherit; font-size: 13px; font-weight: 600; color: var(--text-dim);
+    background: transparent; border: none; border-radius: 7px; padding: 7px 12px; cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  .segmented button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .ghost-btn {
+    font: inherit; font-size: 13px; font-weight: 600; color: var(--text-dim);
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .ghost-btn:hover { color: var(--text); }
+
+  .scoreboard {
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px;
+  }
+  .score-side { display: flex; align-items: center; gap: 8px; }
+  .score-side .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .score-side.x .dot { background: var(--accent); }
+  .score-side.o .dot { background: var(--accent-2); }
+  .score-name { font-size: 13px; font-weight: 600; }
+  .score-num { font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-size: 18px; font-weight: 600; }
+  .score-mid { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--text-dim); letter-spacing: 0.08em; }
+
+  .turn-banner {
+    text-align: center; font-size: 13px; font-weight: 600; color: var(--text-dim);
+    min-height: 18px; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .turn-banner .who { color: var(--text); }
+  .turn-banner.err { color: var(--bad); }
+  .turn-chip { width: 9px; height: 9px; border-radius: 50%; }
+
+  .grid-area { display: grid; grid-template-columns: 78px repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .corner { }
+  .colhead, .rowhead {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    font-size: 12px; font-weight: 700; line-height: 1.15; padding: 6px 4px;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px;
+    color: var(--text);
+  }
+  .rowhead { min-height: 0; }
+  .colhead { min-height: 46px; }
+  .cell {
+    aspect-ratio: 1 / 1; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    cursor: pointer; padding: 4px; text-align: center; position: relative;
+    transition: transform .1s, border-color .15s, background .15s;
+  }
+  .cell:hover:not(.filled) { border-color: var(--accent); }
+  .cell:active:not(.filled) { transform: scale(0.97); }
+  .cell.filled { cursor: default; }
+  .cell.x { background: var(--good-bg); }
+  .cell.o { background: var(--good-bg); }
+  .cell .mark { font-family: "Bebas Neue"; font-size: 30px; line-height: 1; }
+  .cell.x .mark { color: var(--accent); }
+  .cell.o .mark { color: var(--accent-2); }
+  .cell .pname { font-size: 10.5px; font-weight: 600; color: var(--text); line-height: 1.15; padding: 0 4px; word-break: break-word; }
+  .cell.win { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .cell .hint { font-size: 20px; color: var(--text-dim); opacity: 0; transition: opacity .15s; }
+  .cell:hover:not(.filled) .hint { opacity: 0.55; }
+
+  .answer-row { display: flex; gap: 8px; }
+  #guess {
+    flex: 1; min-width: 0; font: inherit; font-size: 15px; padding: 12px 14px;
+    border-radius: 10px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
+  }
+  #guess:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #guess::placeholder { color: var(--text-dim); }
+  .submit-btn {
+    font: inherit; font-weight: 700; font-size: 14px; padding: 0 18px; border-radius: 10px; border: none;
+    background: var(--accent); color: var(--accent-ink); cursor: pointer;
+  }
+  .submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .active-cell-tag {
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--text-dim);
+    display: block; min-height: 16px; line-height: 1.45;
+  }
+  .active-cell-tag b { color: var(--text); font-weight: 600; }
+
+  .result-banner {
+    display: none; text-align: center; border-radius: 12px; padding: 14px; font-weight: 700; font-size: 15px;
+    background: var(--good-bg); border: 1px solid var(--line);
+  }
+  .result-banner.show { display: block; }
+  .result-banner .again {
+    display: inline-flex; margin-top: 8px; font: inherit; font-weight: 700; font-size: 13px;
+    background: var(--accent); color: var(--accent-ink); border: none; border-radius: 8px; padding: 8px 16px; cursor: pointer;
+  }
+
+  .reveal-list { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+  .reveal-list b { color: var(--text); }
+
+  footer { text-align: center; font-size: 11.5px; color: var(--text-dim); padding-top: 4px; }
+  footer a { color: inherit; }
+
+  @media (max-width: 420px) {
+    .grid-area { grid-template-columns: 58px repeat(3, minmax(0, 1fr)); gap: 5px; }
+    .cell .mark { font-size: 24px; }
+    .cell .pname { font-size: 9.5px; }
+    .colhead { font-size: 11px; min-height: 40px; }
+    .rowhead { font-size: 11px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+  .guess-wrap { position: relative; flex: 1; min-width: 0; display: flex; }
+  .suggest {
+    position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 20;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+    box-shadow: var(--shadow); list-style: none; margin: 0; padding: 4px; max-height: 280px; overflow-y: auto;
+  }
+  .suggest li {
+    padding: 8px 10px; border-radius: 7px; cursor: pointer; display: flex; justify-content: space-between; gap: 10px;
+    font-size: 14px;
+  }
+  .suggest li .meta { color: var(--text-dim); font-size: 12px; white-space: nowrap; font-family: "IBM Plex Mono", monospace; }
+  .suggest li[aria-selected="true"], .suggest li:hover { background: var(--surface-2); }
+  .suggest .empty { color: var(--text-dim); cursor: default; }
+  .cell .count {
+    position: absolute; bottom: 5px; left: 0; right: 0; font-family: "IBM Plex Mono", monospace;
+    font-size: 9.5px; color: var(--text-dim); letter-spacing: 0.02em;
+  }
+  .cell.active { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .colhead small, .rowhead small {
+    display: block; font-weight: 500; font-size: 9.5px; color: var(--text-dim); font-family: "IBM Plex Mono", monospace; margin-top: 2px;
+  }
+  .rowhead, .colhead { flex-direction: column; }
+  .settings { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .loading {
+    text-align: center; padding: 40px 12px; color: var(--text-dim); font-size: 14px;
+    display: flex; flex-direction: column; gap: 10px; align-items: center;
+  }
+  .loading .bar { width: 160px; height: 4px; border-radius: 4px; background: var(--surface-2); overflow: hidden; }
+  .loading .bar span { display: block; height: 100%; width: 40%; background: var(--accent); animation: slide 1.1s ease-in-out infinite; }
+  @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+  [hidden] { display: none !important; }
+  @media (max-width: 420px) {
+    .score-mid { font-size: 0; }
+    .score-mid::after { content: ":"; font-size: 24px; font-weight: 700; color: var(--accent); }
+    .score-name { font-size: 11px; }
+  }
+  .settings { display: grid; grid-template-columns: auto 1fr; gap: 8px 10px; align-items: center; }
+  .settings .lbl { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+  .settings .segmented { justify-self: start; flex-wrap: wrap; }
+  .turn-row { display: flex; align-items: center; gap: 8px; }
+  .turn-row .turn-banner { flex: 1; justify-content: flex-start; text-align: left; }
+  .timer {
+    font-family: "IBM Plex Mono", monospace; font-variant-numeric: tabular-nums; font-weight: 600; font-size: 15px;
+    padding: 5px 10px; border-radius: 8px; background: var(--surface-2); border: 1px solid var(--line); min-width: 58px; text-align: center;
+  }
+  .timer.low { color: var(--bad); border-color: var(--bad); }
+  .timer.paused { opacity: 0.45; }
+  .skip-btn { padding: 6px 10px; }
+  .skip-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .timebar { height: 4px; border-radius: 4px; background: var(--surface-2); overflow: hidden; margin-top: -8px; }
+  .timebar span { display: block; height: 100%; width: 100%; background: var(--accent); transition: width .2s linear; }
+  .timebar.o span { background: var(--accent-2); }
+  .timebar.low span { background: var(--bad); }
+  .rowhead, .colhead { hyphens: auto; -webkit-hyphens: auto; overflow-wrap: break-word; }
+  @media (max-width: 420px) {
+    .segmented button { padding: 7px 8px; font-size: 12.5px; }
+    .rowhead { font-size: 10px; padding: 6px 3px; }
+    .grid-area { grid-template-columns: 72px repeat(3, minmax(0, 1fr)); }
+    .settings { gap: 8px 6px; }
+  }
+  .empty-head { color: var(--text-dim); border-style: dashed; font-size: 18px; }
+  .empty-head.current { color: var(--text); border-style: solid; border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+  .empty-head.current.o { border-color: var(--accent-2); box-shadow: inset 0 0 0 1px var(--accent-2); }
+  .cell.locked { cursor: default; opacity: 0.75; }
+  .suggest li.off { opacity: 0.5; cursor: not-allowed; }
+  .menu-title { font-family: "Bebas Neue", "Work Sans", sans-serif; font-size: 28px; letter-spacing: 0.02em; margin: 0; font-weight: 400; }
+  .name-field .lbl { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+  .names { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .name-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+  .name-field input {
+    font: inherit; font-size: 15px; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line);
+    background: var(--surface-2); color: var(--text); min-width: 0;
+  }
+  .name-field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .name-field input::placeholder { color: var(--text-dim); }
+  .variant-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 520px) { .variant-grid { grid-template-columns: 1fr 1fr; } }
+  .variant-card { --card: #4fd987; --card-glow: rgba(79,217,135,0.14); position: relative; overflow: hidden; }
+  .variant-card[data-variant="klassik"] { --card: #5cc8ff; --card-glow: rgba(92,200,255,0.14); }
+  .variant-card[data-variant="gen2000"] { --card: #c77dff; --card-glow: rgba(199,125,255,0.16); }
+  .variant-card[data-variant="oldies"]  { --card: #e8b84a; --card-glow: rgba(232,184,74,0.15); }
+  .variant-card::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--card); }
+  .variant-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 80% 70% at 100% 0, var(--card-glow), transparent 70%); }
+  .variant-card .v-badge { font-family: "IBM Plex Mono", monospace; font-size: 10.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--card); }
+  .variant-card .v-dots { display: inline-flex; gap: 5px; margin-top: 2px; }
+  .variant-card .v-dots i { width: 10px; height: 10px; border-radius: 50%; }
+  .variant-card {
+    font: inherit; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 6px;
+    padding: 18px; border-radius: 14px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
+    transition: border-color .15s, transform .1s;
+  }
+  .variant-card:hover:not(:disabled) { border-color: var(--card); }
+  .variant-card:active:not(:disabled) { transform: scale(0.99); }
+  .variant-card:disabled { opacity: 0.6; cursor: progress; }
+  .variant-card .v-title { font-family: "Bebas Neue", "Work Sans", sans-serif; font-size: 30px; line-height: 1; letter-spacing: 0.02em; color: var(--card); }
+  .variant-card .v-desc { font-size: 14px; color: var(--text); }
+  .variant-card .v-meta { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+  .menu-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .variant-tag { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .menu-help { margin: 0; padding-left: 18px; color: var(--text-dim); font-size: 13px; line-height: 1.5; display: flex; flex-direction: column; gap: 2px; }
+  .start-btn {
+    font: inherit; font-weight: 700; font-size: 16px; padding: 14px; border-radius: 12px; border: none;
+    background: var(--accent); color: var(--accent-ink); cursor: pointer;
+  }
+  .start-btn:disabled { opacity: 0.55; cursor: progress; }
+  .gamebar { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .gamebar-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .game-summary { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; color: var(--text-dim); letter-spacing: 0.02em; }
+  .result-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .result-banner .again.ghost { background: var(--surface); color: var(--text); border: 1px solid var(--line); }
+  .ghost-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .request-banner {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    border: 1px dashed var(--accent-2); border-radius: 12px; padding: 10px 12px; font-size: 13px; background: var(--surface-2);
+  }
+  .request-banner.info { border-color: var(--line); color: var(--text-dim); }
+  .request-banner .again {
+    font: inherit; font-weight: 700; font-size: 13px; border: none; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    background: var(--accent-2); color: var(--accent-2-ink);
+  }
+  .request-banner .again.x { background: var(--accent); color: var(--accent-ink); }
+  /* ---------- Gemeinsam für beide Designs ---------- */
+  html { background: var(--bg); }
+  body { min-height: 100vh; background-color: var(--bg); background-attachment: fixed; }
+  .wrap { position: relative; z-index: 1; }
+  .panel { background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+  .cell.x { background: var(--good-bg); border-color: var(--line-strong); }
+  .cell.o { background: var(--o-bg); border-color: var(--o-line); }
+  .cell .mark { font-size: 34px; }
+  .cell.x .mark { color: var(--x-mark); }
+  .cell.o .mark { color: var(--o-mark); }
+  .cell.win { outline-color: var(--accent); }
+  .score-side.x .dot { background: var(--x-mark); }
+  .score-side.o .dot { background: var(--o-mark); }
+  .segmented button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); box-shadow: none; }
+  .ticker, .bigscore { display: none; }
+
+  /* ---------- Flutlicht-Arena (Standard) ---------- */
+  body {
+    background-image:
+      radial-gradient(ellipse 60vw 50vh at 0 0, var(--flood), transparent 70%),
+      radial-gradient(ellipse 60vw 50vh at 100% 0, var(--flood), transparent 70%),
+      radial-gradient(circle, var(--dots) 1.3px, transparent 1.7px);
+    background-size: auto, auto, 12px 12px;
+  }
+  .eyebrow { color: var(--led); }
+  h1 { color: #ffffff; font-weight: 400; }
+  .sub { color: var(--text-dim); }
+  .scoreboard {
+    background-color: var(--board); border: 1px solid var(--line);
+    background-image: radial-gradient(circle, var(--led-dots) 1px, transparent 1.4px); background-size: 6px 6px;
+  }
+  .score-name { font-family: "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: 0.12em; }
+  .score-side.x .score-name { color: var(--x-mark); }
+  .score-side.o .score-name { color: var(--o-mark); }
+  .score-num { color: var(--led); font-size: 26px; }
+  .score-mid { color: var(--text-dim); }
+  .timer { color: var(--led); background: var(--board); }
+  .mast { position: fixed; top: 24px; z-index: 0; pointer-events: none; display: flex; flex-direction: column; align-items: center; }
+  .mast.left { left: 3vw; } .mast.right { right: 3vw; }
+  .mast .lamps { display: grid; grid-template-columns: repeat(6, 12px); gap: 6px; padding: 8px; background: #1a2027; border-radius: 4px; }
+  .mast .lamps span { height: 12px; border-radius: 2px; background: var(--lamp); box-shadow: 0 0 10px var(--flood); }
+  .mast .pole { width: 8px; height: 100vh; background: #1a2027; }
+  @media (max-width: 1040px) { .mast { display: none; } }
+  /* ---------- Oldies but Goldies: nur Farben anders (Tokens), dazu der Ticker ---------- */
+  :root.theme-retro .ticker {
+    display: block; margin: 2px -16px -16px; border-top: 1px solid var(--line); background: var(--surface-2);
+    border-radius: 0 0 14px 14px; overflow: hidden; white-space: nowrap;
+    font-size: 12.5px; font-weight: 600; color: var(--accent); padding-block: 9px;
+  }
+  .ticker-track { display: inline-block; padding-left: 100%; animation: ticker 22s linear infinite; }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+  @media (prefers-reduced-motion: reduce) { .ticker-track { animation: none; padding-left: 12px; } }
+  /* ---------- Tor-Animation beim Rundensieg ---------- */
+  #game { position: relative; }
+  .goal-anim {
+    position: absolute; inset: 0; z-index: 30; pointer-events: none; display: flex; align-items: center; justify-content: center;
+    border-radius: inherit; background: rgba(0,0,0,0.55); animation: goalFade 1.9s ease forwards;
+  }
+  .goal-anim[hidden] { display: none; }
+  .goal-stage { position: relative; width: 280px; height: 200px; }
+  .goal-frame {
+    position: absolute; left: 20px; right: 20px; top: 10px; height: 110px;
+    border: 6px solid #f4f6f8; border-bottom: none; border-radius: 4px 4px 0 0; box-shadow: 0 0 24px rgba(255,255,255,0.25);
+  }
+  .goal-net {
+    position: absolute; inset: 0; transform-origin: 50% 20%;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0 1px, transparent 1px 12px),
+                      repeating-linear-gradient(-45deg, rgba(255,255,255,0.35) 0 1px, transparent 1px 12px);
+    animation: netBulge 1.9s ease-out;
+  }
+  .goal-ball { position: absolute; left: 122px; top: 50px; width: 36px; height: 36px; animation: ballFly 1.9s cubic-bezier(.2,.7,.3,1) forwards; }
+  .goal-text {
+    position: absolute; left: -80px; right: -80px; top: 132px; text-align: center; font-family: "Bebas Neue", sans-serif;
+    font-size: 52px; line-height: 1; letter-spacing: 0.04em; color: var(--accent); text-shadow: 0 4px 18px rgba(0,0,0,0.6);
+    animation: goalPop 1.9s ease forwards;
+  }
+  @keyframes ballFly {
+    0% { transform: translate(-150px, 150px) scale(1.5) rotate(0deg); }
+    40% { transform: translate(0, 0) scale(0.8) rotate(300deg); }
+    52% { transform: translate(0, 10px) scale(0.75) rotate(330deg); }
+    100% { transform: translate(0, 34px) scale(0.75) rotate(340deg); }
+  }
+  @keyframes netBulge { 0%, 38% { transform: scale(1); } 48% { transform: scale(1.08, 1.12); } 62%, 100% { transform: scale(1); } }
+  @keyframes goalPop { 0%, 40% { opacity: 0; transform: scale(0.4); } 52% { opacity: 1; transform: scale(1.15); } 62%, 88% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+  @keyframes goalFade { 0% { opacity: 0; } 10%, 85% { opacity: 1; } 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    .goal-ball, .goal-net { animation: none; }
+    .goal-text, .goal-anim { animation: none; }
+  }
+  .datanote { font-size: 11.5px; color: var(--text-dim); }
+  /* ---------- Startmenü-Reiter und Toneinstellungen ---------- */
+  .home-tabs { display: flex; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 4px; }
+  .home-tabs button {
+    flex: 1; font: inherit; font-size: 14px; font-weight: 600; color: var(--text-dim); background: transparent; border: none;
+    border-radius: 9px; padding: 9px 10px; cursor: pointer;
+  }
+  .home-tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
+  .home-pane { display: flex; flex-direction: column; gap: 14px; }
+  .home-pane[hidden] { display: none; }
+  .snd-master { background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: 12px; padding: 12px 14px; }
+  .snd-list { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .snd-list .snd-row { padding: 10px 14px; border-top: 1px solid var(--line); }
+  .snd-list .snd-row:first-child { border-top: none; }
+  .snd-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(90px, 150px) 48px auto; align-items: center; gap: 12px; }
+  .snd-master .snd-row { grid-template-columns: minmax(0, 1fr) auto minmax(90px, 150px) 48px; }
+  .snd-name { display: flex; flex-direction: column; gap: 1px; font-size: 14px; font-weight: 600; min-width: 0; }
+  .snd-name small { font-size: 11.5px; font-weight: 400; color: var(--text-dim); }
+  .snd-val { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--text-dim); text-align: right; font-variant-numeric: tabular-nums; }
+  .snd-row.off .snd-val, .snd-row.off input[type=range] { opacity: 0.4; }
+  .snd-list.muted .snd-row { opacity: 0.45; }
+  .switch { position: relative; width: 42px; height: 24px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; padding: 0; }
+  .switch i { position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--text-dim); transition: transform .15s, background .15s; }
+  .switch[aria-checked="true"] { background: var(--accent); border-color: var(--accent); }
+  .switch[aria-checked="true"] i { transform: translateX(18px); background: var(--accent-ink); }
+  .switch:focus-visible, .snd-test:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+  .snd-test { font: inherit; font-size: 12px; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); cursor: pointer; }
+  .snd-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  @media (max-width: 520px) {
+    .snd-row, .snd-master .snd-row { grid-template-columns: minmax(0, 1fr) auto auto; row-gap: 8px; }
+    .snd-row input[type=range] { grid-column: 1 / 3; }
+    .snd-master .snd-row input[type=range] { grid-column: 1 / 3; }
+    .snd-row .snd-test { grid-row: 1; grid-column: 3; }
+    .snd-list .snd-row .switch { grid-row: 1; grid-column: 2; }
+  }
+</style>
+
+</head>
+<body>
+<div class="mast left" aria-hidden="true"><div class="lamps"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="pole"></div></div>
+<div class="mast right" aria-hidden="true"><div class="lamps"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="pole"></div></div>
+<div class="bigscore left" id="big-x" hidden aria-hidden="true"><span id="big-x-name">Heim</span><b id="big-x-num">0</b></div>
+<div class="bigscore right" id="big-o" hidden aria-hidden="true"><span id="big-o-name">Gast</span><b id="big-o-num">0</b></div>
+<div class="wrap" lang="de">
+  <div class="masthead">
+    <span class="eyebrow">Fußball-Quiz · Tic-Tac-Toe</span>
+    <h1>Ball Knowledge-Play</h1>
+    <p class="sub">Jedes Feld kreuzt zwei Kategorien: eine Nation, einen Verein oder einen Titel wie WM- oder CL-Sieger. Tippe einen Spieler, der zu beiden passt. Wer zuerst drei Felder in einer Reihe hat, gewinnt.</p>
+  </div>
+
+  <div class="panel" id="home">
+    <div class="home-tabs" role="tablist" aria-label="Startmenü">
+      <button type="button" role="tab" id="tab-modes" aria-selected="true" aria-controls="home-modes">Spielmodus</button>
+      <button type="button" role="tab" id="tab-settings" aria-selected="false" aria-controls="home-settings">⚙ Einstellungen</button>
+    </div>
+    <div id="home-modes" role="tabpanel" aria-labelledby="tab-modes" class="home-pane">
+    <h2 class="menu-title">Spielmodus wählen</h2>
+    <div class="variant-grid">
+      <button type="button" class="variant-card" data-variant="alltime" disabled>
+        <span class="v-badge">Alle Epochen</span>
+        <span class="v-title">All Timer</span>
+        <span class="v-desc" id="v-desc-alltime">Alle Spieler mit mindestens einer Station in den Top-5-Ligen, von damals bis heute.</span>
+        <span class="v-meta"><span class="v-dots" aria-hidden="true"><i style="background:#4fd987"></i><i style="background:#ffb454"></i></span> <span id="v-count-alltime">lädt …</span></span>
+      </button>
+      <button type="button" class="variant-card" data-variant="klassik" disabled>
+        <span class="v-badge">Ab 2000</span>
+        <span class="v-title">Klassik</span>
+        <span class="v-desc" id="v-desc-klassik">Nur Spieler, deren erste Profistation in den 2000ern oder später liegt.</span>
+        <span class="v-meta"><span class="v-dots" aria-hidden="true"><i style="background:#5cc8ff"></i><i style="background:#ff7a6b"></i></span> <span id="v-count-klassik">lädt …</span></span>
+      </button>
+      <button type="button" class="variant-card" data-variant="gen2000" disabled>
+        <span class="v-badge">Jahrgang 2000+</span>
+        <span class="v-title">Born in the 2000s</span>
+        <span class="v-desc" id="v-desc-gen2000">Nur Spieler, die im Jahr 2000 oder später geboren sind.</span>
+        <span class="v-meta"><span class="v-dots" aria-hidden="true"><i style="background:#c77dff"></i><i style="background:#3ee6cf"></i></span> <span id="v-count-gen2000">lädt …</span></span>
+      </button>
+      <button type="button" class="variant-card" data-variant="oldies" disabled>
+        <span class="v-badge">Ab 40 Jahren</span>
+        <span class="v-title">Oldies but Goldies</span>
+        <span class="v-desc" id="v-desc-oldies">Nur Spieler, die mindestens 40 Jahre alt sind.</span>
+        <span class="v-meta"><span class="v-dots" aria-hidden="true"><i style="background:#e8b84a"></i><i style="background:#d3d9e1"></i></span> <span id="v-count-oldies">lädt …</span></span>
+      </button>
+    </div>
+    <div class="datanote" id="datanote"></div>
+    </div>
+    <div id="home-settings" role="tabpanel" aria-labelledby="tab-settings" class="home-pane" hidden>
+      <h2 class="menu-title">Töne</h2>
+      <div class="snd-master">
+        <div class="snd-row">
+          <span class="snd-name"><b>Alle Töne</b><small>Gesamtlautstärke</small></span>
+          <button type="button" class="switch" id="snd-all" role="switch" aria-checked="true" aria-label="Alle Töne an oder aus"><i></i></button>
+          <input type="range" id="snd-all-vol" min="0" max="100" step="10" value="100" aria-label="Gesamtlautstärke">
+          <output class="snd-val" id="snd-all-val" for="snd-all-vol">100 %</output>
+        </div>
+      </div>
+      <div class="snd-list" id="snd-list"></div>
+      <div class="snd-foot">
+        <span class="datanote">Einstellungen werden in diesem Browser gespeichert. ▶ spielt den Ton zur Probe.</span>
+        <button type="button" class="ghost-btn" id="snd-reset">Zurücksetzen</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="menu" hidden>
+    <div class="menu-top">
+      <button type="button" class="ghost-btn" id="back-home">← Spielmodus</button>
+      <span class="variant-tag" id="variant-tag"></span>
+    </div>
+    <h2 class="menu-title">Neues Spiel</h2>
+    <div class="settings">
+      <span class="lbl">Modus</span>
+      <div class="segmented" role="group" aria-label="Spielmodus">
+        <button type="button" id="mode-pvp" aria-pressed="true">2 Spieler</button>
+        <button type="button" id="mode-cpu" aria-pressed="false">Gegen Computer</button>
+      </div>
+      <span class="lbl">Stufe</span>
+      <div class="segmented" role="group" aria-label="Schwierigkeit">
+        <button type="button" id="lvl-easy" data-lvl="easy" aria-pressed="true">Leicht</button>
+        <button type="button" id="lvl-normal" data-lvl="normal" aria-pressed="false">Mittel</button>
+        <button type="button" id="lvl-hard" data-lvl="hard" aria-pressed="false">Schwer</button>
+      </div>
+      <span class="lbl">Kategorien</span>
+      <div class="segmented" role="group" aria-label="Kategorien">
+        <button type="button" data-cat="random" aria-pressed="true">Zufall</button>
+        <button type="button" data-cat="draft" aria-pressed="false">Selbst wählen</button>
+      </div>
+      <span class="lbl">Spiele</span>
+      <div class="segmented" role="group" aria-label="Anzahl Spiele">
+        <button type="button" data-best="3" aria-pressed="false">Best of 3</button>
+        <button type="button" data-best="5" aria-pressed="false">Best of 5</button>
+        <button type="button" data-best="0" aria-pressed="true">Unbegrenzt</button>
+      </div>
+      <span class="lbl">Ton</span>
+      <div class="segmented" role="group" aria-label="Soundeffekte">
+        <button type="button" data-sound="on" aria-pressed="true">An</button>
+        <button type="button" data-sound="off" aria-pressed="false">Aus</button>
+      </div>
+      <span class="lbl">Zugzeit</span>
+      <div class="segmented" role="group" aria-label="Zeit pro Zug">
+        <button type="button" data-time="0" aria-pressed="true">Aus</button>
+        <button type="button" data-time="15" aria-pressed="false">15 s</button>
+        <button type="button" data-time="30" aria-pressed="false">30 s</button>
+        <button type="button" data-time="45" aria-pressed="false">45 s</button>
+        <button type="button" data-time="60" aria-pressed="false">1 min</button>
+      </div>
+    </div>
+    <div class="names">
+      <label class="name-field" for="name-input-x"><span class="lbl" id="name-label-x">Name Spieler 1</span>
+        <input type="text" id="name-input-x" maxlength="16" placeholder="Spieler 1" autocomplete="off" spellcheck="false"></label>
+      <label class="name-field" for="name-input-o" id="name-field-o"><span class="lbl">Name Spieler 2</span>
+        <input type="text" id="name-input-o" maxlength="16" placeholder="Spieler 2" autocomplete="off" spellcheck="false"></label>
+    </div>
+    <ul class="menu-help" id="menu-help"></ul>
+    <button type="button" class="start-btn" id="start-btn">Spiel starten</button>
+  </div>
+
+  <div class="panel" id="game" hidden>
+    <div class="gamebar">
+      <span class="game-summary" id="game-summary"></span>
+      <div class="gamebar-actions">
+        <button type="button" class="ghost-btn" id="new-grid">⟳ Neues Raster</button>
+        <button type="button" class="ghost-btn" id="sound-btn" aria-pressed="true" aria-label="Soundeffekte an oder aus">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path id="sound-wave" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          <span id="sound-label">Ton an</span>
+        </button>
+        <button type="button" class="ghost-btn" id="menu-btn">☰ Hauptmenü</button>
+      </div>
+    </div>
+
+    <div class="scoreboard">
+      <div class="score-side x">
+        <span class="dot"></span>
+        <span class="score-name" id="name-x">Spieler 1</span>
+        <span class="score-num" id="score-x">0</span>
+      </div>
+      <span class="score-mid">SPIELSTAND</span>
+      <div class="score-side o">
+        <span class="score-num" id="score-o">0</span>
+        <span class="score-name" id="name-o">Spieler 2</span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <div class="turn-row">
+      <div class="turn-banner" id="turn-banner" role="status" aria-live="polite">
+        <span class="turn-chip" id="turn-chip"></span>
+        <span id="turn-text">Am Zug: <span class="who" id="turn-who">Spieler 1</span></span>
+      </div>
+      <span class="timer" id="timer" hidden aria-live="off">0:30</span>
+      <button type="button" class="ghost-btn skip-btn" id="skip-btn" disabled>Aussetzen ⏭</button>
+    </div>
+    <div class="timebar" id="timebar" hidden><span id="timebar-fill"></span></div>
+    <div class="request-banner" id="request-banner" hidden>
+      <span id="request-text"></span>
+      <button type="button" class="again" id="request-accept" hidden>Annehmen</button>
+    </div>
+
+    <div class="grid-area" id="grid-area" aria-label="Spielraster"></div>
+    <div class="goal-anim" id="goal-anim" hidden aria-hidden="true">
+      <div class="goal-stage">
+        <div class="goal-frame"><div class="goal-net"></div></div>
+        <svg class="goal-ball" viewBox="0 0 40 40" aria-hidden="true">
+          <circle cx="20" cy="20" r="18.5" fill="#f7f8fa" stroke="#1b1f24" stroke-width="1.5"/>
+          <polygon points="20,12 27.6,17.5 24.7,26.5 15.3,26.5 12.4,17.5" fill="#1b1f24"/>
+          <path d="M20 12V3.5M27.6 17.5l8-2.6M24.7 26.5l5 6.8M15.3 26.5l-5 6.8M12.4 17.5l-8-2.6" stroke="#1b1f24" stroke-width="1.5"/>
+        </svg>
+        <div class="goal-text" id="goal-text">Tor!</div>
+      </div>
+    </div>
+
+    <div class="active-cell-tag" id="active-tag">Wähle ein freies Feld im Raster.</div>
+    <form class="answer-row" id="guess-form" autocomplete="off">
+      <div class="guess-wrap">
+        <input type="text" id="guess" placeholder="Spielername eingeben …" autocomplete="off" spellcheck="false"
+               role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list" disabled>
+        <ul class="suggest" id="suggest" role="listbox" hidden></ul>
+      </div>
+      <button type="submit" class="submit-btn" id="guess-submit" disabled>Setzen</button>
+    </form>
+
+    <div class="result-banner" id="result-banner">
+      <div id="result-text"></div>
+      <div class="result-actions">
+        <button type="button" class="again" id="play-again">Neue Runde</button>
+        <button type="button" class="again ghost" id="menu-btn-2">Hauptmenü</button>
+      </div>
+    </div>
+
+    <div class="reveal-list" id="reveal-list"></div>
+    <div class="ticker" aria-hidden="true"><span class="ticker-track" id="ticker-track">+++ Anpfiff</span></div>
+  </div>
+
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen. · Version 29.09.2026-12</footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- Schwierigkeitsstufen ----------
+  const EASY_CLUBS = ["FC Bayern München","Borussia Dortmund","Bayer 04 Leverkusen","RB Leipzig","FC Schalke 04","Werder Bremen","Hamburger SV","VfB Stuttgart","Eintracht Frankfurt","Borussia Mönchengladbach","VfL Wolfsburg","1. FC Köln","Real Madrid","FC Barcelona","Atlético Madrid","FC Sevilla","FC Valencia","FC Villarreal","Athletic Bilbao","Real Sociedad","Betis Sevilla","Manchester United","Manchester City","FC Liverpool","FC Chelsea","FC Arsenal","Tottenham Hotspur","Newcastle United","Aston Villa","FC Everton","West Ham United","Leicester City","Juventus Turin","AC Milan","Inter Mailand","AS Rom","SSC Neapel","Lazio Rom","AC Florenz","Atalanta Bergamo","Paris Saint-Germain","Olympique Marseille","Olympique Lyon","AS Monaco","OSC Lille","OGC Nizza"];
+  const LEVELS = {
+    easy:   { clubMin: 0,   easyOnly: true,  nationMin: 250, cellMin: 5, cpuMiss: 0.30, maxClubRows: 1 },
+    normal: { clubMin: 250, easyOnly: false, nationMin: 100, cellMin: 3, cpuMiss: 0.18, maxClubRows: 2 },
+    hard:   { clubMin: 60,  easyOnly: false, nationMin: 25,  cellMin: 2, cpuMiss: 0.08, maxClubRows: 2 },
+  };
+
+  // ---------- Daten ----------
+  // Kategorien: 0..NC-1 = Nationen, NC..NC+CC-1 = Vereine
+  let DB = null, NORM = [], CATNORM = [], BITS = null, W = 0, NC = 0, CC = 0, NP = 0;
+  let EASY_IDX = new Set();
+  const pairCache = new Map();
+  let MASK = null;                         // Bitmaske der Spieler, die im gewählten Modus zählen
+  const OLDIES_MAX_YEAR = new Date().getFullYear() - 40;   // Mindestalter 40: Jahrgang 1986 und früher (2026)
+  const KLASSIK_FROM = 2000;              // Klassik: erste Profistation frühestens 2000
+  const GEN_FROM = 2000;                  // Born in the 2000s: Jahrgang 2000 und jünger
+  let PRE2000 = new Set();                // Spieler mit einer Profistation vor 2000 (aus Wikidata)
+  const eligible = i => (MASK[i >>> 5] & (1 << (i & 31))) !== 0;
+  // Gehört Spieler i zum Modus? (Klassik: Jahrgang ab 1980 und keine Profistation vor 2000)
+  function inVariant(variant, i) {
+    const y = DB.players[i][1];
+    if (variant === "oldies") return y > 0 && y <= OLDIES_MAX_YEAR;
+    if (variant === "gen2000") return y >= GEN_FROM;
+    if (variant === "klassik") return y >= 1980 && !PRE2000.has(i);
+    return true;
+  }
+  function buildMask(variant) {
+    MASK = new Uint32Array(W);
+    let n = 0;
+    for (let i = 0; i < NP; i++) {
+      if (!inVariant(variant, i)) continue;
+      MASK[i >>> 5] |= 1 << (i & 31); n++;
+    }
+    pairCache.clear();
+    POOL_SIZE = n;
+    return n;
+  }
+
+  function normalize(s) {
+    return s.normalize("NFD").replace(/[̀-ͯ]/g, "")
+      .replace(/ß/g, "ss").replace(/[øØ]/g, "o").replace(/[łŁ]/g, "l").replace(/[đĐ]/g, "d").replace(/[æÆ]/g, "ae")
+      .toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  }
+  // Kategorien: 0..NC-1 Nationen, NC..NC+CC-1 Vereine, danach Titel (WM-Sieger usw.)
+  let NT = 0;
+  const isNation = k => k < NC;
+  const isClub = k => k >= NC && k < NC + CC;
+  const isTitle = k => k >= NC + CC;
+  const catName = k => isNation(k) ? DB.nations[k][0] : isClub(k) ? DB.clubs[k - NC][0] : DB.titles[k - NC - CC][0];
+  const catSub = k => isNation(k) ? "Nation" : isClub(k) ? DB.clubs[k - NC][1] : "Titel";
+  const catSize = k => isNation(k) ? DB.nations[k][1] : isClub(k) ? DB.clubs[k - NC][3] : DB.titles[k - NC - CC][1];
+  // Suchbegriffe, unter denen die Titel zusätzlich gefunden werden
+  const TITLE_ALIAS = {
+    "WM-Sieger": "weltmeister world cup weltmeisterschaft",
+    "EM-Sieger": "europameister euro europameisterschaft",
+    "CL-Sieger": "champions league landesmeister europapokal der landesmeister",
+    "Europa-League-Sieger": "uefa cup uefa pokal europa league",
+    "Conference-League-Sieger": "conference league uecl",
+  };
+
+  function prepare(db) {
+    DB = db; NC = db.nations.length; CC = db.clubs.length; NP = db.players.length;
+    db.titles = db.titles || []; NT = db.titles.length;
+    W = Math.ceil(NP / 32);
+    BITS = new Uint32Array((NC + CC + NT) * W);
+    NORM = new Array(NP);
+    for (let i = 0; i < NP; i++) {
+      const p = db.players[i];
+      NORM[i] = normalize(p[0]);
+      const w = i >>> 5, b = 1 << (i & 31);
+      for (const n of p[2]) BITS[n * W + w] |= b;
+      for (const c of p[3]) BITS[(NC + c) * W + w] |= b;
+      if (p[5]) for (const t of p[5]) BITS[(NC + CC + t) * W + w] |= b;
+    }
+    CATNORM = [];
+    for (let k = 0; k < NC + CC + NT; k++) CATNORM[k] = normalize(catName(k) + (isTitle(k) ? " " + (TITLE_ALIAS[catName(k)] || "") : ""));
+    const cn = db.clubs.map(c => c[0]);
+    EASY_IDX = new Set(EASY_CLUBS.map(n => cn.indexOf(n)).filter(i => i >= 0).map(i => NC + i));
+  }
+  function popcnt(x) { x -= (x >>> 1) & 0x55555555; x = (x & 0x33333333) + ((x >>> 2) & 0x33333333); return Math.imul((x + (x >>> 4)) & 0x0F0F0F0F, 0x01010101) >>> 24; }
+  function pairCount(a, b) {
+    if (a === b) return 0;
+    const key = a < b ? a * 4096 + b : b * 4096 + a;
+    let v = pairCache.get(key);
+    if (v !== undefined) return v;
+    v = 0; const oa = a * W, ob = b * W;
+    for (let w = 0; w < W; w++) { const x = BITS[oa + w] & BITS[ob + w] & MASK[w]; if (x) v += popcnt(x); }
+    pairCache.set(key, v);
+    return v;
+  }
+  function candidates(a, b) {
+    const out = [], oa = a * W, ob = b * W;
+    for (let w = 0; w < W; w++) {
+      let x = BITS[oa + w] & BITS[ob + w] & MASK[w];
+      while (x) { const t = x & -x; out.push(w * 32 + (31 - Math.clz32(t))); x ^= t; }
+    }
+    return out;
+  }
+  const hasCat = (i, k) => (BITS[k * W + (i >>> 5)] & (1 << (i & 31))) !== 0;
+
+  // ---------- Kategorien-Pools ----------
+  function pools(level) {
+    const L = LEVELS[level], clubs = [], nations = [];
+    for (let c = 0; c < CC; c++) {
+      const k = NC + c;
+      if (L.easyOnly ? EASY_IDX.has(k) : (DB.clubs[c][3] >= L.clubMin || EASY_IDX.has(k))) clubs.push(k);
+    }
+    for (let n = 0; n < NC; n++) if (DB.nations[n][2] && DB.nations[n][1] >= L.nationMin) nations.push(n);
+    const titles = []; for (let t = 0; t < NT; t++) titles.push(NC + CC + t);
+    return { clubs, nations, titles };
+  }
+  function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  // Zufallsraster: Spalten = Vereine, Zeilen = Nationen und bis zu 1–2 Vereine
+  let POOL_SIZE = 0;                       // Spieler im gewählten Modus
+  function catCount(k) {                   // Spieler im Modus mit Kategorie k
+    let v = 0; const o = k * W;
+    for (let w = 0; w < W; w++) { const x = BITS[o + w] & MASK[w]; if (x) v += popcnt(x); }
+    return v;
+  }
+  // Kleiner Spielerpool (Born in the 2000s): Kategorien nach Spielern im Modus wählen, Mindestlösungen 2 bzw. 1
+  function smallPools() {
+    const top = (from, to, n) => { const a = []; for (let k = from; k < to; k++) a.push([k, catCount(k)]); return a.sort((x, y) => y[1] - x[1]).slice(0, n).map(x => x[0]); };
+    const titles = []; for (let t = 0; t < NT; t++) titles.push(NC + CC + t);
+    return { clubs: top(NC, NC + CC, 40), nations: top(0, NC, 25).filter(n => DB.nations[n][2]), titles };
+  }
+  function generateGrid(level) {
+    const L = LEVELS[level];
+    if (POOL_SIZE < 5000) {
+      const P = smallPools();
+      for (const min of { easy: [3, 2, 1], normal: [2, 1], hard: [1] }[level]) { const g = tryGrid({ ...L, maxClubRows: 2 }, P, min, 4000); if (g) return g; }
+    }
+    const P = pools(level);
+    // In Modi mit kleinerem Spielerpool (z. B. Born in the 2000s) wird die Mindestzahl an Lösungen notfalls gesenkt
+    for (const min of [L.cellMin, Math.max(2, L.cellMin - 2), 1]) {
+      const g = tryGrid(L, P, min, 2500); if (g) return g;
+    }
+    const byName = (arr, name) => arr.findIndex(x => x[0] === name);
+    return { rows: ["Deutschland", "Frankreich", "Spanien"].map(n => byName(DB.nations, n)),
+             cols: ["Real Madrid", "FC Bayern München", "FC Barcelona"].map(n => NC + byName(DB.clubs, n)) };
+  }
+  function tryGrid(L0, P, cellMin, tries) {
+    const L = { ...L0, cellMin };
+    for (let attempt = 0; attempt < tries; attempt++) {
+      const cols = shuffle(P.clubs).slice(0, 3);
+      const clubRows = Math.random() < 0.5 ? Math.floor(Math.random() * L.maxClubRows) + 1 : 0;
+      const titleRows = Math.random() < 0.35 ? 1 : 0;
+      const nationRows = 3 - clubRows - titleRows;
+      if (nationRows < 0) continue;
+      const okN = P.nations.filter(n => cols.every(c => pairCount(n, c) >= L.cellMin));
+      const okC = P.clubs.filter(k => !cols.includes(k) && cols.every(c => pairCount(k, c) >= L.cellMin));
+      const okT = P.titles.filter(k => cols.every(c => pairCount(k, c) >= L.cellMin));
+      if (okN.length < nationRows || okC.length < clubRows || okT.length < titleRows) continue;
+      let rows = shuffle(shuffle(okC).slice(0, clubRows).concat(shuffle(okT).slice(0, titleRows), shuffle(okN).slice(0, nationRows)));
+      if (Math.random() < 0.3) return { rows: cols, cols: rows }; // manchmal Nationen oben
+      return { rows, cols };
+    }
+    return null;
+  }
+
+  // ---------- Zustand ----------
+  const WIN_LINES = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  // Reihenfolge beim Selbstwählen: Zeile 1, Spalte 1, Zeile 2, Spalte 2, Zeile 3, Spalte 3
+  const DRAFT_SLOTS = [["r", 0], ["c", 0], ["r", 1], ["c", 1], ["r", 2], ["c", 2]];
+  let state = { score: { X: 0, O: 0 }, mode: "pvp", level: "easy", time: 0, catMode: "random", names: { X: "", O: "" }, variant: "alltime", bestOf: 0, roundNo: 1, matchOver: false };
+  let pendingPick = null;
+  let roundId = 0;
+
+  function newRound() {
+    roundId++;
+    stopTimer();
+    const base = { cells: Array(9).fill(null), used: new Set(), turn: "X", activeCell: null, over: false, busy: false, request: null, requestNote: null };
+    if (state.catMode === "draft") {
+      state = { ...state, ...base, rows: [null, null, null], cols: [null, null, null], phase: "draft", draftStep: 0 };
+    } else {
+      const g = generateGrid(state.level);
+      state = { ...state, ...base, rows: g.rows, cols: g.cols, phase: "play" };
+    }
+    resultBanner.classList.remove("show");
+    turnBanner.classList.remove("err");
+    revealList.innerHTML = "";
+    guessInput.value = ""; pendingPick = null; hideSuggest();
+    tickerItems = []; tick_log(state.phase === "draft" ? "Anpfiff – Kategorien wählen" : "Anpfiff – neues Raster");
+    SFX.play("kickoff");
+    if (state.phase === "draft") beginDraftStep(); else beginTurn();
+  }
+
+  // ---------- Soundeffekte ----------
+  // Einzelne Töne (Reihenfolge = Liste in den Einstellungen)
+  const SOUND_LIST = [
+    ["kickoff", "Anpfiff", "Zu Beginn jeder Runde"],
+    ["goal", "Tor & Jubel", "Wenn jemand eine Runde gewinnt"],
+    ["final", "Abpfiff", "Wenn ein Best-of-Spiel entschieden ist"],
+    ["draw", "Unentschieden", "Raster voll ohne Dreierreihe"],
+    ["correct", "Richtiger Spieler", "Dein Feld ist gesetzt"],
+    ["cpu", "Computer setzt", "Zug des Computers"],
+    ["wrong", "Falsche Wahl", "Spieler passt nicht, Zug verloren"],
+    ["time", "Zeit abgelaufen", "Zugzeit ist vorbei"],
+    ["tick", "Countdown-Ticken", "Letzte 5 Sekunden der Zugzeit"],
+    ["skip", "Aussetzen", "Zug wird übersprungen"],
+    ["request", "Rasteranfrage", "Neues Raster wird angefragt"],
+    ["pick", "Kategorie wählen", "Beim Selbstwählen der Kategorien"],
+  ];
+  const SFX = {
+    ctx: null, on: true, master: 1, vol: {}, mute: {}, dest: null,
+    ensure() {
+      if (!this.on) return null;
+      try {
+        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+        if (this.ctx.state === "suspended") this.ctx.resume();
+        return this.ctx;
+      } catch (e) { return null; }
+    },
+    tone(freq, start, dur, { type = "sine", vol = 0.2, slide = null } = {}) {
+      const c = this.ctx, o = c.createOscillator(), g = c.createGain(), t = c.currentTime + start;
+      o.type = type; o.frequency.setValueAtTime(freq, t);
+      if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(this.dest || c.destination); o.start(t); o.stop(t + dur + 0.05);
+    },
+    whistle(start, dur, vol = 0.012) {          // Schiedsrichterpfiff wie ursprünglich (hoher Ton, schneller Triller), nur deutlich leiser
+      const c = this.ctx, t = c.currentTime + start, o = c.createOscillator(), lfo = c.createOscillator(), depth = c.createGain(), g = c.createGain();
+      o.type = "sine"; o.frequency.setValueAtTime(2900, t);
+      lfo.frequency.setValueAtTime(28, t); depth.gain.setValueAtTime(140, t);
+      lfo.connect(depth).connect(o.frequency);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+      g.gain.setValueAtTime(vol, t + dur - 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(this.dest || c.destination); o.start(t); lfo.start(t); o.stop(t + dur + 0.05); lfo.stop(t + dur + 0.05);
+    },
+    crowd(start, dur, vol = 0.28) {             // Jubel: gefiltertes Rauschen, das an- und abschwillt
+      const c = this.ctx, t = c.currentTime + start, n = Math.floor(c.sampleRate * dur);
+      const buf = c.createBuffer(1, n, c.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      const src = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain();
+      src.buffer = buf; f.type = "bandpass"; f.frequency.setValueAtTime(900, t); f.Q.value = 0.7;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.3);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(f).connect(g).connect(this.dest || c.destination); src.start(t);
+    },
+    level(kind) { return this.mute[kind] ? 0 : this.master * (this.vol[kind] ?? 1); },
+    play(kind, force) {
+      const c = this.ensure(); if (!c) return;
+      const lv = force ? this.master * (this.vol[kind] ?? 1) : this.level(kind);
+      if (lv <= 0) return;
+      this.dest = c.createGain(); this.dest.gain.value = lv; this.dest.connect(c.destination);
+      switch (kind) {
+        case "kickoff": this.whistle(0, 0.4); break;
+        case "correct": this.tone(660, 0, 0.14, { vol: 0.18 }); this.tone(990, 0.1, 0.22, { vol: 0.18 }); break;
+        case "cpu": this.tone(520, 0, 0.12, { vol: 0.14 }); this.tone(780, 0.09, 0.2, { vol: 0.14 }); break;
+        case "wrong": this.tone(392, 0, 0.16, { type: "triangle", vol: 0.16 }); this.tone(294, 0.15, 0.32, { type: "triangle", vol: 0.16, slide: 262 }); break;   // sanftes „dü-düm“ nach unten
+        case "time": this.tone(520, 0, 0.6, { type: "triangle", vol: 0.14, slide: 200 }); break;
+        case "skip": this.tone(420, 0, 0.12, { type: "triangle", vol: 0.12, slide: 300 }); break;
+        case "request": this.tone(520, 0, 0.1, { type: "triangle", vol: 0.12 }); this.tone(520, 0.16, 0.1, { type: "triangle", vol: 0.12 }); break;
+        case "tick": this.tone(1500, 0, 0.05, { type: "square", vol: 0.05 }); break;
+        case "pick": this.tone(740, 0, 0.08, { type: "triangle", vol: 0.1 }); break;
+        case "goal":                             // Tor: Stadionhorn und Jubel der Menge
+          this.tone(110, 0, 0.9, { type: "sawtooth", vol: 0.09 }); this.tone(165, 0, 0.9, { type: "sawtooth", vol: 0.07 });
+          this.crowd(0.05, 2.8, 0.32);
+          break;
+        case "final":                            // Abpfiff: kurz, kurz, lang
+          this.whistle(0, 0.22); this.whistle(0.32, 0.22); this.whistle(0.64, 0.9);
+          break;
+        case "lose": [440, 370, 311].forEach((f, i) => this.tone(f, i * 0.18, 0.3, { type: "triangle", vol: 0.14 })); break;
+        case "draw": this.tone(440, 0, 0.25, { type: "triangle", vol: 0.12 }); this.tone(440, 0.3, 0.35, { type: "triangle", vol: 0.12 }); break;
+      }
+    },
+  };
+  function vibrate(p) { try { if (SFX.on && navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
+  function setSound(on) {
+    SFX.on = on;
+    pressed("[data-sound]", "sound", on ? "on" : "off");
+    $("sound-btn").setAttribute("aria-pressed", String(on));
+    $("sound-label").textContent = on ? "Ton an" : "Ton aus";
+    $("sound-wave").style.display = on ? "" : "none";
+    store("kaderraster-sound", on ? "on" : "off");
+    if (on) SFX.ensure();
+    renderSoundSettings();
+  }
+  // ---------- Toneinstellungen (Reiter im Startmenü) ----------
+  const pct = v => Math.round(v * 100) + " %";
+  function saveSoundPrefs() { store("kaderraster-sfx", JSON.stringify({ master: SFX.master, vol: SFX.vol, mute: SFX.mute })); }
+  function loadSoundPrefs() {
+    try {
+      const s = JSON.parse(localStorage.getItem("kaderraster-sfx") || "null"); if (!s) return;
+      if (typeof s.master === "number") SFX.master = Math.min(1, Math.max(0, s.master));
+      for (const [k] of SOUND_LIST) {
+        if (typeof s.vol?.[k] === "number") SFX.vol[k] = Math.min(1, Math.max(0, s.vol[k]));
+        if (s.mute?.[k]) SFX.mute[k] = true;
+      }
+    } catch (e) {}
+  }
+  function buildSoundList() {
+    $("snd-list").innerHTML = SOUND_LIST.map(([k, name, hint]) => `
+      <div class="snd-row" data-snd="${k}">
+        <span class="snd-name">${esc(name)}<small>${esc(hint)}</small></span>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="${esc(name)} an oder aus"><i></i></button>
+        <input type="range" min="0" max="100" step="10" value="100" aria-label="Lautstärke ${esc(name)}">
+        <output class="snd-val">100 %</output>
+        <button type="button" class="snd-test" aria-label="${esc(name)} anhören">▶</button>
+      </div>`).join("");
+    $("snd-list").querySelectorAll(".snd-row").forEach(row => {
+      const k = row.dataset.snd;
+      row.querySelector(".switch").addEventListener("click", () => { SFX.mute[k] = !SFX.mute[k]; if (!SFX.mute[k]) delete SFX.mute[k]; saveSoundPrefs(); renderSoundSettings(); if (!SFX.mute[k]) SFX.play(k); });
+      const r = row.querySelector("input");
+      r.addEventListener("input", () => { SFX.vol[k] = +r.value / 100; saveSoundPrefs(); renderSoundSettings(); });
+      r.addEventListener("change", () => SFX.play(k, true));
+      row.querySelector(".snd-test").addEventListener("click", () => SFX.play(k, true));
+    });
+  }
+  function renderSoundSettings() {
+    if (!$("snd-list").firstElementChild) return;
+    $("snd-all").setAttribute("aria-checked", String(SFX.on));
+    $("snd-all-vol").value = Math.round(SFX.master * 100); $("snd-all-val").textContent = pct(SFX.master);
+    $("snd-all").closest(".snd-row").classList.toggle("off", !SFX.on);
+    $("snd-list").classList.toggle("muted", !SFX.on);
+    $("snd-list").querySelectorAll(".snd-row").forEach(row => {
+      const k = row.dataset.snd, v = SFX.vol[k] ?? 1, on = !SFX.mute[k];
+      row.querySelector(".switch").setAttribute("aria-checked", String(on));
+      row.querySelector("input").value = Math.round(v * 100);
+      row.querySelector(".snd-val").textContent = pct(v);
+      row.classList.toggle("off", !on);
+    });
+  }
+  function showHomeTab(t) {
+    const set = t === "settings";
+    $("tab-modes").setAttribute("aria-selected", String(!set)); $("tab-settings").setAttribute("aria-selected", String(set));
+    $("home-modes").hidden = set; $("home-settings").hidden = !set;
+  }
+
+  // ---------- Ticker und große Ziffern ----------
+  let tickerItems = [];
+  function tick_log(text) {
+    tickerItems.unshift(text);
+    tickerItems = tickerItems.slice(0, 5);
+    const line = tickerItems.map(t => "+++ " + t).join("     ");
+    $("ticker-track").textContent = line;
+  }
+  function syncBig() {
+    const show = !$("game").hidden && state.variant === "oldies";
+    $("big-x").hidden = !show; $("big-o").hidden = !show;
+    if (!show) return;
+    $("big-x-name").textContent = who("X"); $("big-o-name").textContent = who("O");
+    $("big-x-num").textContent = state.score.X; $("big-o-num").textContent = state.score.O;
+  }
+
+  // ---------- Neues Raster nur mit Zustimmung ----------
+  const other = p => (p === "X" ? "O" : "X");
+  function requestNewGrid() {
+    if (state.over || state.busy || !humanTurn() || state.request || state.phase !== "play") return;
+    const by = state.turn;
+    state.request = { by };
+    state.requestNote = null;
+    guessInput.value = ""; pendingPick = null; hideSuggest();
+    // Die Anfrage beendet den eigenen Zug sofort, der andere entscheidet in seinem Zug
+    const nxt = other(by), nxtName = who(nxt) === "Computer" ? "der Computer" : who(nxt);
+    failTurn(`${who(by)} ${verb(by, "fragst", "fragt")} nach einem neuen Raster – ${nxtName} ${verb(nxt, "bist", "ist")} dran`, 1000, "request");
+  }
+  function acceptRequest() {
+    if (!state.request || state.over) return;
+    newRound();
+  }
+  // Wird aufgerufen, wenn der Zug von Spieler p endet (Feld gesetzt, Fehler, Aussetzen, Zeit, Kategorie gewählt)
+  function turnEnded(p) {
+    if (state.requestNote && state.requestNote.until === p) state.requestNote = null;
+    if (state.request && state.request.by !== p) {
+      state.request = null;
+      state.requestNote = { text: `${who(p)} ${verb(p, "hast", "hat")} weitergespielt – Anfrage abgelehnt, das Raster bleibt.`, until: other(p) };
+    }
+  }
+  // Computer entscheidet über deine Anfrage, wenn er am Zug ist. true = angenommen (neues Raster läuft)
+  function cpuAnswersRequest() {
+    if (!(state.mode === "cpu" && state.request && state.request.by === "X")) return false;
+    let accept;
+    if (state.phase === "draft") accept = Math.random() < 0.5;
+    else {
+      const o = state.cells.filter(c => c && c.s === "O").length, x = state.cells.filter(c => c && c.s === "X").length;
+      const canWin = WIN_LINES.some(l => l.filter(i => state.cells[i] && state.cells[i].s === "O").length === 2 && l.filter(i => !state.cells[i]).length === 1);
+      accept = !canWin && o <= x && Math.random() < 0.6;
+    }
+    if (accept) {
+      flashError("Der Computer nimmt deine Anfrage an – gleich kommt ein neues Raster");
+      const myRound = roundId;
+      setTimeout(() => { if (myRound === roundId) newRound(); }, 2200);
+      return true;
+    }
+    state.request = null;
+    state.requestNote = { text: "Der Computer lehnt ab und spielt weiter – das Raster bleibt.", until: "X" };
+    return false;
+  }
+  function renderRequest() {
+    const box = $("request-banner"), txt = $("request-text"), btn = $("request-accept");
+    $("new-grid").disabled = state.over || state.busy || !humanTurn() || !!state.request || state.phase !== "play";
+    if (state.over) { box.hidden = true; return; }
+    const thing = state.phase === "draft" || state.catMode === "draft" ? "neu wählen" : "ein neues Raster";
+    if (state.request) {
+      const by = state.request.by, to = other(by);
+      box.hidden = false; box.classList.remove("info");
+      const want = thing === "neu wählen" ? "die Kategorien neu wählen" : thing;
+      if (state.mode === "cpu") {
+        txt.textContent = `${who(by)} ${verb(by, "möchtest", "möchte")} ${want}. Der Computer entscheidet jetzt.`;
+        btn.hidden = true;
+      } else {
+        txt.textContent = `${who(by)} möchte ${want}. ${who(to)}: annehmen – oder einfach normal weiterspielen, dann bleibt alles, wie es ist.`;
+        btn.hidden = false; btn.textContent = `${who(to)}: Annehmen`;
+        btn.classList.toggle("x", to === "X");
+      }
+    } else if (state.requestNote) {
+      box.hidden = false; box.classList.add("info"); btn.hidden = true;
+      txt.textContent = state.requestNote.text;
+    } else box.hidden = true;
+  }
+
+  // ---------- Kategorien wählen ----------
+  const draftSlot = () => DRAFT_SLOTS[state.draftStep];
+  const draftPicker = () => (state.draftStep % 2 === 0 ? "X" : "O");
+  const slotLabel = ([ax, i]) => (ax === "r" ? "Zeile " : "Spalte ") + (i + 1);
+  function draftCheck(k) {
+    // null = erlaubt, sonst Grund
+    if (state.rows.includes(k) || state.cols.includes(k)) return "schon gewählt";
+    const [ax] = draftSlot();
+    const other = (ax === "r" ? state.cols : state.rows).filter(x => x !== null);
+    if (isNation(k) && other.some(o => isNation(o))) return "zwei Nationen können sich nicht kreuzen";
+    for (const o of other) if (pairCount(k, o) === 0) return `0 Spieler mit ${catName(o)}`;
+    return null;
+  }
+  function beginDraftStep() {
+    stopTimer();
+    state.turn = draftPicker();
+    render();
+    if (state.mode === "cpu" && state.turn === "O") cpuDraft();
+  }
+  function applyDraft(k) {
+    turnEnded(state.turn);
+    SFX.play("pick");
+    const [ax, i] = draftSlot();
+    (ax === "r" ? state.rows : state.cols)[i] = k;
+    state.draftStep++;
+    guessInput.value = ""; pendingPick = null; hideSuggest();
+    if (state.draftStep >= DRAFT_SLOTS.length) { state.phase = "play"; state.turn = "X"; beginTurn(); }
+    else beginDraftStep();
+  }
+  function cpuDraft() {
+    state.busy = true; render();
+    const myRound = roundId;
+    setTimeout(() => {
+      if (myRound !== roundId || state.phase !== "draft") return;
+      if (cpuAnswersRequest()) return;
+      const L = LEVELS[state.level], P = pools(state.level);
+      const [ax] = draftSlot();
+      const other = (ax === "r" ? state.cols : state.rows).filter(x => x !== null);
+      const r = Math.random();
+      const pool = r < 0.15 ? shuffle(P.titles).concat(shuffle(P.clubs.concat(P.nations)))
+        : shuffle(r < 0.6 ? P.clubs.concat(P.nations) : P.nations.concat(P.clubs));
+      let pick = pool.find(k => !draftCheck(k) && other.every(o => pairCount(k, o) >= L.cellMin));
+      if (pick === undefined) pick = pool.find(k => !draftCheck(k));
+      if (pick === undefined) for (let k = 0; k < NC + CC + NT && pick === undefined; k++) if (!draftCheck(k)) pick = k;
+      state.busy = false;
+      applyDraft(pick);
+    }, 800);
+  }
+
+  // ---------- Zug-Timer ----------
+  let deadline = 0, tickHandle = 0;
+  const humanTurn = () => !(state.mode === "cpu" && state.turn === "O");
+  function stopTimer() { clearInterval(tickHandle); tickHandle = 0; deadline = 0; }
+  function beginTurn() {
+    stopTimer();
+    render();
+    if (state.over) return;
+    if (!humanTurn()) { maybeCpu(); return; }
+    if (state.time > 0) {
+      deadline = Date.now() + state.time * 1000;
+      tickHandle = setInterval(tick, 200);
+      tick();
+    }
+  }
+  let lastTickSec = 0;
+  function tick() {
+    if (!deadline) return;
+    const left = deadline - Date.now();
+    if (left <= 0) { stopTimer(); renderTimer(0); timeUp(); return; }
+    const sec = Math.ceil(left / 1000);
+    if (sec <= 5 && sec !== lastTickSec) SFX.play("tick");
+    lastTickSec = sec;
+    renderTimer(left);
+  }
+  function renderTimer(leftMs) {
+    const t = $("timer"), bar = $("timebar");
+    const on = state.time > 0 && !state.over && state.phase === "play";
+    t.hidden = !on; bar.hidden = !on;
+    if (!on) return;
+    const running = deadline > 0;
+    const ms = running ? leftMs : state.time * 1000;
+    const sec = Math.ceil(ms / 1000);
+    t.textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
+    const low = running && sec <= 5;
+    t.classList.toggle("low", low); bar.classList.toggle("low", low);
+    t.classList.toggle("paused", !running);
+    bar.classList.toggle("o", state.turn === "O");
+    $("timebar-fill").style.width = (running ? Math.max(0, ms / (state.time * 1000)) * 100 : 100) + "%";
+  }
+  function timeUp() {
+    if (state.over || state.busy || !humanTurn() || state.phase !== "play") return;
+    guessInput.value = ""; pendingPick = null; hideSuggest();
+    failTurn(isDu(state.turn) ? "Zeit abgelaufen – du verlierst den Zug" : `Zeit abgelaufen – ${who(state.turn)} verliert den Zug`, 1400, "time");
+  }
+  function skipTurn() {
+    if (state.over || state.busy || !humanTurn() || state.phase !== "play") return;
+    guessInput.value = ""; pendingPick = null; hideSuggest();
+    failTurn(`${who(state.turn)} ${verb(state.turn, "setzt", "setzt")} aus`, 700, "skip");
+  }
+  const rc = i => ({ r: Math.floor(i / 3), c: i % 3 });
+  function checkWin() {
+    for (const line of WIN_LINES) {
+      const [a, b, c] = line.map(i => state.cells[i]);
+      if (a && b && c && a.s === b.s && b.s === c.s) return { s: a.s, line };
+    }
+    return null;
+  }
+
+  // ---------- DOM ----------
+  const $ = id => document.getElementById(id);
+  const gridArea = $("grid-area"), guessInput = $("guess"), guessForm = $("guess-form"), guessSubmit = $("guess-submit");
+  const activeTag = $("active-tag"), turnBanner = $("turn-banner"), turnText = $("turn-text"), turnChip = $("turn-chip");
+  const resultBanner = $("result-banner"), resultText = $("result-text"), revealList = $("reveal-list");
+  const suggest = $("suggest");
+  const esc = s => String(s).replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
+  const who = s => {
+    if (state.mode === "cpu") return s === "X" ? (state.names.X || "Du") : "Computer";
+    return s === "X" ? (state.names.X || "Spieler 1") : (state.names.O || "Spieler 2");
+  };
+  const isDu = s => who(s) === "Du";          // 2. Person nur, wenn gegen den Computer kein Name gesetzt ist
+  const verb = (s, du, er) => (isDu(s) ? du : er);
+
+  function headEl(k, cls, slot) {
+    const h = document.createElement("div");
+    h.className = cls;
+    if (k === null) {
+      const cur = state.phase === "draft" && draftSlot()[0] === slot[0] && draftSlot()[1] === slot[1];
+      h.classList.add("empty-head");
+      if (cur) h.classList.add("current", state.turn === "O" ? "o" : "x");
+      h.innerHTML = `?<small>${cur ? "wird gewählt" : slotLabel(slot)}</small>`;
+    } else {
+      h.innerHTML = `${esc(catName(k))}<small>${esc(catSub(k))}</small>`;
+    }
+    return h;
+  }
+
+  function render() {
+    const drafting = state.phase === "draft";
+    gridArea.innerHTML = "";
+    gridArea.appendChild(document.createElement("div"));
+    state.cols.forEach((k, c) => gridArea.appendChild(headEl(k, "colhead", ["c", c])));
+    const win = checkWin();
+    for (let r = 0; r < 3; r++) {
+      gridArea.appendChild(headEl(state.rows[r], "rowhead", ["r", r]));
+      for (let c = 0; c < 3; c++) {
+        const i = r * 3 + c, cell = state.cells[i];
+        const a = state.rows[r], b = state.cols[c];
+        const el = document.createElement("button");
+        el.type = "button";
+        el.className = "cell" + (cell ? " filled " + cell.s.toLowerCase() : "") + (state.activeCell === i ? " active" : "") +
+          (win && win.line.includes(i) ? " win" : "") + (drafting ? " locked" : "");
+        if (a !== null && b !== null) el.setAttribute("aria-label", `${catName(a)} und ${catName(b)}`);
+        if (cell) {
+          el.innerHTML = `<span class="mark">${cell.s}</span><span class="pname">${esc(DB.players[cell.p][0])}</span>`;
+        } else if (a !== null && b !== null) {
+          const cnt = pairCount(a, b);
+          el.innerHTML = `<span class="hint">+</span><span class="count">${cnt} ${cnt === 1 ? "Lösung" : "Lösungen"}</span>`;
+          if (!drafting) el.addEventListener("click", () => selectCell(i));
+        }
+        gridArea.appendChild(el);
+      }
+    }
+    $("name-x").textContent = `${who("X")} (X)`;
+    $("name-o").textContent = `${who("O")} (O)`;
+    syncBig();
+    document.querySelector(".score-mid").textContent = state.bestOf ? `Runde ${state.roundNo} · Best of ${state.bestOf}` : `Runde ${state.roundNo}`;
+    $("score-x").textContent = state.score.X;
+    $("score-o").textContent = state.score.O;
+    turnChip.style.background = state.turn === "X" ? "var(--accent)" : "var(--accent-2)";
+    if (!state.over && !turnBanner.classList.contains("err")) {
+      if (drafting) {
+        turnText.innerHTML = state.busy ? `<span class="who">Computer wählt …</span>`
+          : `<span class="who">${who(state.turn)}</span> ${verb(state.turn, "wählst", "wählt")} ${slotLabel(draftSlot())}`;
+      } else {
+        turnText.innerHTML = state.busy && state.turn === "O" && state.mode === "cpu"
+          ? `<span class="who">Computer überlegt …</span>` : `Am Zug: <span class="who">${who(state.turn)}</span>`;
+      }
+    }
+    $("skip-btn").disabled = drafting || state.over || state.busy || !humanTurn();
+    renderRequest();
+    renderTimer(deadline ? deadline - Date.now() : 0);
+
+    const canType = !state.over && !state.busy && (drafting ? humanTurn() : state.activeCell !== null);
+    guessInput.disabled = !canType;
+    guessSubmit.disabled = !canType;
+    guessInput.placeholder = drafting ? "Nation, Verein oder Titel suchen …" : "Spielername eingeben …";
+    guessSubmit.textContent = drafting ? "Wählen" : "Setzen";
+    if (drafting) {
+      activeTag.innerHTML = humanTurn()
+        ? `Wähle eine Nation, einen Verein oder einen Titel für <b>${slotLabel(draftSlot())}</b>. Jedes Feld braucht mindestens eine Lösung, und zwei Nationen dürfen sich nicht kreuzen.`
+        : "Der Computer wählt eine Kategorie.";
+      if (canType) guessInput.focus({ preventScroll: true });
+    } else if (!humanTurn() && !state.over) {
+      activeTag.textContent = "Der Computer ist am Zug.";
+    } else if (state.activeCell === null || state.over) {
+      if (!state.over) activeTag.textContent = "Wähle ein freies Feld im Raster.";
+    } else {
+      const { r, c } = rc(state.activeCell);
+      activeTag.innerHTML = `Gesucht: <b>${esc(catName(state.rows[r]))}</b> × <b>${esc(catName(state.cols[c]))}</b>`;
+      if (canType) guessInput.focus({ preventScroll: true });
+    }
+  }
+
+  function selectCell(i) {
+    if (state.phase !== "play" || state.over || state.busy || state.cells[i]) return;
+    if (!humanTurn()) return;
+    state.activeCell = i;
+    guessInput.value = ""; pendingPick = null; hideSuggest();
+    render();
+  }
+
+  // ---------- Suche (Spieler oder Kategorien) ----------
+  let sugItems = [], sugIdx = -1;
+  function rankSearch(nq, list, maxHits) {
+    const buckets = [[], [], [], [], []];
+    const wq = " " + nq, wqe = " " + nq + " ";
+    let found = 0;
+    for (let i = 0; i < list.length; i++) {
+      const n = list[i], sn = " " + n + " ";
+      let b = -1;
+      if (n === nq) b = 0;
+      else if (sn.includes(wqe)) b = 1;
+      else if (n.startsWith(nq)) b = 2;
+      else if (sn.includes(wq)) b = 3;
+      else if (nq.length >= 3 && n.includes(nq)) b = 4;
+      if (b >= 0) { buckets[b].push(i); if (++found > maxHits) break; }
+    }
+    return buckets;
+  }
+  function searchPlayers(q) {
+    const nq = normalize(q);
+    if (nq.length < 2) return [];
+    const byLen = (a, b) => (DB.players[b][4] || 0) - (DB.players[a][4] || 0) || NORM[a].length - NORM[b].length || DB.players[b][1] - DB.players[a][1];
+    return [].concat(...rankSearch(nq, NORM, 3000).map(x => x.filter(eligible).sort(byLen))).slice(0, 8);
+  }
+  function searchCats(q) {
+    const nq = normalize(q);
+    if (nq.length < 2) return [];
+    const bySize = (a, b) => catSize(b) - catSize(a);
+    return [].concat(...rankSearch(nq, CATNORM, 5000).map(x => x.sort(bySize))).slice(0, 8);
+  }
+  function describe(i) {
+    const p = DB.players[i];
+    return p[1] ? "Jg. " + p[1] : "";
+  }
+  function showSuggest(list) {
+    sugItems = list; sugIdx = -1;
+    if (!guessInput.value.trim() || normalize(guessInput.value).length < 2) { hideSuggest(); return; }
+    const drafting = state.phase === "draft";
+    suggest.innerHTML = list.length
+      ? list.map((i, k) => {
+          if (drafting) {
+            const why = draftCheck(i);
+            return `<li role="option" id="sug-${k}" data-k="${k}" aria-selected="false"${why ? ' aria-disabled="true" class="off"' : ""}><span>${esc(catName(i))}</span><span class="meta">${esc(why || catSub(i))}</span></li>`;
+          }
+          return `<li role="option" id="sug-${k}" data-k="${k}" aria-selected="false"><span>${esc(DB.players[i][0])}</span><span class="meta">${esc(describe(i))}</span></li>`;
+        }).join("")
+      : `<li class="empty">${drafting ? "Keine Nation, kein Verein und kein Titel gefunden" : "Kein Spieler gefunden"}</li>`;
+    suggest.hidden = false; guessInput.setAttribute("aria-expanded", "true");
+  }
+  function hideSuggest() { suggest.hidden = true; guessInput.setAttribute("aria-expanded", "false"); sugItems = []; sugIdx = -1; }
+  function highlight(k) {
+    sugIdx = k;
+    suggest.querySelectorAll("li[data-k]").forEach(li => li.setAttribute("aria-selected", String(+li.dataset.k === k)));
+    const li = $("sug-" + k); if (li) li.scrollIntoView({ block: "nearest" });
+  }
+  function pick(k) {
+    const i = sugItems[k]; if (i === undefined) return;
+    if (state.phase === "draft") {
+      const why = draftCheck(i);
+      if (why) { flashNote(`${catName(i)} geht hier nicht: ${why}.`); return; }
+      applyDraft(i); return;
+    }
+    pendingPick = i; guessInput.value = DB.players[i][0]; hideSuggest();
+    submitGuess();
+  }
+  function flashNote(msg) {
+    activeTag.innerHTML = `<span style="color:var(--bad)">${esc(msg)}</span>`;
+  }
+  let searchTimer = 0;
+  guessInput.addEventListener("input", () => {
+    pendingPick = null;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => showSuggest(state.phase === "draft" ? searchCats(guessInput.value) : searchPlayers(guessInput.value)), 60);
+  });
+  guessInput.addEventListener("keydown", e => {
+    if (suggest.hidden) return;
+    const n = sugItems.length;
+    if (e.key === "ArrowDown" && n) { e.preventDefault(); highlight((sugIdx + 1) % n); }
+    else if (e.key === "ArrowUp" && n) { e.preventDefault(); highlight((sugIdx - 1 + n) % n); }
+    else if (e.key === "Enter" && sugIdx >= 0) { e.preventDefault(); pick(sugIdx); }
+    else if (e.key === "Escape") hideSuggest();
+  });
+  suggest.addEventListener("mousedown", e => { const li = e.target.closest("li[data-k]"); if (li) { e.preventDefault(); pick(+li.dataset.k); } });
+  guessInput.addEventListener("blur", () => setTimeout(hideSuggest, 120));
+
+  function submitDraftText() {
+    const nq = normalize(guessInput.value);
+    if (!nq) return;
+    const exact = []; for (let k = 0; k < CATNORM.length; k++) if (CATNORM[k] === nq) exact.push(k);
+    const k = exact.find(x => !draftCheck(x));
+    if (k === undefined) { flashNote(exact.length ? `${catName(exact[0])} geht hier nicht: ${draftCheck(exact[0])}.` : "Bitte eine Nation, einen Verein oder einen Titel aus der Liste wählen."); return; }
+    applyDraft(k);
+  }
+
+  // ---------- Züge ----------
+  function flashError(msg) {
+    turnBanner.classList.add("err");
+    turnText.textContent = msg;
+  }
+  function failTurn(msg, delay = 1400, sound = "wrong") {
+    stopTimer();
+    SFX.play(sound);
+    if (sound === "wrong" || sound === "time") vibrate(120);
+    tick_log(msg.replace(/ – Zug verloren$/, " – Zug weg"));
+    turnEnded(state.turn);
+    flashError(msg);
+    state.busy = true; render();
+    const myRound = roundId;
+    setTimeout(() => {
+      if (myRound !== roundId) return;
+      turnBanner.classList.remove("err");
+      state.busy = false; state.activeCell = null;
+      state.turn = state.turn === "X" ? "O" : "X";
+      beginTurn();
+    }, delay);
+  }
+  function submitGuess() {
+    if (state.phase !== "play" || state.activeCell === null || state.over || state.busy) return;
+    const raw = guessInput.value.trim();
+    if (!raw) return;
+    const { r, c } = rc(state.activeCell);
+    const a = state.rows[r], b = state.cols[c];
+    let pool;
+    if (pendingPick !== null) pool = [pendingPick];
+    else { const nq = normalize(raw); pool = []; for (let i = 0; i < NORM.length; i++) if (NORM[i] === nq) pool.push(i); }
+    guessInput.value = ""; pendingPick = null; hideSuggest();
+    if (!pool.length) return failTurn("Spieler nicht in der Datenbank – Zug verloren");
+    if (!pool.some(eligible)) {
+      const p = DB.players[pool[0]];
+      const jg = p[1] ? " (Jg. " + p[1] + ")" : "";
+      const why = { oldies: `ist zu jung für „Oldies but Goldies“${jg}`, gen2000: `ist vor 2000 geboren${jg} – nicht „Born in the 2000s“`,
+                    klassik: `hat schon vor 2000 Profi gespielt${jg} – nicht im Klassik-Modus` }[state.variant] || "gehört nicht zu diesem Modus";
+      return failTurn(`${p[0]} ${why} – Zug verloren`);
+    }
+    pool = pool.filter(eligible);
+    const fits = pool.filter(i => hasCat(i, a) && hasCat(i, b));
+    if (!fits.length) return failTurn(`${DB.players[pool[0]][0]} passt nicht zu ${catName(a)} × ${catName(b)} – Zug verloren`);
+    const free = fits.filter(i => !state.used.has(i));
+    if (!free.length) return failTurn(`${DB.players[fits[0]][0]} wurde schon gesetzt – Zug verloren`);
+    place(free[0]);
+  }
+  guessForm.addEventListener("submit", e => {
+    e.preventDefault();
+    if (!suggest.hidden && sugIdx >= 0) return pick(sugIdx);
+    if (state.phase === "draft") {
+      if (!suggest.hidden && sugItems.length === 1) return pick(0);
+      return submitDraftText();
+    }
+    submitGuess();
+  });
+
+  function place(i) {
+    stopTimer();
+    turnEnded(state.turn);
+    tick_log(`${who(state.turn)} ${verb(state.turn, "setzt", "setzt")} ${DB.players[i][0]}`);
+    SFX.play(humanTurn() ? "correct" : "cpu");
+    state.cells[state.activeCell] = { s: state.turn, p: i };
+    state.used.add(i);
+    const win = checkWin();
+    if (win) {
+      state.over = true; state.score[win.s]++;
+      const stand = `${state.score.X} : ${state.score.O}`;
+      if (state.bestOf && state.score[win.s] >= needWins()) {
+        state.matchOver = true;
+        resultText.textContent = `${who(win.s)} ${verb(win.s, "gewinnst", "gewinnt")} das Spiel ${stand}!`;
+      } else {
+        resultText.textContent = `${who(win.s)} ${verb(win.s, "gewinnst", "gewinnt")} Runde ${state.roundNo} – Stand ${stand}`;
+      }
+      finish(); return;
+    }
+    if (state.cells.every(Boolean)) { state.over = true; resultText.textContent = `Runde ${state.roundNo} unentschieden – das Raster ist voll.`; finish(); return; }
+    state.turn = state.turn === "X" ? "O" : "X";
+    state.activeCell = null;
+    beginTurn();
+  }
+  let goalTimer = 0;
+  function showGoal(s) {
+    const el = $("goal-anim"), txt = $("goal-text");
+    clearTimeout(goalTimer);
+    txt.textContent = `Tor für ${who(s)}!`.replace("Tor für Du!", "Tor für dich!");
+    txt.style.color = s === "X" ? "var(--x-mark)" : "var(--o-mark)";
+    el.hidden = true; void el.offsetWidth; el.hidden = false;       // Animation neu starten
+    goalTimer = setTimeout(() => { el.hidden = true; }, 1950);
+  }
+  function finish() {
+    stopTimer();
+    const w = checkWin();
+    if (!w) SFX.play("draw");
+    else { SFX.play("goal"); vibrate([60, 40, 60, 40, 120]); showGoal(w.s); }   // Tor bei jedem Rundensieg, egal wer gewinnt
+    if (state.matchOver) setTimeout(() => SFX.play("final"), 1700);
+    $("play-again").textContent = state.matchOver ? "Neues Spiel" : "Nächste Runde";
+    tick_log(resultText.textContent.replace(/!$/, ""));
+    state.activeCell = null;
+    resultBanner.classList.add("show");
+    const lines = [];
+    for (let i = 0; i < 9; i++) {
+      if (state.cells[i]) continue;
+      const { r, c } = rc(i);
+      const a = state.rows[r], b = state.cols[c];
+      const cand = shuffle(candidates(a, b)).slice(0, 3).map(k => DB.players[k][0]);
+      if (cand.length) lines.push(`<b>${esc(catName(a))} × ${esc(catName(b))}</b>: z. B. ${cand.map(esc).join(", ")}`);
+    }
+    revealList.innerHTML = lines.length ? "Mögliche Antworten für offene Felder:<br>" + lines.join("<br>") : "";
+    render();
+  }
+
+  function maybeCpu() {
+    if (state.mode !== "cpu" || state.turn !== "O" || state.over || state.phase !== "play") return;
+    state.busy = true; render();
+    const myRound = roundId;
+    setTimeout(() => {
+      if (myRound !== roundId || state.over || state.turn !== "O") return;
+      if (cpuAnswersRequest()) return;
+      const empty = []; state.cells.forEach((v, i) => { if (!v) empty.push(i); });
+      const tryLine = s => { for (const l of WIN_LINES) { const mine = l.filter(i => state.cells[i] && state.cells[i].s === s).length; const open = l.filter(i => !state.cells[i]); if (mine === 2 && open.length === 1) return open[0]; } return null; };
+      let i = tryLine("O"); if (i === null) i = tryLine("X"); if (i === null) i = empty.includes(4) && Math.random() < 0.5 ? 4 : empty[Math.floor(Math.random() * empty.length)];
+      state.activeCell = i; state.busy = false;
+      const { r, c } = rc(i);
+      const pool = candidates(state.rows[r], state.cols[c]).filter(k => !state.used.has(k));
+      if (!pool.length || Math.random() < LEVELS[state.level].cpuMiss) return failTurn("Dem Computer fällt niemand ein – Zug verloren");
+      place(pool[Math.floor(Math.random() * pool.length)]);
+    }, 900);
+  }
+
+  // ---------- Steuerung ----------
+  function pressed(sel, attr, val) { document.querySelectorAll(sel).forEach(b => b.setAttribute("aria-pressed", String(b.dataset[attr] === String(val)))); }
+  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function setMode(m) {
+    state.mode = m;
+    $("name-field-o").hidden = m === "cpu";
+    $("name-label-x").textContent = m === "cpu" ? "Dein Name" : "Name Spieler 1";
+    $("name-input-x").placeholder = m === "cpu" ? "optional" : "Spieler 1";
+    $("mode-pvp").setAttribute("aria-pressed", String(m === "pvp"));
+    $("mode-cpu").setAttribute("aria-pressed", String(m === "cpu"));
+    store("kaderraster-mode", m);
+  }
+  function setLevel(l) { state.level = l; pressed("[data-lvl]", "lvl", l); store("kaderraster-level", l); }
+  const LEVEL_TXT = { easy: "Leicht: nur bekannte Vereine und große Fußballnationen", normal: "Mittel: breitere Auswahl an Vereinen und Nationen", hard: "Schwer: auch kleine und längst abgestiegene Vereine" };
+  const CAT_TXT = { random: "Zufall: das Raster wird ausgelost", draft: "Selbst wählen: ihr wählt die Kategorien abwechselnd, Spieler 1 die Zeilen, Spieler 2 bzw. der Computer die Spalten" };
+  const soundTxt = () => SFX.on ? "Ton: Pfiffe, Jubel und Ticken in den letzten Sekunden" : "Ton: aus";
+  const bestTxt = () => state.bestOf ? `Best of ${state.bestOf}: wer zuerst ${needWins()} Runden gewinnt, gewinnt das Spiel. Übersprungene Raster zählen nicht` : "Unbegrenzt: ihr spielt Runde um Runde, der Spielstand läuft einfach weiter";
+  const timeTxt = t => t ? `Zugzeit: ${t === 60 ? "1 Minute" : t + " Sekunden"} pro Zug` : "Zugzeit: ohne Zeitlimit";
+  function renderMenuHelp() {
+    $("menu-help").innerHTML = [bestTxt(), LEVEL_TXT[state.level], CAT_TXT[state.catMode], timeTxt(state.time), soundTxt()].map(t => `<li>${esc(t)}</li>`).join("");
+  }
+  const VARIANT_NAME = { alltime: "All Timer", klassik: "Klassik", gen2000: "Born in the 2000s", oldies: "Oldies but Goldies" };
+  const THEME = { alltime: ["", "#070a0e"], klassik: ["theme-klassik", "#060a11"], gen2000: ["theme-gen", "#09060f"], oldies: ["theme-retro", "#0b0906"] };
+  function setTheme(v) {
+    const root = document.documentElement;
+    for (const k in THEME) if (THEME[k][0]) root.classList.remove(THEME[k][0]);
+    const [cls, color] = THEME[v] || THEME.alltime;
+    if (cls) root.classList.add(cls);
+    const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = color;
+  }
+  function chooseVariant(v) {
+    state.variant = v;
+    setTheme(v);
+    const n = buildMask(v);
+    store("kaderraster-variant", v);
+    $("variant-tag").textContent = `${VARIANT_NAME[v]} · ${n.toLocaleString("de-DE")} Spieler`;
+    $("home").hidden = true; $("menu").hidden = false; $("game").hidden = true;
+    renderMenuHelp();
+    window.scrollTo({ top: 0 });
+  }
+  function toHome() {
+    $("menu").hidden = true; $("game").hidden = true; $("home").hidden = false;
+    setTheme("alltime");
+    syncBig();
+    window.scrollTo({ top: 0 });
+  }
+  function summary() {
+    const lv = { easy: "Leicht", normal: "Mittel", hard: "Schwer" }[state.level];
+    return [VARIANT_NAME[state.variant], state.mode === "cpu" ? "Gegen Computer" : "2 Spieler", lv, state.catMode === "draft" ? "Selbst wählen" : "Zufallsraster", state.bestOf ? "Best of " + state.bestOf : "Unbegrenzt", state.time ? (state.time === 60 ? "1 min" : state.time + " s") + " pro Zug" : "ohne Zeitlimit"].join(" · ");
+  }
+  function readNames() {
+    const clean = v => v.replace(/\s+/g, " ").trim().slice(0, 16);
+    state.names = { X: clean($("name-input-x").value), O: clean($("name-input-o").value) };
+    if (state.mode === "pvp" && state.names.X && state.names.X === state.names.O) state.names.O += " (2)";
+    store("kaderraster-names", JSON.stringify(state.names));
+  }
+  function startGame() {
+    readNames();
+    state.score = { X: 0, O: 0 }; state.roundNo = 1; state.matchOver = false;
+    $("menu").hidden = true; $("game").hidden = false;
+    $("game-summary").textContent = summary();
+    $("new-grid").textContent = state.catMode === "draft" ? "⟳ Neu wählen anfragen" : "⟳ Neues Raster anfragen";
+    newRound();
+    window.scrollTo({ top: 0 });
+  }
+  function toMenu() {
+    roundId++; stopTimer(); hideSuggest();
+    state.over = true; state.busy = false;
+    $("game").hidden = true; $("menu").hidden = false;
+    syncBig();
+    renderMenuHelp();
+  }
+  function setBest(n) { state.bestOf = n; pressed("[data-best]", "best", n); store("kaderraster-best", String(n)); }
+  const needWins = () => Math.floor(state.bestOf / 2) + 1;
+  function setTime(t) { state.time = t; pressed("[data-time]", "time", t); store("kaderraster-time", String(t)); }
+  function setCat(c) { state.catMode = c; pressed("[data-cat]", "cat", c); store("kaderraster-cat", c); }
+  $("mode-pvp").addEventListener("click", () => setMode("pvp"));
+  $("mode-cpu").addEventListener("click", () => setMode("cpu"));
+  document.querySelectorAll("[data-lvl]").forEach(b => b.addEventListener("click", () => { setLevel(b.dataset.lvl); renderMenuHelp(); }));
+  document.querySelectorAll("[data-time]").forEach(b => b.addEventListener("click", () => { setTime(+b.dataset.time); renderMenuHelp(); }));
+  document.querySelectorAll("[data-cat]").forEach(b => b.addEventListener("click", () => { setCat(b.dataset.cat); renderMenuHelp(); }));
+  $("start-btn").addEventListener("click", startGame);
+  document.querySelectorAll("[data-variant]").forEach(b => b.addEventListener("click", () => chooseVariant(b.dataset.variant)));
+  $("back-home").addEventListener("click", toHome);
+  $("menu-btn").addEventListener("click", toMenu);
+  $("menu-btn-2").addEventListener("click", toMenu);
+  $("new-grid").addEventListener("click", requestNewGrid);
+  $("request-accept").addEventListener("click", acceptRequest);
+  $("skip-btn").addEventListener("click", skipTurn);
+  document.querySelectorAll("[data-best]").forEach(b => b.addEventListener("click", () => { setBest(+b.dataset.best); renderMenuHelp(); }));
+  $("sound-btn").addEventListener("click", () => setSound(!SFX.on));
+  $("tab-modes").addEventListener("click", () => showHomeTab("modes"));
+  $("tab-settings").addEventListener("click", () => showHomeTab("settings"));
+  $("home").querySelector(".home-tabs").addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const s = $("tab-settings").getAttribute("aria-selected") === "true"; showHomeTab(s ? "modes" : "settings"); (s ? $("tab-modes") : $("tab-settings")).focus(); }
+  });
+  $("snd-all").addEventListener("click", () => { setSound(!SFX.on); if (SFX.on) SFX.play("correct"); });
+  $("snd-all-vol").addEventListener("input", e => { SFX.master = +e.target.value / 100; saveSoundPrefs(); renderSoundSettings(); });
+  $("snd-all-vol").addEventListener("change", () => SFX.play("correct", true));
+  $("snd-reset").addEventListener("click", () => { SFX.master = 1; SFX.vol = {}; SFX.mute = {}; saveSoundPrefs(); setSound(true); });
+  loadSoundPrefs(); buildSoundList(); renderSoundSettings();
+  document.querySelectorAll("[data-sound]").forEach(b => b.addEventListener("click", () => { setSound(b.dataset.sound === "on"); if (SFX.on) SFX.play("correct"); renderMenuHelp(); }));
+  $("play-again").addEventListener("click", () => {
+    if (state.matchOver) { state.score = { X: 0, O: 0 }; state.roundNo = 1; state.matchOver = false; }
+    else state.roundNo++;            // nur gespielte Runden zählen; ein angenommenes neues Raster zählt nicht
+    newRound();
+  });
+
+  // ---------- Start ----------
+  // Erst mit Versionsanhang (umgeht alte Kopien im Browser-Cache), sonst ohne – manche Hosts kennen keine Anhänge
+  fetch("players.json?v=2026-09-29b")
+    .then(r => r.ok ? r : fetch("players.json"), () => fetch("players.json"))
+    .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(db => {
+      prepare(db);
+      PRE2000 = new Set(db.pre2000 || []);
+      for (const v of Object.keys(VARIANT_NAME)) {
+        let n = 0; for (let i = 0; i < NP; i++) if (inVariant(v, i)) n++;
+        $("v-count-" + v).textContent = `${n.toLocaleString("de-DE")} Spieler`;
+      }
+      $("v-desc-oldies").textContent = `Nur Spieler, die mindestens 40 Jahre alt sind (Jahrgang ${OLDIES_MAX_YEAR} und früher).`;
+      document.querySelectorAll("[data-variant]").forEach(b => b.disabled = false);
+      $("datanote").textContent = `${db.players.length.toLocaleString("de-DE")} Spieler mit mindestens einer Station in Bundesliga, Premier League (inkl. alter First Division), La Liga, Serie A oder Ligue 1. Quelle: ${db.source}.`;
+      try {
+        const l = localStorage.getItem("kaderraster-level"); if (l && LEVELS[l]) setLevel(l);
+        const t = +localStorage.getItem("kaderraster-time"); if ([15, 30, 45, 60].includes(t)) setTime(t);
+        const bo = localStorage.getItem("kaderraster-best"); if (bo === "3" || bo === "5" || bo === "0") setBest(+bo);
+        const c = localStorage.getItem("kaderraster-cat"); if (c === "draft" || c === "random") setCat(c);
+        const m = localStorage.getItem("kaderraster-mode"); if (m === "cpu" || m === "pvp") setMode(m);
+        if (localStorage.getItem("kaderraster-sound") === "off") setSound(false);
+        const nm = JSON.parse(localStorage.getItem("kaderraster-names") || "null");
+        if (nm) { $("name-input-x").value = nm.X || ""; $("name-input-o").value = nm.O || ""; }
+      } catch (e) {}
+      renderMenuHelp();
+    })
+    .catch(err => {
+      document.querySelectorAll(".v-meta").forEach(e => e.textContent = "Spielerdatenbank fehlt");
+      $("datanote").textContent = "Die Spielerdatenbank (players.json) konnte nicht geladen werden. Liegt sie im selben Ordner wie diese Seite? (" + err.message + ")";
+    });
+})();
+</script>
+</body>
+</html>
