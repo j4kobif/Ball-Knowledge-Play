@@ -1,0 +1,233 @@
+Ball Knowledge-Play – Einsätze/Tore/Titel, Stand 2026-10-01
+Spieler gesamt: 54,944
+Wikidata-Zuordnung: 50,034 (91.1%), ohne Treffer 4,910, mehrdeutig 119
+Bearbeitet: 50,034
+Ligaspiele/Tore gefunden: 44,063 (88.1% der bearbeiteten)
+  nach Sprache: de: 18,452, en: 23,232, it: 2,379
+Spieler mit Titeln: 3,118, davon mit Mehrfachtitel aus Honours: 410
+Kürzere Spielernamen aus Wikipedia: 2,483 – z. B. Davi Machado dos Santos Araújo → Davi Araújo; Miguel Rodríguez Vidal → Miguel Rodríguez; Arsen Norairowitsch Sacharjan → Arsen Zakharyan; Rodrigo Sánchez Rodríguez → Rodri; Moacir Rodrigues dos Santos → Moacir; Jefferson Souza Arroz → Jefferson Arroz; Iván Pérez Muñoz → Iván Pérez; Joe Kendrick, Jr. → Joe Kendrick; Billy Watson, Snr. → Billy Watson; Carlos García Badías → Carlos García; Carlos Ruiz Herrero → Carlos; Muhammad Juzaili Samion → Juzaili Samion
+
+Stichprobe (Spiele / Tore / Titel gesamt / Quelle):
+  Peter Shilton (1949): 1005 / 1 / 2 / de
+  Jamie Cureton (1975): 975 / 363 / -1 / en
+  Tommy Hutchison (1947): 950 / 60 / -1 / de
+  Paul Bowgett (1955): 941 / 70 / -1 / en
+  Kevin Ellison (1979): 911 / 196 / -1 / en
+  Peter Clarke (1982): 896 / 60 / -1 / en
+  Jack Bentley (1942): 885 / 436 / -1 / en
+  César Caneda (1978): 873 / 20 / -1 / en
+  Robbie James (1957): 864 / 141 / -1 / en
+  Frank Worthington (1948): 853 / 270 / -1 / en
+  Neil Redfearn (1965): 851 / 176 / -1 / de
+  Graham Alexander (1971): 837 / 107 / -1 / de
+  Steve Claridge (1966): 829 / 256 / -1 / en
+  Terry Paine (1939): 824 / 168 / 1 / de
+  Anderson Luiz de Carvalho (1981): 819 / 237 / -1 / de
+  Chris Hope (1972): 819 / 66 / -1 / en
+  David James (1970): 817 / 0 / -1 / de
+  Zico (1953): 816 / 566 / -1 / de
+  Roberto Fernández Bonillo (1962): 810 / 136 / -1 / de
+  John Burridge (1951): 803 / 0 / -1 / en
+  Apodi (1986): 799 / 50 / -1 / en
+  Luke Chambers (1985): 791 / 38 / -1 / de
+  Lee Hughes (1976): 783 / 346 / -1 / en
+  Denis Godeas (1975): 779 / 317 / -1 / en
+  Andrés D’Alessandro (1981): 778 / 133 / -1 / de
+  Per Mertesacker (1984): 393 / 26 / 1 / de
+  Nico Rodewald (1998): 89 / 16 / -1 / de
+  Edgar Chadwick (1869): 465 / 145 / -1 / de
+  Paul Miller (1968): 308 / 45 / -1 / en
+  Ederson (1993): 407 / 0 / 1 / de
+  Paul Sanderson (1964): 152 / 9 / -1 / en
+  Klaus Ottens (1966): 185 / 36 / -1 / de
+  Fritz Fuchs (1943): 168 / 12 / -1 / en
+  Percy Gleeson (1921): 9 / 1 / -1 / en
+  Iván Gabrich (1972): 231 / 43 / -1 / en
+  Tommy Bamford (1905): 338 / 242 / -1 / en
+  Christoph Dabrowski (1978): 429 / 36 / -1 / de
+  Eddie Lloyd (1902): 157 / 4 / -1 / en
+  Ruud Krol (1949): 525 / 24 / 3 / de
+  Oier Zarraga (1999): 225 / 18 / -1 / de
+  Pascal Dupraz (1962): 197 / 24 / -1 / en
+  Archie Heslop (1903): 51 / 12 / -1 / en
+  Andy Sinton (1966): 684 / 68 / -1 / de
+  Pietro Ferrari (1914): 188 / 0 / -1 / en
+  Darragh Lenihan (1994): 301 / 11 / -1 / en
+  Juan Antonio López Moreno (1958): 325 / 16 / -1 / en
+  Ian Forns (2004): 68 / 5 / -1 / en
+  Graziano Landoni (1939): 421 / 26 / -1 / it
+  Aldo Boffi (1915): 271 / 168 / -1 / de
+  Chris Lawler (1943): 519 / 46 / 1 / de
+
+Ohne Einsatzdaten (Auswahl):
+  Mayk Bullerjahn (1963) Q1000050 ['de']
+  János Füzér (1916) Q1006755 ['it']
+  Dezső Gencsy (1897) Q1009087 ['it']
+  Dieter Krafczyk (1941) Q1022371 ['de']
+  Amedeo Balestrieri (1939) Q1024120 ['it']
+  Davide Ballardini (1964) Q1024171 ['de', 'en', 'it']
+  Ivo Ballardini (1955) Q1024184 ['it']
+  Max Fischer (1927) Q1029116 ['de']
+  Camille Cottin (1910) Q1029156 ['de']
+  Dudu (1939) Q10293011 ['en']
+  János Hanek (1937) Q1033494 ['de', 'it']
+  Norman Smith (1897) Q10337411 ['en', 'it']
+  Harry Goodley (1880) Q1035366 ['it']
+  Pat Sharkey (1953) Q10377564 ['en']
+  Matthew Turner (1981) Q10379507 ['en']
+  Mark Robinson (1981) Q10379723 ['en']
+  Junior Osborne (1988) Q10379778 ['en']
+  Steve Baker (1978) Q10379857 ['en']
+  Tony Coleman (1945) Q10381900 ['de', 'en']
+  Paul Blades (1965) Q10388516 ['en']
+  Mickey Burns (1946) Q10392313 ['en']
+  Tony Thorpe (1974) Q10394792 ['en']
+  Gerry Murphy (1943) Q10394954 ['en']
+  Jimmy Corbett (1980) Q10396118 ['en']
+  Fred Everiss (1882) Q10396682 ['en']
+  Jackie Milburn (1920) Q10396721 ['en']
+  Matt Clarke (1973) Q10396798 ['en']
+  Tommy Gaynor (1963) Q10396959 ['en']
+  Ken DeMange (1964) Q10396960 ['en']
+  Stuart Beavon (1958) Q10404949 ['en']
+  Jimmy McAlinden (1917) Q10405755 ['en']
+  John Woodward (1949) Q10406852 ['en']
+  Neil Whitworth (1972) Q10410370 ['en']
+  Jason White (1971) Q10412305 ['en']
+  Norman Wharton (1903) Q10415351 ['en']
+  Jos van Herpen (1962) Q10418910 ['en']
+  Horace Husler (1890) Q10420379 ['en']
+  Barry Powell (1954) Q10422922 ['en', 'it']
+  Jim Molyneux (1895) Q10423097 ['en']
+  Gastone Ballarini (1937) Q1042404 ['it']
+
+Diagnose Infobox (nicht auswertbar):
+  [de] Mayk Bullerjahn: keine Infobox gefunden – Anfang: '''Mayk Bullerjahn''' (* [[1. November]] [[1963]] in [[Greifswald]]) ist ein ehemaliger [[Deutschland|deutscher]] [[Fußballspieler]], der zwischen 1982 und 1987 für den [[Hansa Rostock|F.C. Hansa Rost
+  [de] Rudi Lorch: Infobox Fußballspieler ⏎ | kurzname = Rudi Lorch ⏎ | bildname =  ⏎ | langname = Rudi Lorch ⏎ | geburtstag = [[20. Januar]] [[1966]] ⏎ | geburtsort =  ⏎ | geburtsland =  ⏎ | sterbedatum =  ⏎ | sterbeort =  ⏎ | sterbeland =  ⏎ | größe = 166 cm ⏎ | position = [[Stürmer (Fußball)|Stürmer]] ⏎ | jugendvereine_tabelle =  ⏎ {{Team-Station|         |TSG Schnaitheim}} ⏎ {{Team-Station|{{0|0000}}–1982|[[1. FC Heidenheim|SB Heidenheim]]}} ⏎ {{Team-Station|1982–1984|[[VfB Stuttgart]]}} ⏎ | vereine_tabelle =  ⏎ {{Team-Station|1984–1985|[[VfB Stuttgart]]|24 (0)}} ⏎ {{Team-Station|1986     |[[SSV Ulm 1846]]|7 (2)}} ⏎ {{Team-Station|1986–1989|[[VfR Aalen]]|? (?)}} ⏎ | nationalmannschaft_tabelle =  ⏎ | trainer_tabelle =  ⏎ {{Team-Station||Sportfreunde 
+  [de] Marco Grimm: Infobox Fußballspieler ⏎ | kurzname            =  ⏎ | bildname            = ⏎ | bildunterschrift    = ⏎ | langname            = ⏎ | geburtstag          = [[16. Juni]] [[1972]] ⏎ | geburtsort          = [[Baden-Baden]] ⏎ | geburtsland         = [[Deutschland]] ⏎ | sterbedatum         = ⏎ | sterbeort           = ⏎ | sterbeland          = ⏎ | größe               = 186 cm ⏎ | position            = [[Abwehrspieler#Fußball|Abwehr]] ([[Innenverteidiger|Innenverteidigung]]) ⏎ | jugendvereine_tabelle = ⏎ {{Team-Station|1978–1988|FV Hörden}} ⏎ {{Team-Station|1988–1990|SV Kuppenheim}} ⏎ | vereine_tabelle = ⏎ {{Team-Station|1990–1992|[[SV Kuppenheim]]|? (?)}} ⏎ {{Team-Station|1992–1993|[[VfB Gaggenau]]|33 (2)}} ⏎ {{Team-Station|1993–1995|[[
+  [de] Aitor Paredes: Infobox Fußballspieler ⏎ | bildname                   = ABFRAGE_WIKIDATA ⏎ | geburtstag                 = ABFRAGE_WIKIDATA ⏎ | geburtsort                 = ABFRAGE_WIKIDATA ⏎ | geburtsland                = ABFRAGE_WIKIDATA ⏎ | größe                      = ABFRAGE_WIKIDATA ⏎ | position                   = ABFRAGE_WIKIDATA ⏎ | vereine_tabelle            = ABFRAGE_WIKIDATA ⏎ | nationalmannschaft_tabelle = ABFRAGE_WIKIDATA ⏎ | lgupdate                   = ABFRAGE_WIKIDATA ⏎ | nmupdate                   = ABFRAGE_WIKIDATA ⏎ 
+  [de] Werner Dreßel: keine Infobox gefunden – Anfang: '''Werner Dreßel''' (* [[30. August]] [[1958]] in [[Hambach (Dittelbrunn)|Hambach]], [[Unterfranken]]) ist ein ehemaliger [[Deutschland|deutscher]] [[Fußball]]spieler, der von 1977 bis 1986 in der [[F
+  [de] Martin Vitík: Infobox Fußballspieler ⏎ | bildname                   = ABFRAGE_WIKIDATA ⏎ | geburtstag                 = ABFRAGE_WIKIDATA ⏎ | geburtsort                 = ABFRAGE_WIKIDATA ⏎ | geburtsland                = ABFRAGE_WIKIDATA ⏎ | größe                      = ABFRAGE_WIKIDATA ⏎ | position                   = ABFRAGE_WIKIDATA ⏎ | vereine_tabelle            = ABFRAGE_WIKIDATA ⏎ | nationalmannschaft_tabelle = ⏎ {{Team-Station|2023–|[[Tschechische Fußballnationalmannschaft|Tschechien]]|9 (0)}} ⏎ | lgupdate = ABFRAGE_WIKIDATA ⏎ | nmupdate = 2026-04-05 ⏎ 
+  [en] Davide Ballardini: Infobox football biography ⏎ | name = Davide Ballardini ⏎ | image = Davide Ballardini cropped.JPG ⏎ | caption = Ballardini as [[SS Lazio|Lazio]] manager in 2009 ⏎ | full_name = Davide Ballardini<ref>{{cite web |url=http://www.legaseriea.it/uploads/default/attachments/comunicati/comunicati_m/4055/files/allegati/4060/cu_109.pdf |title=Comunicato Ufficiale N. 109 |trans-title=Official Press Release No. 109 |publisher=Lega Serie A |page=7 |date=20 January 2014 |access-date=7 December 2020 |language=it |archive-date=25 March 2022 |archive-url=https://web.archive.org/web/20220325120502/https://www.legaseriea.it/uploads/default/attachments/comunicati/comunicati_m/4055/files/allegati/4060/cu_109.pdf |url-st
+  [en] Dudu: Infobox football biography ⏎ | name = Dudu ⏎ | image = Busto de Olegário Tolói de Oliveira no complexo esportivo Allianz Parque (2020).jpg ⏎ | caption = Bust of Dudu at [[Allianz Parque]] in [[São Paulo]], Brazil ⏎ | full_name = Olegário Tolóí de Oliveira ⏎ | birth_date = {{birth date|1939|11|7|df=yes}} ⏎ | birth_place = [[Araraquara]], [[São Paulo (state)|São Paulo]], [[Vargas Era|Brazil]] ⏎ | death_date = {{death date and age|2024|6|28|1939|11|7|df=yes}} ⏎ | death_place = [[São Paulo]], Brazil ⏎ | height = 1.72 m ⏎ | position = [[Midfielder]] ⏎ | years1 = 1959–1963 ⏎ | clubs1 = [[Associação Ferroviária de Esportes|Ferroviária]] ⏎ | years2 = 1964–1975 ⏎ | clubs2 = [[Sociedade Esportiva Palmeiras|Palmeiras]] ⏎ | years3 =
+  [en] Norman Smith: Infobox football biography ⏎ | name     = Norman Smith ⏎ | fullname       = Norman Smith ⏎ | birth_date    = {{birth date|1897|12|15|df=y}} ⏎ | birth_place = [[Newburn]], [[Newcastle upon Tyne]], England ⏎ | death_date    = {{death date and age|1978|5|18|1897|12|15|df=y}} ⏎ | death_place = Newcastle, England ⏎ | height = {{height|ft=5|in=8}}<ref>{{cite news |title=Prospects of the clubs in the First Division of the League. Huddersfield Town |author=Woolwinder |newspaper=Athletic News |location=Manchester |date=20 August 1923 |page=5}}</ref> ⏎ | position  = [[Defender (association football)|Defender]] ⏎ | years1 = 1924–1927   ⏎ | clubs1 = [[Huddersfield Town A.F.C.|Huddersfield Town]]   ⏎ | caps1 =  24    ⏎ | goals1
+  [en] Pat Sharkey: Infobox football biography ⏎ | name = Pat Sharkey ⏎ | image =  ⏎ | fullname = Patrick Gerald Walter Sharkey ⏎ | height =  ⏎ | birth_date = {{Birth date and age|df=y|1953|08|26}} ⏎ | birth_place = [[Omagh]], Northern Ireland ⏎ | position = [[Midfielder]] ⏎ | youthyears1 =  ⏎ | youthclubs1 =  ⏎ | years1 = 1970–1971 ⏎ | years2 = 1971–1973 ⏎ | years3 = 1973–1977 ⏎ | years4 = 1976–1977 ⏎ | years5 = 1977–1978 ⏎ | years6 = 1978 ⏎ | years7 = 1978–1980 ⏎ | years8 = 1980–1981 ⏎ | years9 = 1981–1982 ⏎ | years10 = 1982–? ⏎ | years11 =  ⏎ | clubs1 = [[Sligo Rovers F.C.|Sligo Rovers]] ⏎ | clubs2 = [[Portadown F.C.|Portadown]] ⏎ | clubs3 = [[Ipswich Town F.C.|Ipswich Town]] ⏎ | clubs4 = → [[Millwall F.C.|Millwall]] (loan) ⏎ | clubs5 = [[Mansfield Town F.C
+  [en] Matthew Turner: Infobox football biography ⏎ | name = Matthew Turner ⏎ | image =  ⏎ | caption =  ⏎ | fullname =  ⏎ | birth_date = {{birth date and age|df=y|1981|12|29}} ⏎ | birth_place = [[Nottingham]], England ⏎ | height =  ⏎ | position = Winger, [[Forward (association football)|Forward]] ⏎ | youthyears1 = 1999–2001 ⏎ | youthclubs1 = [[Nottingham Forest F.C.|Nottingham Forest]] ⏎ | years1 = 2001–2003 ⏎ | years2 = 2003–2004 ⏎ | years3 = 2004–2005 ⏎ | years4 = 2005 ⏎ | years5 = 2005 ⏎ | years6 = 2006 ⏎ | years7 = 2006 ⏎ | clubs1 = [[West Bromwich Albion F.C.|West Bromwich Albion]] ⏎ | clubs2 = [[Herfølge Boldklub|Herfølge]] ⏎ | clubs3 = [[Hednesford Town F.C.|Hednesford Town]] ⏎ | clubs4 = [[Eastwood Town F.C.|Eastwood Town]] ⏎ | clubs5 = [[Ilkeston T
+  [en] Mark Robinson: Infobox football biography ⏎ | name                = Mark Robinson ⏎ | image               = Mark Robinson 1.png ⏎ | image_size          =  ⏎ | caption             = Robinson with [[York City F.C.|York City]] following the [[2009 FA Trophy Final]] ⏎ | fullname            = Mark Andrew Robinson<ref name="List of Players under Written Contract Registered Between 01/03/2010 and 31/03/2010">{{Cite web| title = List of Players under Written Contract Registered Between 01/03/2010 and 31/03/2010 | url = http://www.thefa.com/TheFA/RulesandRegulations/~/media/Files/PDF/TheFA/PlayerRegistrations/March2010PlayerRegs.ashx/March2010PlayerRegs.pdf | publisher = The Football Association | access-date = 8 April 2010}
+  [it] János Füzér: Sportivo ⏎ |Nome= János Füzér ⏎ |Immagine=  ⏎ |Sesso= M ⏎ |CodiceNazione = {{HUN}} ⏎ |Disciplina= Calcio ⏎ |Ruolo= [[Attaccante]], [[centrocampista]] ⏎ |Squadra=  ⏎ |TermineCarriera=  ⏎ |Squadre=  ⏎ {{Carriera sportivo ⏎  |sport = calcio |pos = G ⏎  |1938-1945 |Diosgyor |? (17+) ⏎  |1945-1947 |MTK Budapest |32 (15) ⏎  |1947 |Ferar Cluj |3 (1) ⏎  |1947-1948 |Genoa |7 (0) ⏎  |1948-1949 |Pisa |26 (10) ⏎  |1949-1950 |Savona |16 (9) ⏎  |1950-1951 |Parma |13 (3) ⏎ }} ⏎ |SquadreNazionali= ⏎ {{Carriera sportivo ⏎  |1942 |{{Naz|CA|HUN 1918-1940|M}}| 1 (0) ⏎ }} ⏎ |Vittorie=  ⏎ |Incontri=  ⏎ |Allenatore= ⏎ |Aggiornato=  ⏎ 
+  [it] Dezső Gencsy: Sportivo ⏎ |Nome=Dezső Gencsy ⏎ |Immagine= ⏎ |Sesso=M ⏎ |CodiceNazione = {{HUN}} ⏎ |Altezza= ⏎ |Disciplina=Calcio ⏎ |Ruolo=[[Allenatore]] <small>(ex [[attaccante]])</small> ⏎ |Squadra= ⏎ |TermineCarriera=1927 - giocatore <br/> 1951 - allenatore ⏎ |Squadre= ⏎ {{Carriera sportivo ⏎  |sport = calcio |pos = G ⏎  |1921|Nemzeti Budapest|? (?) ⏎  |1921-1924|Saarbrucken|? (?) ⏎  |1924-1925|Union 03|? (?) ⏎  |1925-1926|Derthona|? (?) ⏎  |1926-1927|Genoa|8 (3) ⏎ }} ⏎ |SquadreNazionali= ⏎ {{Carriera sportivo ⏎  |1921 |{{Naz|CA|HUN 1918-1940|M}} | 1 (0) ⏎ }} ⏎ |Vittorie= ⏎ |Incontri= ⏎ |Allenatore= ⏎ {{Carriera sportivo ⏎  |sport = calcio |pos = A ⏎  |1934-1935 |Vianense | ⏎  |1935-1936 |Deportivo La Coruna | ⏎  |1941 |Porto | ⏎  |1946-1947 |Famalicao | ⏎  |1949-195
+  [it] Amedeo Balestrieri: Sportivo ⏎ |Nome= Amedeo Balestrieri ⏎ |Immagine = Amedeo Balestrieri - Parma AS (2).jpg ⏎ |Didascalia = Balestrieri in azione al Parma ⏎ |Sesso= M ⏎ |CodiceNazione = {{ITA}} ⏎ |Altezza=  ⏎ |Disciplina= Calcio ⏎ |Ruolo= [[Attaccante (calcio)|Attaccante]] ⏎ |Squadra=  ⏎ |TermineCarriera= 1972  ⏎ |SquadreGiovanili= ⏎ {{Carriera sportivo ⏎ |sport = calcio ⏎  |19??-19?? |Parma<ref>{{cita news|url=http://dlib.coninet.it/bookreader.php?&c=1&f=10336&p=2#page/2/mode/2up|titolo=Le liste di trasferimento della Lega Nazionale|pubblicazione=Corriere dello Sport|data=2 settembre 1955|p=3}}</ref> | ⏎ }} ⏎ |Squadre=  ⏎ {{Carriera sportivo ⏎ |sport = calcio |pos = G ⏎  |1956-1957 |Parma |1 (0) ⏎  |1957-1958 |{{simbolo|Bianco e Rosso.svg}} Liberta
+  [it] Davide Ballardini: Sportivo ⏎ |Nome = Davide Ballardini ⏎ |Immagine = Davide Ballardini cropped.JPG ⏎ |Didascalia = Ballardini nel 2009 ai tempi della Lazio ⏎ |Sesso = M ⏎ |CodiceNazione = {{ITA}} ⏎ |Disciplina = Calcio ⏎ |Ruolo = [[Allenatore]] <small>(ex [[centrocampista]])</small> ⏎ |Squadra =  ⏎ |TermineCarriera = 1º luglio 1985 - giocatore ⏎ |SquadreGiovanili = {{Carriera sportivo ⏎  |sport = calcio ⏎  |1978-1982|Cesena| ⏎ }} ⏎ |Squadre = {{Carriera sportivo ⏎  |sport = calcio ⏎  |pos = G ⏎  |1982-1984|Cesena|0 (0) ⏎  |1984-1985|Faenza|? (?) ⏎ }} ⏎ |Allenatore = {{Carriera sportivo ⏎  |sport = calcio ⏎  |pos = A ⏎  |1988-1993|{{Calcio Bologna}}|<small>Giovanili</small> ⏎  |1993-1996|{{Calcio Cesena}}|<small>Giovanili</small> ⏎  |1996-1999|{{Calcio Ravenn
+  [it] Ivo Ballardini: Sportivo ⏎ |Nome = Ivo Ballardini ⏎ |Immagine =  ⏎ |Sesso = M ⏎ |CodiceNazione = {{ITA}} ⏎ |Disciplina = Calcio ⏎ |Ruolo = [[Centrocampista]] ⏎ |TermineCarriera = 1989 ⏎ |Squadre =  ⏎ {{Carriera sportivo ⏎  |sport = calcio |pos = G ⏎  |1974-1975 |Bologna |0 (0) ⏎  |1975-1977 |Imola |42 (0) ⏎  |1977-1979 |Vis Pesaro |58 (2) ⏎  |1979-1981 |Fano |50 (3) ⏎  |1981-1984 |Ancona |89 (3) ⏎  |1984-1988 |Modena |116 (0) ⏎  |1988-1989 |Faenza |? (?) ⏎ }} ⏎ 
+  [it] János Hanek: Sportivo ⏎ |Nome = János Hanek ⏎ |Immagine =  ⏎ |Didascalia =  ⏎ |CodiceNazione = {{HUN}} ⏎ |Altezza =  ⏎ |Disciplina = Calcio ⏎ |Ruolo = [[Attaccante (calcio)|Attaccante]] e [[centrocampista]] ⏎ |Squadra= ⏎ |TermineCarriera = 1970 ⏎ |SquadreGiovanili= ⏎ {{Carriera sportivo ⏎  |sport = calcio |pos = G ⏎  |1955-1957|Ferencvaros<ref>Sino al 1956 "Kiniszi".</ref>| ⏎ }} ⏎ |Squadre=  ⏎ {{Carriera sportivo ⏎  |sport = calcio |pos = G ⏎  |1957-1958|Eintracht Francoforte|2 (0)<ref name=kicker>{{cita web|url=http://www.kickersarchiv.de/index.php/Main/HanekJanos|sito=Kickersarchiv.de|titolo=Hanek, Janos|accesso=5 maggio 2020|lingua=de}}</ref> ⏎  |1958-1960|Stuttgarter Kickers|49 (10)<ref name=kicker /> ⏎  |1960-1962|DOS|67 (33)<ref name=ere
+
+Diagnose Titel (gezählte Zeilen):
+  Nicolas Jackson ['Conference-League-Sieger'] -> {'cl': 0, 'el': 0, 'ecl': 1, 'wc': 0, 'euro': 0}
+      *UEFA Conference League: 2024–25
+  Felix Irorere ['Europa-League-Sieger'] -> {'cl': 0, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      
+  Yéremi Pino ['WM-Sieger', 'Europa-League-Sieger', 'Conference-League-Sieger'] -> {'cl': 0, 'el': 1, 'ecl': 1, 'wc': 1, 'euro': 0}
+      * UEFA Europa League: 2020–21
+      *UEFA Conference League: 2025–26
+      *FIFA World Cup: 2026
+  Fabio Cannavaro ['WM-Sieger', 'Europa-League-Sieger'] -> {'cl': 0, 'el': 1, 'ecl': 0, 'wc': 1, 'euro': 0}
+      *UEFA Cup: 1998–99
+      *FIFA World Cup: 2006
+      *UEFA European Championship runner-up: 2000
+      *UEFA European Championship Team of the Tournament: 2000
+      *FIFA World Cup Silver Ball: 2006
+      *FIFA World Cup All-Star Team: 2006
+  Dane Scarlett ['Europa-League-Sieger'] -> {'cl': 0, 'el': 1, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *UEFA Europa League: 2024–25
+  João Carlos Teixeira ['CL-Sieger'] -> {'cl': 0, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      
+  Erwin Hadewicz ['CL-Sieger'] -> {'cl': 1, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      * European Cup winner: 1973–74
+  Brian Mooney ['CL-Sieger'] -> {'cl': 0, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      
+  Raúl ['CL-Sieger'] -> {'cl': 3, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *UEFA Champions League: 1997–98, 1999–2000, 2001–02
+      *UEFA Champions League top goalscorer: 1999–2000, 2000–01
+      *UEFA Champions League top assist provider: 2002–03
+  Iker Casillas ['WM-Sieger', 'EM-Sieger', 'CL-Sieger'] -> {'cl': 3, 'el': 0, 'ecl': 0, 'wc': 1, 'euro': 2}
+      *UEFA Champions League: 1999–2000, 2001–02, 2013–14
+      *FIFA World Cup: 2010
+      *UEFA European Championship: 2008, 2012
+      *FIFA World Cup Golden Glove: 2010
+      *FIFA World Cup Dream Team: 2010
+      *UEFA Euro Team of the Tournament: 2008, 2012
+      *Second-most appearances in the UEFA Champions League: 177 (behind Cristiano Ronaldo) (excluding 4 appearances in the qualifying rounds)
+      *Second-most clean sheets in the UEFA Champions League: 57 (excluding 2 in the qualifying rounds) (behind Manuel Neuer)
+      *Third-most victories in the UEFA Champions League: 101 (behind Cristiano Ronaldo and Thomas Müller)
+      *Most consecutive seasons in the UEFA Champions League: 20
+      *First player in UEFA Champions League history to reach the knockout phase 19 times
+      *First goalkeeper to win 100 UEFA Champions League matches
+      *Youngest goalkeeper to play in a UEFA Champions League final: 19 years and 4 days
+      *Youngest goalkeeper to win a UEFA Champions League final: 19 years and 4 days
+      *Most penalty kicks saved in the UEFA Champions League (excluding shoot-outs): 7 out of 23
+      *Second-most UEFA Champions League titles won by a goalkeeper: 3 (behind Juan Alonso) (alongside Ray Clemence, Sepp Maier, Keylor Navas, Heinz Stuy, Víctor Vald
+      *Most FIFA World Cup tournaments played for Spain: 4 (alongside Xavi, Andoni Zubizarreta, Fernando Hierro, Andrés Iniesta, Sergio Ramos and Sergio Busquets)
+      *Longest unbeaten run at the UEFA European Championship: 509 minutes
+      *Most clean sheets at the UEFA European Championship: 9 (alongside Edwin van der Sar)
+      *Most clean sheets in a single edition of UEFA European Championship: 5 (in 2012, alongside Jordan Pickford in 2020)
+      *Fewest goals conceded in a single edition of the UEFA European Championship: 1 (in 2012, alongside Gianluigi Buffon, Thomas Myhre, and Dino Zoff)
+      *Most penalty kicks saved in penalty shoot-outs at the UEFA European Championship: 3 (alongside Gianluigi Buffon)
+      *Only goalkeeper to stop penalties in two different editions of the FIFA World Cup (excluding shoot-outs): 2002 (vs Ireland), 2010 (vs Paraguay)
+  Tommy Smith ['CL-Sieger', 'Europa-League-Sieger'] -> {'cl': 2, 'el': 2, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1976–77, 1977–78
+      *UEFA Cup: 1972–73, 1975–76
+  Raymond Kopa ['CL-Sieger'] -> {'cl': 3, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1956–57, 1957–58, 1958–59{{citation needed|date=January 2021}}
+      *FIFA World Cup third place: 1958{{citation needed|date=January 2021}}
+      *FIFA World Cup All-Star Team: 1958{{citation needed|date=January 2021}}
+  David Johnson ['CL-Sieger'] -> {'cl': 3, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1976–77, 1977–78, 1980–81
+  Samuel Eto’o ['CL-Sieger'] -> {'cl': 4, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *UEFA Champions League: 1999–2000
+      *UEFA Champions League: 2005–06, 2008–09
+      *UEFA Champions League: 2009–10
+      * UEFA Champions League top assist provider: 2005–06
+      * UEFA Champions League Squad of the Season: 2005–06,2008–09  ,2009–10 , 2010–11
+  Dani Carvajal ['EM-Sieger', 'CL-Sieger'] -> {'cl': 6, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 1}
+      *UEFA Champions League: 2013–14, 2015–16, 2016–17, 2017–18, 2021–22, 2023–24
+      *UEFA European Championship: 2024
+      *UEFA Champions League Team of the Season: 2013–14, 2016–17, 2023–24
+  Toni Kroos ['WM-Sieger', 'CL-Sieger'] -> {'cl': 6, 'el': 0, 'ecl': 0, 'wc': 1, 'euro': 0}
+      * UEFA Champions League: 2012–13
+      * UEFA Champions League: 2015–16, 2016–17, 2017–18, 2021–22, 2023–24
+      * FIFA World Cup: 2014
+      * UEFA Champions League Squad of the Season: 2013–14, 2014–15, 2015–16, 2016–17, 2017–18
+      *FIFA World Cup All-Star Team: 2014
+      * FIFA World Cup Dream Team: 2014
+      * UEFA European Championship Team of the Tournament: 2016
+  Enrique Mateos ['CL-Sieger'] -> {'cl': 4, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1956–57, 1957–58, 1958–59, 1959–60
+  Steve Heighway ['CL-Sieger', 'Europa-League-Sieger'] -> {'cl': 2, 'el': 2, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1976–77, 1977–78
+      *UEFA Cup: 1972–73, 1975–76
+  Joseíto ['CL-Sieger'] -> {'cl': 4, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1955–56, 1956–57, 1957–58, 1958–59
+  Gerrie Mühren ['CL-Sieger'] -> {'cl': 3, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      * European Cup: 1970–71, 1971–72, 1972–73
+  Alfredo Di Stéfano ['CL-Sieger'] -> {'cl': 5, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1955–56, 1956–57, 1957–58, 1958–59, 1959–60; runner-up: 1961–62, 1963–64
+      *European Cup top scorer: 1957–58
+      *European Cup Winners' Cup: 1979–80
+      *Scored in most European Cup finals: five
+      *Scored in most consecutive European Cup finals: five
+      *Most goals scored in European Cup finals: seven (shared with Ferenc Puskás)
+  Jimmy Case ['CL-Sieger', 'Europa-League-Sieger'] -> {'cl': 3, 'el': 1, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *European Cup: 1976–77, 1977–78, 1980–81
+      *UEFA Cup: 1975–76
+  Dani Ceballos ['CL-Sieger'] -> {'cl': 3, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      *UEFA Champions League: 2017–18, 2021–22, 2023–24
+  Juan Alonso ['CL-Sieger'] -> {'cl': 5, 'el': 0, 'ecl': 0, 'wc': 0, 'euro': 0}
+      * European Cup: 1955–56, 1956–57, 1957–58, 1958–59, 1959–60
+  Carles Puyol ['WM-Sieger', 'EM-Sieger', 'CL-Sieger'] -> {'cl': 3, 'el': 0, 'ecl': 0, 'wc': 1, 'euro': 1}
+      *UEFA Champions League: 2005–06, 2008–09, 2010–11
+      *FIFA World Cup: 2010
+      *UEFA European Championship: 2008
+      *UEFA European Championship Team of the Tournament: 2008
+      *FIFA World Cup All-Star Team: 2010
+      *FIFA World Cup Dream Team: 2010
+      *UEFA Euro All-time XI (published 2016)
