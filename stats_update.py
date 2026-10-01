@@ -35,7 +35,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
-QLEVER = "https://qlever.cs.uni-freiburg.de/api/wikidata"
+QLEVER = "https://qlever.dev/api/wikidata"
 LANGS = ["de", "en", "it"]                      # Reihenfolge = Vorrang bei Einsätzen/Toren
 REPO = os.environ.get("GITHUB_REPOSITORY", "j4kobif/Ball-Knowledge-Play")
 UA = f"BallKnowledgePlay-DataUpdate/1.0 (https://github.com/{REPO}; football quiz, non-bulk polite client)"
@@ -64,12 +64,19 @@ def http(url, data=None, headers=None, tries=6, timeout=300):
     body = urllib.parse.urlencode(data).encode() if data is not None else None
     h = {"User-Agent": UA}
     h.update(headers or {})
+    redirects = 0
     for attempt in range(1, tries + 1):
         try:
             req = urllib.request.Request(url, data=body, headers=h)
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 return r.read().decode("utf-8")
         except urllib.error.HTTPError as e:
+            loc = e.headers.get("Location") if e.headers else None
+            if e.code in (301, 302, 303, 307, 308) and loc and redirects < 5:
+                url = urllib.parse.urljoin(url, loc)              # Umzug des Servers: neue Adresse nehmen, Anfrage wiederholen
+                redirects += 1
+                log(f"  Weiterleitung nach {url}")
+                continue
             if e.code in (429, 500, 502, 503, 504) and attempt < tries:
                 wait = int(e.headers.get("Retry-After") or 0) or 5 * attempt
                 log(f"  HTTP {e.code}, warte {wait}s …")
