@@ -682,6 +682,23 @@
   .pk-trophies { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13.5px; background: var(--surface-2); }
   .pk-trophies[hidden] { display: none; }
   .pk-ads { animation: pkAds 26s linear infinite; }
+  #pk-keeper-idle.on { animation: pkKIdle 0.9s ease-in-out infinite alternate; }
+  @keyframes pkKIdle { 0% { transform: translateX(-3.5px); } 50% { transform: translate(0, -1.5px); } 100% { transform: translateX(3.5px); } }
+  .pk-svg.arrive { animation: pkArrive 0.9s cubic-bezier(.2,.8,.3,1) both; }
+  @keyframes pkArrive { from { transform: scale(1.9); filter: blur(4px) brightness(1.6); opacity: .3; } to { transform: none; filter: none; opacity: 1; } }
+  .pk-travel { position: absolute; inset: 0; z-index: 8; cursor: pointer; background: #050a12; }
+  .pk-travel[hidden] { display: none; }
+  .pk-travel svg { width: 100%; height: 100%; display: block; }
+  .pk-travel .tv-cloud { animation: pkCloud 3.2s linear both; }
+  @keyframes pkCloud { from { transform: translateX(80px); } to { transform: translateX(-140px); } }
+  .pk-travel .tv-fade { animation: pkFadeIn .5s ease both; }
+  .pk-travel .tv-late { animation: pkFadeIn .5s ease 1.7s both; }
+  .pk-travel .tv-pulse { animation: pkPulse .5s ease-in-out 1.9s 3 alternate both; transform-box: fill-box; transform-origin: 50% 50%; }
+  @keyframes pkFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+  @keyframes pkPulse { from { transform: scale(1); } to { transform: scale(1.18); } }
+  .pk-travel.zoom svg { animation: pkZoomIn .6s ease-in forwards; transform-origin: var(--zx, 82%) var(--zy, 70%); }
+  @keyframes pkZoomIn { to { transform: scale(5); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { #pk-keeper-idle.on, .pk-svg.arrive, .pk-travel *, .pk-travel.zoom svg { animation: none !important; } }
   @keyframes pkAds { from { transform: translateX(0); } to { transform: translateX(-262px); } }
   #pk-crowd.cheer { animation: pkCheer .32s ease-in-out 5 alternate; }
   @keyframes pkCheer { from { transform: translateY(0); } to { transform: translateY(-3px); } }
@@ -1340,7 +1357,7 @@
         <defs>
           <linearGradient id="pkSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080c11"/><stop offset="1" stop-color="#152029"/></linearGradient>
           <linearGradient id="pkGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d5d38"/><stop offset="1" stop-color="#0e3821"/></linearGradient>
-          <pattern id="pkCrowd" width="21" height="9" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3" r="1.7" fill="rgba(255,180,84,.38)"/><circle cx="10.5" cy="5.5" r="1.7" fill="rgba(79,217,135,.3)"/><circle cx="17.5" cy="3" r="1.7" fill="rgba(238,245,255,.3)"/><circle cx="7" cy="8" r="1.4" fill="rgba(92,200,255,.25)"/><circle cx="14" cy="1" r="1.4" fill="rgba(255,122,107,.3)"/></pattern>
+          <pattern id="pkCrowd" width="21" height="9" patternUnits="userSpaceOnUse"><circle id="pk-fan1" cx="3.5" cy="3" r="1.7" fill="rgba(255,180,84,.38)"/><circle id="pk-fan2" cx="10.5" cy="5.5" r="1.7" fill="rgba(79,217,135,.3)"/><circle id="pk-fan3" cx="17.5" cy="3" r="1.7" fill="rgba(238,245,255,.3)"/><circle id="pk-fan4" cx="7" cy="8" r="1.4" fill="rgba(92,200,255,.25)"/><circle id="pk-fan5" cx="14" cy="1" r="1.4" fill="rgba(255,122,107,.3)"/></pattern>
           <pattern id="pkNetPat" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0H9M0 0V9" stroke="rgba(255,255,255,.42)" stroke-width=".8" fill="none"/></pattern>
           <radialGradient id="pkGlow" cx="50%" cy="0%" r="75%"><stop offset="0" stop-color="rgba(255,255,255,.26)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
         </defs>
@@ -1350,32 +1367,73 @@
         <rect width="360" height="58" fill="url(#pkGlow)"/>
         <circle cx="12" cy="6" r="16" fill="rgba(238,245,255,.10)"/><circle cx="348" cy="6" r="16" fill="rgba(238,245,255,.10)"/>
         <rect y="47" width="360" height="11" fill="#06090d"/>
-        <g class="pk-ads"><text x="0" y="55" font-family="IBM Plex Mono, monospace" font-size="6.2" font-weight="700" letter-spacing="1.2" fill="#ffb454">BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER ·</text></g>
+        <g class="pk-ads"><text id="pk-ads-text" x="0" y="55" font-family="IBM Plex Mono, monospace" font-size="6.2" font-weight="700" letter-spacing="1.2" fill="#ffb454">BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER ·</text></g>
         <rect y="58" width="360" height="182" fill="url(#pkGrass)"/>
         <g fill="rgba(255,255,255,.045)"><rect y="76" width="360" height="18"/><rect y="112" width="360" height="22"/><rect y="152" width="360" height="26"/><rect y="196" width="360" height="30"/></g>
         <g stroke="rgba(255,255,255,.7)" stroke-width="1.6" fill="none"><path d="M0 153H360"/><path d="M104 153V182H256V153"/></g>
         <circle cx="180" cy="212" r="2.2" fill="rgba(255,255,255,.8)"/>
         <rect x="72" y="62" width="216" height="90" fill="rgba(0,0,0,.32)"/>
         <g id="pk-net" style="transform-origin:180px 62px"><rect x="72" y="62" width="216" height="90" fill="url(#pkNetPat)"/></g>
-        <g id="pk-keeper" style="transform-origin:180px 122px">
-          <rect x="171" y="132" width="7" height="22" rx="3" fill="#1d242c"/><rect x="182" y="132" width="7" height="22" rx="3" fill="#1d242c"/>
-          <rect x="168" y="102" width="24" height="34" rx="9" style="fill:var(--pk-keeper,#ffb454)"/>
-          <g id="pk-arm-l" style="transform-origin:170px 108px"><rect x="150" y="105" width="22" height="6" rx="3" style="fill:var(--pk-keeper,#ffb454)" transform="rotate(25 170 108)"/><circle cx="152" cy="116" r="4.6" fill="#f4f6f8"/></g>
-          <g id="pk-arm-r" style="transform-origin:190px 108px"><rect x="188" y="105" width="22" height="6" rx="3" style="fill:var(--pk-keeper,#ffb454)" transform="rotate(-25 190 108)"/><circle cx="208" cy="116" r="4.6" fill="#f4f6f8"/></g>
-          <circle cx="180" cy="94" r="8.5" fill="#e7c3a2"/><path d="M171.5 93a8.5 8.5 0 0 1 17 0c-3-3-14-3-17 0z" fill="#2a2018"/>
+        <g id="pk-keeper" transform="translate(180 154)">
+          <ellipse cx="0" cy="1" rx="13" ry="2.6" fill="rgba(0,0,0,.28)"/>
+          <g id="pk-keeper-idle" class="on">
+          <g id="pk-keep-body" style="transform-box:fill-box;transform-origin:50% 72%">
+            <path d="M-5 -24 L-10 -13" stroke="#14181d" stroke-width="6" stroke-linecap="round"/>
+            <path d="M5 -24 L10 -13" stroke="#14181d" stroke-width="6" stroke-linecap="round"/>
+            <path d="M-10 -13 L-9 -3" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="5" stroke-linecap="round"/>
+            <path d="M10 -13 L9 -3" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="5" stroke-linecap="round"/>
+            <ellipse cx="-10" cy="-1.5" rx="4.2" ry="2" fill="#0d0f12"/><ellipse cx="10" cy="-1.5" rx="4.2" ry="2" fill="#0d0f12"/>
+            <path d="M-10 -31 H10 L11.5 -21 H1.5 L0 -23 L-1.5 -21 H-11.5 Z" fill="#14181d"/>
+            <path d="M-11 -48 Q0 -52 11 -48 L12.5 -29 H-12.5 Z" style="fill:var(--pk-keeper,#ffb454)"/>
+            <path d="M-11 -48 Q0 -52 11 -48 L11.4 -45 Q0 -49 -11.4 -45 Z" fill="rgba(0,0,0,.18)"/>
+            <text x="0" y="-33.5" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="10" fill="rgba(0,0,0,.42)">1</text>
+            <g id="pk-k-arm-l" style="transform-box:fill-box;transform-origin:100% 0%"><path d="M-10 -46 L-18 -38 L-23 -30" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="-24" cy="-28.5" r="3.6" fill="#f4f6f8"/></g>
+            <g id="pk-k-arm-r" style="transform-box:fill-box;transform-origin:0% 0%"><path d="M10 -46 L18 -38 L23 -30" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="-28.5" r="3.6" fill="#f4f6f8"/></g>
+            <rect x="-2.6" y="-54" width="5.2" height="6" fill="#e2b896"/>
+            <circle cx="0" cy="-58.5" r="6.6" fill="#e2b896"/>
+            <path d="M-6.6 -59 A6.6 6.6 0 0 1 6.6 -59 Q3 -63 -6.6 -59 Z" fill="#2a2018"/>
+            <circle cx="-2.3" cy="-58.2" r=".8" fill="#2a2018"/><circle cx="2.3" cy="-58.2" r=".8" fill="#2a2018"/>
+          </g>
+          </g>
         </g>
         <rect x="68" y="58" width="6" height="96" fill="#f4f6f8"/><rect x="286" y="58" width="6" height="96" fill="#f4f6f8"/><rect x="68" y="58" width="224" height="6" fill="#f4f6f8"/>
-        <g id="pk-kicker">
-          <rect x="138" y="205" width="9" height="30" rx="4" fill="#1d242c"/>
-          <g id="pk-kick-leg" style="transform-origin:157px 205px"><rect x="152" y="205" width="9" height="30" rx="4" fill="#1d242c"/></g>
-          <rect x="136" y="172" width="30" height="40" rx="11" style="fill:var(--pk-kicker,#4fd987)"/>
-          <circle cx="151" cy="162" r="9.5" fill="#e7c3a2"/><path d="M141.5 161a9.5 9.5 0 0 1 19 0c-4-3.5-15-3.5-19 0z" fill="#2a2018"/>
+        <g id="pk-kicker" transform="translate(156 236)">
+          <g id="pk-kick-body" style="transform-box:fill-box;transform-origin:50% 100%;transform:translate(-36px,4px) scale(1.12)">
+            <ellipse cx="0" cy="0" rx="15" ry="3.4" fill="rgba(0,0,0,.32)"/>
+            <g id="pk-leg-l" style="transform-box:fill-box;transform-origin:50% 0%">
+              <path d="M-6 -31 L-7 -17" stroke="#e2b896" stroke-width="7" stroke-linecap="round"/>
+              <path d="M-7 -18 L-7 -5" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6.6" stroke-linecap="round"/>
+              <ellipse cx="-7" cy="-2.6" rx="4.6" ry="3" fill="#0d0f12"/>
+            </g>
+            <g id="pk-leg-r" style="transform-box:fill-box;transform-origin:50% 0%">
+              <path d="M6 -31 L7 -17" stroke="#e2b896" stroke-width="7" stroke-linecap="round"/>
+              <path d="M7 -18 L7 -5" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6.6" stroke-linecap="round"/>
+              <ellipse cx="7" cy="-2.6" rx="4.6" ry="3" fill="#0d0f12"/>
+            </g>
+            <path d="M-13.5 -40 H13.5 L15 -27 H2.5 L0 -30 L-2.5 -27 H-15 Z" fill="#eef1f4"/>
+            <g id="pk-arm-l2" style="transform-box:fill-box;transform-origin:75% 4%">
+              <path d="M-14 -64 L-18.5 -52" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M-18.5 -52 L-20 -41" stroke="#e2b896" stroke-width="4.6" stroke-linecap="round"/>
+            </g>
+            <g id="pk-arm-r2" style="transform-box:fill-box;transform-origin:25% 4%">
+              <path d="M14 -64 L18.5 -52" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6" stroke-linecap="round"/>
+              <path d="M18.5 -52 L20 -41" stroke="#e2b896" stroke-width="4.6" stroke-linecap="round"/>
+            </g>
+            <path d="M-15 -66 Q0 -70 15 -66 L16.5 -38 H-16.5 Z" style="fill:var(--pk-kicker,#4fd987)"/>
+            <path d="M-15 -66 Q0 -70 15 -66 L14.6 -63.5 Q0 -67.5 -14.6 -63.5 Z" fill="rgba(0,0,0,.16)"/>
+            <text id="pk-back-name" x="0" y="-56.5" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="7.4" letter-spacing=".6" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width=".5" paint-order="stroke">DU</text>
+            <text id="pk-back-num" x="0" y="-41" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="15.5" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width=".6" paint-order="stroke">10</text>
+            <rect x="-3" y="-73" width="6" height="7" fill="#e2b896"/>
+            <circle cx="-7.6" cy="-77" r="2" fill="#e2b896"/><circle cx="7.6" cy="-77" r="2" fill="#e2b896"/>
+            <circle cx="0" cy="-77.5" r="8" fill="#2a2018"/>
+          </g>
         </g>
         <g id="pk-ball" style="transform-origin:180px 212px"><ellipse cx="180" cy="222" rx="8" ry="2.4" fill="rgba(0,0,0,.35)" id="pk-ball-shadow"/><g transform="translate(180 212) scale(.46) translate(-20 -20)"><circle cx="20" cy="20" r="18.5" fill="#f7f8fa" stroke="#1b1f24" stroke-width="1.5"/><polygon points="20,12 27.6,17.5 24.7,26.5 15.3,26.5 12.4,17.5" fill="#1b1f24"/><path d="M20 12V3.5M27.6 17.5l8-2.6M24.7 26.5l5 6.8M15.3 26.5l-5 6.8M12.4 17.5l-8-2.6" stroke="#1b1f24" stroke-width="1.5"/></g></g>
       </svg>
       <div class="pk-zones" id="pk-zones" hidden></div>
       <div class="pk-flash" id="pk-flash" aria-live="assertive"></div>
       <div class="pk-confetti" id="pk-confetti" aria-hidden="true"></div>
+      <div class="pk-travel" id="pk-travel" hidden></div>
       <div class="pk-handoff" id="pk-handoff" hidden>
         <div><p id="pk-handoff-text"></p><button type="button" class="start-btn" id="pk-handoff-btn">Bereit</button></div>
       </div>
@@ -1757,7 +1815,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-10</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-12</footer>
 </div>
 
 <script>
@@ -3714,6 +3772,10 @@
     { t: "fliegt am liebsten hoch in die Ecken", w: [2.5, .6, 2.5, .4, .3, .4] },
     { t: "geht tief und flach in die Ecken", w: [.4, .3, .4, 2.5, .8, 2.5] },
   ];
+  const PK_KITS = [["#d7263d", "#ffffff"], ["#1e88e5", "#ffffff"], ["#fdd835", "#1a1a1a"], ["#2e7d32", "#ffffff"], ["#8e24aa", "#ffd54f"], ["#fb8c00", "#1a1a1a"],
+    ["#00897b", "#ffffff"], ["#c62828", "#1e3a8a"], ["#eceff1", "#c62828"], ["#6d4c41", "#ffcc80"], ["#3949ab", "#ffeb3b"], ["#00acc1", "#0d1b2a"]];
+  const PK_KEEPER_KITS = ["#cddc39", "#ff7043", "#26c6da", "#ab47bc", "#9ccc65", "#ffca28"];
+  const PK_ARENA = ["Arena", "Park", "Stadion", "Kessel", "Arena", "Stadion"];
   const PK_SHOOTERS = [
     { t: "schießt am liebsten flach links", w: [.5, .2, .5, 3, .5, .6], on: 0 },
     { t: "liebt die Ecke rechts oben", w: [.5, .3, 3, .5, .3, 1], on: 0 },
@@ -3750,8 +3812,9 @@
     syncBig(); pkRenderTracks();
     $("pk-turn-chip").style.background = pk.kicker === "X" ? "var(--accent)" : "var(--accent-2)";
     const st = $("pk-stage").style;
-    st.setProperty("--pk-kicker", pk.kicker === "X" ? "var(--x-mark)" : "var(--o-mark)");
-    st.setProperty("--pk-keeper", pk.keeper === "X" ? "var(--x-mark)" : "var(--o-mark)");
+    const oKit = pk.opp ? pk.opp.color : "var(--o-mark)", oKeeper = pk.opp ? pk.opp.keeperColor : "var(--o-mark)";
+    st.setProperty("--pk-kicker", pk.kicker === "X" ? "var(--x-mark)" : oKit);
+    st.setProperty("--pk-keeper", pk.keeper === "X" ? "var(--x-mark)" : oKeeper);
     const tt = $("pk-turn-text"), tag = $("pk-tag"), nm = esc(pk.shooterName);
     if (pk.over) { tt.textContent = "Elfmeterschießen beendet"; tag.textContent = ""; return; }
     if (pk.phase === "scout") { tt.innerHTML = `<span class="who">${esc(PK_STAGES[pk.career.stage].name)}</span> · Gegner: ${esc(pk.opp.club)}`; tag.textContent = "Lies den Scouting-Bericht – dann Anpfiff."; return; }
@@ -3773,7 +3836,8 @@
     if (on) z.innerHTML = PK_ZONES.map((zz, i) => `<button type="button" class="pk-zone${zz[0] === hint ? " hint" : ""}" data-z="${i}" aria-label="${PK_ZNAME[zz[1]][zz[0]]}">${PK_ZNAME[zz[1]][zz[0]]}</button>`).join("");
   }
   function pkResetScene() {
-    for (const id of ["pk-ball", "pk-keeper", "pk-net", "pk-kick-leg", "pk-arm-l", "pk-arm-r", "pk-ball-shadow"]) { const el = $(id); pkReset(el); if (el.style) { el.style.transform = ""; el.style.opacity = ""; } }
+    for (const id of ["pk-ball", "pk-net", "pk-ball-shadow", "pk-keep-body", "pk-k-arm-l", "pk-k-arm-r", "pk-kick-body", "pk-leg-l", "pk-leg-r", "pk-arm-l2", "pk-arm-r2"]) { const el = $(id); pkReset(el); if (el.style && id !== "pk-kick-body") { el.style.transform = ""; el.style.opacity = ""; } }
+    $("pk-keeper-idle").classList.add("on");
     const f = $("pk-flash"); f.classList.remove("show", "goal", "bad"); f.textContent = "";
     $("pk-crowd").classList.remove("cheer");
   }
@@ -3786,13 +3850,16 @@
     for (let i = 0; i < NP; i++) { const r = RANKPOS[i]; if (r >= 0 && r < (TIER_CUT.okay || 180)) pk.pool.push(i); }
     $("pk-result-banner").classList.remove("show"); $("pk-confetti").innerHTML = "";
     pkResetScene(); pkShowZones(false); $("pk-meter-wrap").hidden = true; $("pk-handoff").hidden = true;
+    pkSetShirt();
     if (pk.mode === "career") {
       const st = PK_STAGES[pk.career.stage];
       pk.level = st.cpu; pk.shots = 5; pk.opp = pk.career.opps[pk.career.stage];
       $("pk-summary").textContent = pkSummary();
-      pk.phase = "scout"; pkShowScout(); pkRender(); return;
+      pk.phase = "scout"; pkRender();
+      pkTravel(() => { pkStadium(pk.opp); pkShowScout(); });
+      return;
     }
-    pk.opp = null;
+    pk.opp = null; pkStadium(null);
     pkKickOff();
   }
   function pkKickOff() {
@@ -3800,6 +3867,62 @@
     tickerItems = []; tick_log(pk.opp ? `Anpfiff – ${PK_STAGES[pk.career.stage].name} gegen ${pk.opp.club}` : "Anpfiff – Elfmeterschießen");
     SFX.play("kickoff");
     pkNextKick();
+  }
+  // Stadion des Gegners: Fanfarben und Bande
+  function pkStadium(o) {
+    const hexA = (h, a) => { const n = parseInt(h.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
+    const fans = o ? [hexA(o.color, .55), hexA(o.color2, .42), hexA(o.color, .4), "rgba(238,245,255,.25)", hexA(o.color2, .3)]
+      : ["rgba(255,180,84,.38)", "rgba(79,217,135,.3)", "rgba(238,245,255,.3)", "rgba(92,200,255,.25)", "rgba(255,122,107,.3)"];
+    fans.forEach((c, k) => { const el = $("pk-fan" + (k + 1)); if (el.setAttribute) el.setAttribute("fill", c); });
+    const ad = o ? `${o.arena.toUpperCase()} · ${o.club.toUpperCase()} · BALL KNOWLEDGE · PLAY · ` : "BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · ";
+    $("pk-ads-text").textContent = ad.repeat(4);
+    const at = $("pk-ads-text"); if (at.setAttribute) at.setAttribute("fill", o ? (o.color === "#eceff1" ? "#ffb454" : o.color) : "#ffb454");
+  }
+  // Flug von Stadion zu Stadion (Karriere): Klick überspringt
+  function pkTravel(done) {
+    const c = pk.career, st = PK_STAGES[c.stage], o = pk.opp;
+    const from = c.stage === 0 ? "Heimat" : c.opps[c.stage - 1].arena;
+    const tv = $("pk-travel"), tok = pk.token;
+    let finished = false;
+    const end = () => { if (finished || tok !== pk.token) return; finished = true; tv.hidden = true; tv.classList.remove("zoom"); tv.innerHTML = ""; const sv = $("pk-svg"); sv.classList.remove("arrive"); void sv.offsetWidth; sv.classList.add("arrive"); done(); };
+    const stad = (x, y, col, id) => `<g transform="translate(${x} ${y})"><g ${id ? `id="${id}" class="tv-pulse"` : ""}><ellipse cx="0" cy="6" rx="26" ry="7" fill="rgba(0,0,0,.4)"/><path d="M-24 0 Q-24 -12 0 -12 Q24 -12 24 0 L22 6 Q0 12 -22 6 Z" fill="#1b2430" stroke="${col}" stroke-width="1.6"/><ellipse cx="0" cy="-2" rx="15" ry="5" fill="#2f9d62"/><path d="M-20 -12 V-24 M20 -12 V-24" stroke="#4b5866" stroke-width="1.4"/><rect x="-23" y="-27" width="6" height="3" fill="#eef5ff"/><rect x="17" y="-27" width="6" height="3" fill="#eef5ff"/></g></g>`;
+    const path = "M70 172 Q180 40 290 172";
+    tv.innerHTML = `<svg viewBox="0 0 360 240" aria-label="Flug zum nächsten Stadion">
+      <defs><linearGradient id="tvSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060b16"/><stop offset="1" stop-color="#14304a"/></linearGradient></defs>
+      <rect width="360" height="240" fill="url(#tvSky)"/>
+      ${Array.from({ length: 26 }, () => `<circle cx="${(Math.random() * 360).toFixed(0)}" cy="${(Math.random() * 130).toFixed(0)}" r="${(Math.random() * 0.9 + 0.3).toFixed(2)}" fill="rgba(255,255,255,.6)"/>`).join("")}
+      <path d="M0 200 Q90 180 180 196 T360 190 V240 H0 Z" fill="#0b1a12"/>
+      <g class="tv-cloud" opacity=".5"><ellipse cx="120" cy="70" rx="34" ry="8" fill="#9fb3c8"/><ellipse cx="300" cy="110" rx="40" ry="9" fill="#9fb3c8"/><ellipse cx="220" cy="40" rx="26" ry="6" fill="#9fb3c8"/></g>
+      <path id="tv-path" d="${path}" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.4" stroke-dasharray="3 5"/>
+      ${stad(70, 180, "rgba(255,255,255,.5)")}
+      ${stad(290, 180, o.color, "tv-dest")}
+      <g id="tv-ball" transform="translate(70 172)"><circle r="6.5" fill="#f7f8fa" stroke="#1b1f24" stroke-width="1"/><polygon points="0,-3 2.9,-.9 1.8,2.4 -1.8,2.4 -2.9,-.9" fill="#1b1f24"/></g>
+      <text x="70" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="rgba(255,255,255,.7)">${esc(from)}</text>
+      <text class="tv-fade" x="180" y="30" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="20" fill="#ffb454" letter-spacing="1">${esc(st.name)}</text>
+      <text class="tv-late" x="290" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#fff">${esc(o.arena)}</text>
+      <text class="tv-late" x="290" y="218" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="13" fill="${o.color === "#eceff1" ? "#fff" : o.color}">${esc(o.club)}</text>
+    </svg>`;
+    tv.style.setProperty("--zx", "80.5%"); tv.style.setProperty("--zy", "73%");
+    tv.hidden = false;
+    // Ball fliegt entlang der Flugbahn (sanft beschleunigen und abbremsen, dreht sich dabei)
+    try {
+      const pth = tv.querySelector("#tv-path"), bl = tv.querySelector("#tv-ball");
+      if (pth && pth.getTotalLength && bl) {
+        const L = pth.getTotalLength(), t0 = performance.now(), dur = 1800;
+        const step = now => {
+          if (finished || tok !== pk.token) return;
+          const u = Math.min(1, (now - t0 - 250) / dur), e = u <= 0 ? 0 : u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+          const pt = pth.getPointAtLength(L * e);
+          bl.setAttribute("transform", `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) rotate(${(e * 720).toFixed(0)})`);
+          if (u < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+    } catch (e) {}
+    SFX.play("pick");
+    tv.onclick = end;
+    pkLater(() => { tv.classList.add("zoom"); }, 2700);
+    pkLater(end, 3300);
   }
   function pkPathHTML() {
     return `<div class="pk-path">${PK_STAGES.map((s, k) => `<span class="${k < pk.career.stage ? "done" : k === pk.career.stage ? "now" : ""}">${esc(s.name)}</span>`).join("")}</div>`;
@@ -3822,7 +3945,8 @@
     pk.kicker = nx; pk.keeper = other(nx); pk.dive = null; pk.zone = null; pk.band = 1; pk.hintCol = null; pk.cpuPlan = null;
     pk.sudden = pk.kicks.X.length >= pk.shots && pk.kicks.O.length >= pk.shots;
     const pl = pk.pool.length ? pk.pool[Math.floor(Math.random() * pk.pool.length)] : -1;
-    pk.shooterName = pl >= 0 ? DB.players[pl][0] : "Schütze";
+    pk.shooterName = pkHuman(pk.kicker) ? pkWho(pk.kicker) : (pl >= 0 ? DB.players[pl][0] : "Schütze");
+    pkSetShirt();
     tick_log(`${pkWho(pk.kicker)}: ${pk.shooterName} legt sich den Ball zurecht`);
     // Computer-Torwart entscheidet sofort (verdeckt), ein menschlicher Torwart wählt zuerst
     if (!pkHuman(pk.keeper)) { pk.dive = pkCpuDive(); pkShooterPhase(); }
@@ -3831,6 +3955,15 @@
       pkQuizThen("keep", () => { pk.phase = "keeperPick"; pkShowZones(true); pkRender(); });
     }
     else { pk.phase = "keeperPick"; pkShowZones(true); pkRender(); }
+  }
+  // Name und Nummer auf dem Rücken des Schützen
+  function pkSetShirt() {
+    const human = pkHuman(pk.kicker);
+    let name = human ? pkWho(pk.kicker) : pk.shooterName.split(/\s+/).pop();
+    name = (name || "").toUpperCase().slice(0, 14);
+    const t = $("pk-back-name"); t.textContent = name;
+    if (t.setAttribute) { if (name.length > 8) { t.setAttribute("textLength", "25"); t.setAttribute("lengthAdjust", "spacingAndGlyphs"); } else { t.removeAttribute("textLength"); t.removeAttribute("lengthAdjust"); } }
+    $("pk-back-num").textContent = human ? (pk.kicker === "X" ? "10" : "9") : String(2 + Math.floor(Math.random() * 30));
   }
   function pkShooterPhase() {
     if (pkHuman(pk.keeper) && pkHuman(pk.kicker)) {                         // 2 Spieler an einem Gerät: Gerät weitergeben
@@ -3845,7 +3978,7 @@
     if (pkHuman(pk.kicker)) pkQuizThen("kick", () => { pk.phase = "shooterPick"; pkShowZones(true); pkRender(); });
     else {                                                                   // Computer schießt
       pk.phase = "cpu"; pkShowZones(false); pkRender();
-      pkLater(() => { const z = pk.cpuPlan || pkCpuShot(); pkResolve(z.zone, z.q); }, 900);
+      pkLater(() => { const z = pk.cpuPlan || pkCpuShot(); pkResolve(z.zone, z.q, z.roll); }, 900);
     }
   }
   function pkPickZone(i) {
@@ -3906,14 +4039,16 @@
     const late = pk.kicks.O.length >= 3 || pk.sudden;                          // Nervosität wirkt erst, wenn es eng wird
     const r = Math.random(), on = Math.max(0.4, Math.min(0.98, PK_ONTARGET[pk.level] + (pk.opp ? (pk.opp.shooter.on < 0 && !late ? 0 : pk.opp.shooter.on) : 0)));
     const q = r < on ? 0.6 + Math.random() * 0.4 : (r < on + (1 - on) * 0.55 ? 0.3 + Math.random() * 0.22 : Math.random() * 0.2);
-    return { zone: PK_ZONES[i], q };
+    return { zone: PK_ZONES[i], q, roll: [Math.random()] };
   }
   // ----- Ergebnis -----
   // kind: goal | save | post | miss; shot = Zone, in die der Ball tatsächlich geht
-  function pkOutcome(zone, q, dive) {
+  // roll = vorab gewürfelte Zufallswerte (beim Computer-Schuss, damit der Torwart-Tipp zum echten Ballweg passt)
+  function pkOutcome(zone, q, dive, roll) {
+    const r1 = roll ? roll[0] : Math.random();
     let shot = zone, kind = "on", miss = null;
-    if (q < 0.25) { kind = "miss"; miss = zone[0] !== 1 && Math.random() < 0.55 ? "wide" : "over"; }
-    else if (q < 0.55) { if (zone[0] !== 1 && Math.random() < 0.5) kind = "post"; else shot = [1, zone[1]]; }
+    if (q < 0.25) { kind = "miss"; miss = zone[0] !== 1 && r1 < 0.55 ? "wide" : "over"; }
+    else if (q < 0.55) { if (zone[0] !== 1 && r1 < 0.5) kind = "post"; else shot = [1, zone[1]]; }
     if (kind === "on") {
       const dc = Math.abs(dive[0] - shot[0]), dr = Math.abs(dive[1] - shot[1]);
       let p = 0; if (dc === 0 && dr === 0) p = 1; else if (dc === 0) p = 0.4; else if (dc === 1 && dr === 0) p = 0.12;
@@ -3921,40 +4056,63 @@
     }
     return { kind, shot, miss, dive, zone };
   }
-  function pkResolve(zone, q) {
+  // Spalte, in die der Ball wirklich fliegt (unsauberer Schuss rutscht in die Mitte)
+  function pkBallCol(zone, q, roll) { return q >= 0.25 && q < 0.55 && !(zone[0] !== 1 && roll[0] < 0.5) ? 1 : zone[0]; }
+  function pkResolve(zone, q, roll) {
     if (pk.over) return;
     pk.phase = "anim"; pkShowZones(false); $("pk-meter-wrap").hidden = true;
-    const o = pkOutcome(zone, q, pk.dive);
+    const o = pkOutcome(zone, q, pk.dive, roll);
     pkRender();
     pkPlay(o);
-    const settle = o.kind === "goal" ? 1250 : 1200;
-    pkLater(() => pkEndKick(o), settle + 650);
+    pkLater(() => pkEndKick(o), PK_RUN + PK_HIT + PK_T + 750);
   }
   // ----- Animation -----
+  // Ablauf: Anlauf (RUN ms) → Schuss → Ball fliegt (T ms), Torwart springt beim Abschuss
+  const PK_RUN = 780, PK_HIT = 210, PK_T = 1250;
   function pkPlay(o) {
-    const ball = $("pk-ball"), keeper = $("pk-keeper"), net = $("pk-net"), leg = $("pk-kick-leg"), flash = $("pk-flash"), shadow = $("pk-ball-shadow");
+    const ball = $("pk-ball"), net = $("pk-net"), flash = $("pk-flash"), shadow = $("pk-ball-shadow");
+    const body = $("pk-kick-body"), legL = $("pk-leg-l"), legR = $("pk-leg-r"), armL = $("pk-arm-l2"), armR = $("pk-arm-r2");
     const bx = pkZX(o.shot[0]) - 180, by = pkZY(o.shot[1]) - 212;
-    const T = 1250, tf = (x, y, s, r) => `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`;
-    SFX.play("kick"); vibrate(30);
-    // Schütze tritt an
-    pkAnimate(leg, [{ transform: "rotate(0deg)" }, { transform: "rotate(-55deg)", offset: 0.4 }, { transform: "rotate(-10deg)" }], { duration: 420, easing: "ease-out" });
-    // Torwart springt (kurze Reaktionszeit)
-    const dx = pkZX(o.dive[0]) - 180, up = o.dive[1] === 0;
-    const ang = o.dive[0] === 1 ? 0 : (o.dive[0] === 0 ? -68 : 68);
-    const kdy = up ? -26 : (o.dive[0] === 1 ? 2 : 10);
-    pkAnimate(keeper, [{ transform: "translate(0px,0px) rotate(0deg)" }, { transform: `translate(${dx * 0.9}px,${kdy}px) rotate(${ang}deg) scale(${up ? 1.05 : 1})` }], { duration: 520, delay: 140, easing: "cubic-bezier(.2,.8,.3,1)" });
-    pkAnimate($("pk-arm-l"), [{ transform: "rotate(0deg)" }, { transform: "rotate(-55deg)" }], { duration: 400, delay: 140 });
-    pkAnimate($("pk-arm-r"), [{ transform: "rotate(0deg)" }, { transform: "rotate(55deg)" }], { duration: 400, delay: 140 });
-    pkAnimate(shadow, [{ opacity: 1 }, { opacity: 0 }], { duration: 200, delay: 100 });
-    // Ball
+    const T = PK_T, HIT = PK_RUN + PK_HIT, tf = (x, y, s, r) => `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`;
+    // --- Anlauf: vier Schritte mit leichtem Wippen, Arme und Beine im Wechsel
+    const runFrames = [];
+    for (let k = 0; k <= 8; k++) {
+      const p = k / 8, x = -36 * (1 - p), y = 4 * (1 - p) - (k % 2 ? 2.4 : 0), sc = 1.12 - 0.12 * p;
+      runFrames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(3)})`, offset: p });
+    }
+    pkAnimate(body, runFrames, { duration: PK_RUN, easing: "linear" });
+    const step = (on, off) => [0, 1, 2, 3, 4].map(k => ({ transform: k % 2 ? on : off, offset: k / 4 }));
+    pkAnimate(legL, step("translateY(-3px) scaleY(.74)", "none"), { duration: PK_RUN, easing: "ease-in-out" });
+    pkAnimate(legR, step("none", "translateY(-3px) scaleY(.74)"), { duration: PK_RUN * 0.75, easing: "ease-in-out" });
+    pkAnimate(armL, step("rotate(-24deg)", "rotate(18deg)"), { duration: PK_RUN, easing: "ease-in-out" });
+    pkAnimate(armR, step("rotate(24deg)", "rotate(-18deg)"), { duration: PK_RUN, easing: "ease-in-out" });
+    // --- Schuss: Standbein, Oberkörper lehnt sich zurück/zur Seite, Schussbein holt aus und zieht durch
+    pkLater(() => {
+      SFX.play("kick"); vibrate(30);
+      pkAnimate(body, [{ transform: "none" }, { transform: "rotate(-7deg)", offset: 0.45 }, { transform: "rotate(-4deg) translateY(-1px)" }], { duration: 560, easing: "ease-out" });
+      pkAnimate(legR, [{ transform: "none" }, { transform: "translateY(-3px) rotate(12deg) scaleY(.55)", offset: 0.38 }, { transform: "rotate(-30deg) scaleY(.82)", offset: 0.62 }, { transform: "translateY(-6px) rotate(-22deg) scaleY(.45)" }], { duration: 520, easing: "ease-out" });
+      pkAnimate(legL, [{ transform: "none" }, { transform: "scaleY(.96)" }], { duration: 300 });
+      pkAnimate(armL, [{ transform: "none" }, { transform: "rotate(62deg)", offset: 0.5 }, { transform: "rotate(54deg)" }], { duration: 520, easing: "ease-out" });
+      pkAnimate(armR, [{ transform: "none" }, { transform: "rotate(-34deg)", offset: 0.5 }, { transform: "rotate(-20deg)" }], { duration: 520, easing: "ease-out" });
+    }, PK_RUN);
+    // --- Torwart: kurzes Absenken, dann Hechtsprung mit gestreckten Armen
+    pkLater(() => { $("pk-keeper-idle").classList.remove("on"); pkKeeperDive(o.dive); }, HIT - 60);
+    // --- Ball
     const f0 = { transform: tf(0, 0, 1, 0) };
     const mid = { transform: tf(bx * 0.5, by * 0.5 - (o.shot[1] === 0 ? 10 : 2), 0.8, 240), offset: 0.26 };
     let frames, text, cls, snd;
     if (o.kind === "goal") {
-      pkLater(() => $("pk-crowd").classList.add("cheer"), 0.46 * T);
       frames = [f0, mid, { transform: tf(bx, by, 0.52, 480), offset: 0.46 }, { transform: tf(bx, by + 18, 0.5, 520), offset: 0.7 }, { transform: tf(bx, by + 26, 0.5, 520) }];
       text = "TOOOR!"; cls = "goal"; snd = "goal";
-      pkLater(() => pkAnimate(net, [{ transform: "scale(1)" }, { transform: "scale(1.06,1.14)", offset: 0.4 }, { transform: "scale(1)" }], { duration: 600, easing: "ease-out" }), 0.46 * T);
+      pkLater(() => {
+        $("pk-crowd").classList.add("cheer");
+        pkAnimate(net, [{ transform: "scale(1)" }, { transform: "scale(1.06,1.14)", offset: 0.4 }, { transform: "scale(1)" }], { duration: 600, easing: "ease-out" });
+      }, HIT + 0.46 * T);
+      pkLater(() => {                                                          // Jubel: Arme hoch
+        pkAnimate(armL, [{ transform: "rotate(54deg)" }, { transform: "rotate(150deg)" }], { duration: 300, easing: "ease-out" });
+        pkAnimate(armR, [{ transform: "rotate(-20deg)" }, { transform: "rotate(-150deg)" }], { duration: 300, easing: "ease-out" });
+        pkAnimate(body, [{ transform: "rotate(-4deg)" }, { transform: "translateY(-5px)", offset: 0.5 }, { transform: "none" }], { duration: 420, iterations: 2, easing: "ease-in-out" });
+      }, HIT + 0.55 * T);
     } else if (o.kind === "save") {
       const out = o.shot[0] === 0 ? -1 : o.shot[0] === 2 ? 1 : (Math.random() < 0.5 ? -1 : 1);
       frames = [f0, mid, { transform: tf(bx, by, 0.56, 480), offset: 0.46 }, { transform: tf(bx + out * 46, by + 34, 0.6, 620), offset: 0.75 }, { transform: tf(bx + out * 70, by + 62, 0.66, 720) }];
@@ -3969,11 +4127,37 @@
       frames = [f0, { transform: tf(ex * 0.45, ey * 0.5, 0.7, 240), offset: 0.3 }, { transform: tf(ex, ey, wide ? 0.5 : 0.42, 560), offset: 0.6 }, { transform: tf(ex * 1.15, ey - (wide ? 0 : 50), 0.3, 700), opacity: 0 }];
       text = wide ? "DANEBEN!" : "DRÜBER!"; cls = "bad"; snd = "wrong";
     }
-    pkAnimate(ball, frames, { duration: T, easing: "cubic-bezier(.2,.7,.35,1)" });
+    pkAnimate(shadow, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, delay: HIT });
+    pkAnimate(ball, frames, { duration: T, delay: HIT, easing: "cubic-bezier(.2,.7,.35,1)" });
     pkLater(() => {
       SFX.play(snd); if (snd === "goal") vibrate([60, 40, 60, 40, 120]);
       flash.textContent = text; flash.classList.remove("show", "goal", "bad"); void flash.offsetWidth; flash.classList.add("show", cls);
-    }, 0.46 * T);
+    }, HIT + 0.46 * T);
+  }
+  // Torwart-Animation: dive = [Spalte, Höhe]
+  function pkKeeperDive(dive) {
+    const kb = $("pk-keep-body"), aL = $("pk-k-arm-l"), aR = $("pk-k-arm-r");
+    const col = dive[0], up = dive[1] === 0, dir = col === 0 ? -1 : col === 2 ? 1 : 0, dx = pkZX(col) - 180;
+    const D = 1050;
+    const crouch = { transform: "translate(0px,3px) scale(1.05,.88)", offset: 0.1 };
+    if (dir) {
+      const ang = dir * (up ? 66 : 82), ty = up ? -30 : 0;
+      pkAnimate(kb, [{ transform: "none" }, crouch,
+        { transform: `translate(${(dx * 0.42).toFixed(1)}px,${ty - 8}px) rotate(${(ang * 0.65).toFixed(1)}deg)`, offset: 0.3 },
+        { transform: `translate(${(dx * 0.76).toFixed(1)}px,${ty}px) rotate(${ang}deg)`, offset: 0.48 },
+        { transform: `translate(${(dx * 0.8).toFixed(1)}px,${up ? -10 : 4}px) rotate(${ang + dir * 4}deg)`, offset: 0.72 },
+        { transform: `translate(${(dx * 0.8).toFixed(1)}px,${up ? 8 : 9}px) rotate(${dir * 90}deg)` }], { duration: D, easing: "ease-out" });
+      pkAnimate(aL, [{ transform: "none" }, { transform: "rotate(-10deg)", offset: 0.1 }, { transform: "rotate(128deg)", offset: 0.38 }, { transform: "rotate(136deg)" }], { duration: D, easing: "ease-out" });
+      pkAnimate(aR, [{ transform: "none" }, { transform: "rotate(10deg)", offset: 0.1 }, { transform: "rotate(-128deg)", offset: 0.38 }, { transform: "rotate(-136deg)" }], { duration: D, easing: "ease-out" });
+    } else if (up) {
+      pkAnimate(kb, [{ transform: "none" }, crouch, { transform: "translate(0px,-24px) scale(1,1.04)", offset: 0.42 }, { transform: "translate(0px,-26px)", offset: 0.55 }, { transform: "none" }], { duration: D, easing: "ease-out" });
+      pkAnimate(aL, [{ transform: "none" }, { transform: "rotate(140deg)", offset: 0.35 }, { transform: "rotate(135deg)" }], { duration: D, easing: "ease-out" });
+      pkAnimate(aR, [{ transform: "none" }, { transform: "rotate(-140deg)", offset: 0.35 }, { transform: "rotate(-135deg)" }], { duration: D, easing: "ease-out" });
+    } else {
+      pkAnimate(kb, [{ transform: "none" }, crouch, { transform: "translate(0px,6px) scale(1.12,.78)", offset: 0.4 }, { transform: "translate(0px,5px) scale(1.1,.8)" }], { duration: D, easing: "ease-out" });
+      pkAnimate(aL, [{ transform: "none" }, { transform: "rotate(-48deg)", offset: 0.4 }, { transform: "rotate(-44deg)" }], { duration: D, easing: "ease-out" });
+      pkAnimate(aR, [{ transform: "none" }, { transform: "rotate(48deg)", offset: 0.4 }, { transform: "rotate(44deg)" }], { duration: D, easing: "ease-out" });
+    }
   }
   function pkEndKick(o) {
     const s = pk.kicker, scored = o.kind === "goal";
@@ -4031,7 +4215,11 @@
   }
   function pkNewCareer() {
     const clubs = g3Shuffle(PK_CLUBS.slice());
-    pk.career = { stage: 0, done: false, opps: PK_STAGES.map((s, k) => ({ club: clubs[k], keeper: g3Rand(PK_KEEPERS), shooter: g3Rand(PK_SHOOTERS) })) };
+    const kits = g3Shuffle(PK_KITS.slice());
+    pk.career = { stage: 0, done: false, opps: PK_STAGES.map((s, k) => {
+      const kit = kits[k % kits.length], last = clubs[k].split(" ").pop();
+      return { club: clubs[k], keeper: g3Rand(PK_KEEPERS), shooter: g3Rand(PK_SHOOTERS), color: kit[0], color2: kit[1], keeperColor: g3Rand(PK_KEEPER_KITS), arena: `${last}-${g3Rand(PK_ARENA)}` };
+    }) };
   }
   function pkPlayAgain() {
     if (pk.mode === "career" && (!pk.career || pk.career.done)) pkNewCareer();
@@ -4106,7 +4294,7 @@
       $("pk-quiz-opts").querySelectorAll("button").forEach((b, j) => { b.disabled = true; if (j === q.ok) b.classList.add("ok"); else if (j === k) b.classList.add("no"); });
       bar.classList.remove("run");
       if (kind === "kick") pk.band = right ? 1.5 : 0.65;
-      else pk.hintCol = right ? pk.cpuPlan.zone[0] : null;
+      else pk.hintCol = right ? pkBallCol(pk.cpuPlan.zone, pk.cpuPlan.q, pk.cpuPlan.roll) : null;
       const fb = k < 0 ? "Zeit abgelaufen. " : right ? "Richtig! " : "Leider falsch. ";
       $("pk-quiz-fb").textContent = fb + (kind === "kick" ? (right ? "Dein grüner Bereich wird größer." : "Dein grüner Bereich wird kleiner.") : (right ? "Du siehst gleich, auf welche Seite der Schütze zielt." : "Kein Tipp für dich – du musst raten."));
       SFX.play(right ? "correct" : k < 0 ? "time" : "wrong");
@@ -4159,6 +4347,7 @@
   }
   function pkToMenu() {
     pk.token++; pkClearTimers(); pk.over = true; pk.phase = "idle"; pkHideQuiz(); $("pk-scout").hidden = true;
+    const tv = $("pk-travel"); tv.hidden = true; tv.innerHTML = "";
     if (pk.levelMenu) { pk.level = pk.levelMenu; pk.shots = pk.shotsMenu; pk.levelMenu = null; }
     pkSetMode(pk.mode);
     pkShowZones(false); $("pk-meter-wrap").hidden = true; $("pk-handoff").hidden = true;
