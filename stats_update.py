@@ -358,6 +358,13 @@ def plausible(g, t):
     return 1 <= g <= 1500 and 0 <= t <= 1000 and t <= g * 1.6 + 5
 
 
+def infobox_snippet(text):
+    body = find_template(text, ["Infobox Fußballspieler", "Infobox football biography", "Infobox footballer", "Sportivo"])
+    if not body:
+        return "keine Infobox gefunden – Anfang: " + text[:200].replace("\n", " ⏎ ")
+    return body[:700].replace("\n", " ⏎ ")
+
+
 def parse_de(text):
     body = find_template(text, ["Infobox Fußballspieler"])
     if not body:
@@ -524,6 +531,7 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
     goals = [-1] * n
     src = [""] * n
     texts_en = {}
+    debug = []
     need = set(todo)
     for lang in LANGS:
         want = {}
@@ -541,6 +549,7 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
         for i, t in want.items():
             by_title.setdefault(t, []).append(i)
         parsed = 0
+        dbg_left = 6
         for texts in fetch(lang, list(by_title)):
             for t, tx in texts.items():
                 for i in by_title.get(t, []):
@@ -553,15 +562,22 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
                             src[i] = lang
                             need.discard(i)
                             parsed += 1
+                        elif dbg_left > 0:
+                            dbg_left -= 1
+                            debug.append(f"[{lang}] {players[i][0]}: " + infobox_snippet(tx))
         log(f"  {lang}: Einsätze/Tore für {parsed:,} Spieler")
 
     titles_total = [-1] * n
     title_found = 0
+    tdebug = []
     for i, p in enumerate(players):
         tl = p[5] if len(p) > 5 and p[5] else []
         if not tl:
             continue
         c = count_titles_en(texts_en[i], section=True) if i in texts_en else {}
+        if i in texts_en and len(tdebug) < 15:
+            tdebug.append(f"{p[0]} {[title_names[t] for t in tl]} -> {c}\n      " + "\n      ".join(
+                ln.strip()[:160] for ln in clean(texts_en[i]).split("\n") if ln.strip().startswith("*") and any(rx.search(ln) for rx in TITLE_RX.values())))
         total = 0
         for t in set(tl):
             key = TITLE_KEYS.get(title_names[t]) if t < len(title_names) else None
@@ -593,6 +609,12 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
     for i in [i for i in todo if games[i] < 0][:40]:
         q = links.get(i)
         lines.append(f"  {players[i][0]} ({players[i][1]}) {q or ''} {sorted(wd[q]['sites']) if q else ''}")
+    lines.append("")
+    lines.append("Diagnose Infobox (nicht auswertbar):")
+    lines += ["  " + d for d in debug]
+    lines.append("")
+    lines.append("Diagnose Titel (gezählte Zeilen):")
+    lines += ["  " + d for d in tdebug]
     report = "\n".join(lines)
     log("\n" + report)
     if args.report:
