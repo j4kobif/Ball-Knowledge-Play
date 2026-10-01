@@ -693,6 +693,56 @@
   .pk-cont-d { font-size: 13px; color: var(--text-dim); }
   .pk-cont-note { margin: 6px 2px 0; font-size: 12px; color: var(--text-dim); }
   .pk-3d.arrive { animation: pkArrive 0.9s cubic-bezier(.2,.8,.3,1) both; }
+  /* ---------- Kabine & Shop ---------- */
+  .coin { display: inline-block; width: 1em; height: 1em; border-radius: 50%; flex: none; vertical-align: -0.15em; background: radial-gradient(circle at 35% 30%, #fff4b8, #f2c14e 48%, #b07f22 100%); box-shadow: inset 0 0 0 1.5px rgba(110,72,16,.55); }
+  .kb-open { justify-self: start; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; max-width: 100%; font: inherit; cursor: pointer; text-align: left; padding: 9px 13px; border-radius: 12px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); color: var(--text); }
+  .kb-open:hover { background: color-mix(in srgb, var(--accent) 20%, var(--surface-2)); }
+  .kb-open-k { font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: .04em; color: var(--accent); line-height: 1; }
+  .kb-open-d { font-size: 12.5px; color: var(--text-dim); display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .kb-coins { display: inline-flex; align-items: center; gap: 7px; font-family: "IBM Plex Mono", monospace; font-size: 15px; font-weight: 600; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); }
+  .kb-coins.bump { animation: kbBump .7s ease; }
+  @keyframes kbBump { 25% { transform: scale(1.2); border-color: #f2c14e; } }
+  .kb-sub { margin: -6px 0 0; color: var(--text-dim); font-size: 13.5px; }
+  .kb-stage { position: relative; width: 100%; max-width: 520px; margin: 0 auto; aspect-ratio: 1 / 1; max-height: 62vh; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); background: #0b1016; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+  .kb-stage:active { cursor: grabbing; }
+  @media (min-width: 640px) { .kb-stage { aspect-ratio: 4 / 3; } }
+  .kb-stage .pk-3d { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .kb-views { position: absolute; left: 6px; right: 6px; bottom: 8px; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap; z-index: 2; }
+  .kb-views button { font: inherit; font-size: 11.5px; font-weight: 700; padding: 5px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,.25); background: rgba(8,12,16,.66); color: #fff; cursor: pointer; }
+  .kb-views button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .kb-drag { position: absolute; top: 8px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 11px; font-family: "IBM Plex Mono", monospace; color: rgba(255,255,255,.8); background: rgba(8,12,16,.55); padding: 3px 9px; border-radius: 999px; pointer-events: none; transition: opacity .5s; z-index: 2; }
+  .kb-drag.off { opacity: 0; }
+  .kb-views[hidden], .kb-drag[hidden] { display: none; }
+  .kb-nogl { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding-bottom: 40px; background: radial-gradient(circle at 50% 40%, #233042, #0b1016 70%); color: rgba(255,255,255,.7); font-size: 12px; text-align: center; }
+  .kb-nogl[hidden] { display: none; }
+  .kb-nogl svg { width: 46%; max-width: 200px; height: auto; }
+  .kb-tabs { display: flex; width: 100%; box-sizing: border-box; }
+  .kb-tabs button { flex: 1 1 auto; padding: 8px 4px; font-size: 12.5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .kb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
+  .kb-grid.nums { grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+  .kb-item { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 5px 7px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); font: inherit; cursor: pointer; min-width: 0; }
+  .kb-item:hover { border-color: var(--text-dim); }
+  .kb-item svg { width: 56px; height: 56px; display: block; }
+  .kb-n { font-size: 12px; font-weight: 600; line-height: 1.2; text-align: center; max-width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; hyphens: auto; min-height: 2.4em; }
+  .kb-p { font-size: 11.5px; font-family: "IBM Plex Mono", monospace; color: var(--text-dim); display: inline-flex; align-items: center; gap: 4px; }
+  .kb-item.owned .kb-p { color: var(--accent); }
+  .kb-item.sel { background: color-mix(in srgb, var(--accent) 15%, var(--surface-2)); border-color: var(--accent); }
+  .kb-item.on { box-shadow: inset 0 0 0 2px var(--accent); }
+  .kb-item.on::after { content: "✓"; position: absolute; top: 4px; right: 7px; font-size: 13px; font-weight: 800; color: var(--accent); }
+  .kb-num { font-family: "Bebas Neue", sans-serif; font-size: 26px; line-height: 1; padding: 9px 0 7px; }
+  .kb-detail { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line-strong); border-radius: 12px; background: var(--surface-2); }
+  .kb-d-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .kb-d-txt b { font-size: 15px; } .kb-d-txt span { font-size: 12.5px; color: var(--text-dim); display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .kb-d-btn { flex: none; padding: 10px 16px; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
+  .kb-d-btn[hidden] { display: none; }
+  .kb-d-btn:disabled { cursor: not-allowed; opacity: .5; }
+  .kb-earn { margin: 0; font-size: 12.5px; color: var(--text-dim); line-height: 1.5; }
+  .pk-coins-earn { display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 6px; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 600; color: var(--text); }
+  .pk-coins-earn[hidden] { display: none; }
+  .pk-coins-earn { flex-direction: column; gap: 3px; }
+  .pk-coins-earn b { color: #f2c14e; font-size: 14px; }
+  .pk-ce-main { display: inline-flex; align-items: center; gap: 6px; }
+  .pk-ce-sub { font-family: "Work Sans", sans-serif; font-weight: 500; font-size: 12px; color: var(--text-dim); }
   @keyframes pkArrive { from { transform: scale(1.9); filter: blur(4px) brightness(1.6); opacity: .3; } to { transform: none; filter: none; opacity: 1; } }
   .pk-travel { position: absolute; inset: 0; z-index: 8; cursor: pointer; background: #050a12; }
   .pk-travel[hidden] { display: none; }
@@ -1287,9 +1337,9 @@
         <button type="button" data-pquiz="1" aria-pressed="true">An</button>
         <button type="button" data-pquiz="0" aria-pressed="false">Aus</button>
       </div>
-      <div class="pk-level-wrap" id="pk-char-wrap" hidden>
+      <div class="pk-level-wrap" id="pk-char-wrap">
         <span class="lbl">Dein Spieler</span>
-        <select id="pk-char" class="pk-char-select" aria-label="Dein Spieler"></select>
+        <button type="button" class="kb-open" id="kb-open"><span class="kb-open-k">Kabine &amp; Shop</span><span class="kb-open-d" id="kb-open-d"></span></button>
       </div>
       <div class="pk-level-wrap" id="pk-level-wrap">
         <span class="lbl">Stufe</span>
@@ -1323,6 +1373,38 @@
     </div>
     <ul class="menu-help" id="pmenu-help"></ul>
     <button type="button" class="start-btn" id="pstart-btn">Anpfiff</button>
+  </div>
+
+  <div class="panel" id="kabine" hidden>
+    <div class="menu-top">
+      <button type="button" class="ghost-btn" id="kb-back">← Zurück</button>
+      <span class="kb-coins" id="kb-coins" title="Deine Münzen"><i class="coin" aria-hidden="true"></i><b id="kb-coins-n">0</b></span>
+    </div>
+    <h2 class="menu-title">Kabine</h2>
+    <p class="kb-sub" id="kb-sub"></p>
+    <div class="kb-stage" id="kb-stage">
+      <div class="kb-nogl" id="kb-nogl" hidden></div>
+      <span class="kb-drag" id="kb-drag" aria-hidden="true">↔ Ziehen zum Drehen</span>
+      <div class="kb-views" role="group" aria-label="Ansicht">
+        <button type="button" data-kbv="full" aria-pressed="true">Ganz</button>
+        <button type="button" data-kbv="head" aria-pressed="false">Kopf</button>
+        <button type="button" data-kbv="feet" aria-pressed="false">Schuhe</button>
+        <button type="button" data-kbv="back" aria-pressed="false">Rücken</button>
+      </div>
+    </div>
+    <div class="segmented kb-tabs" role="group" aria-label="Shop-Bereiche">
+      <button type="button" data-kbt="char" aria-pressed="true">Spieler</button>
+      <button type="button" data-kbt="kit" aria-pressed="false">Trikot</button>
+      <button type="button" data-kbt="boots" aria-pressed="false">Schuhe</button>
+      <button type="button" data-kbt="acc" aria-pressed="false">Extras</button>
+      <button type="button" data-kbt="num" aria-pressed="false" aria-label="Rückennummer">Nr.</button>
+    </div>
+    <div class="kb-grid" id="kb-grid"></div>
+    <div class="kb-detail" id="kb-detail">
+      <div class="kb-d-txt"><b id="kb-d-name"></b><span id="kb-d-info"></span></div>
+      <button type="button" class="start-btn kb-d-btn" id="kb-d-btn"></button>
+    </div>
+    <p class="kb-earn">Münzen gibt es gegen den Computer und in der Karriere: Sieg 15 bis 70 (je nach Stufe), jede gewonnene Karriere-Runde 30 bis 110, Pokalsieg +150, dazu jedes eigene Tor und jede Parade +3. Anprobieren ist kostenlos.</p>
   </div>
 
   <div class="panel" id="pen" hidden>
@@ -1381,6 +1463,7 @@
     <div class="active-cell-tag" id="pk-tag"></div>
     <div class="result-banner" id="pk-result-banner">
       <div id="pk-result-text"></div>
+      <div class="pk-coins-earn" id="pk-coins-earn" hidden></div>
       <div class="result-actions">
         <button type="button" class="again" id="pk-play-again">Neues Elfmeterschießen</button>
         <button type="button" class="again ghost" id="pk-menu-btn-2">Hauptmenü</button>
@@ -1744,7 +1827,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-18</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-19</footer>
 </div>
 
 <script>
@@ -2190,6 +2273,7 @@
     ["kick", "Schuss", "Elfmeter: Ball wird getreten"],
     ["post", "Pfosten", "Elfmeter: Ball an Pfosten oder Latte"],
     ["save", "Parade", "Elfmeter: Torwart hält den Ball"],
+    ["coin", "Münzen", "Kabine: Kauf im Shop, Münzen nach dem Spiel"],
   ];
   const SFX = {
     ctx: null, on: true, master: 1, vol: {}, mute: {}, dest: null,
@@ -2304,6 +2388,7 @@
         case "request": this.tone(520, 0, 0.1, { type: "triangle", vol: 0.12 }); this.tone(520, 0.16, 0.1, { type: "triangle", vol: 0.12 }); break;
         case "tick": this.tone(1500, 0, 0.05, { type: "square", vol: 0.05 }); break;
         case "pick": this.tone(740, 0, 0.08, { type: "triangle", vol: 0.1 }); break;
+        case "coin": this.tone(1318, 0, 0.09, { vol: 0.11 }); this.tone(1760, 0.07, 0.16, { vol: 0.11 }); this.tone(2637, 0.15, 0.26, { vol: 0.06 }); break;
         case "goal": this.goalCrowd(); break;    // Tor: Netz, Stadionhorn, Jubel der Menge mit Applaus
         case "final":                            // Abpfiff: kurz, kurz, lang
           this.whistle(0, 0.22); this.whistle(0.32, 0.22); this.whistle(0.64, 0.9);
@@ -2974,6 +3059,7 @@
   }
   // Seite 2: Spielmodus (Variante) für das gewählte Game
   function toVariants() {
+    kbClose(false);
     for (const g in PANELS) { $(PANELS[g][0]).hidden = true; $(PANELS[g][1]).hidden = true; }
     $("home").hidden = true; $("vpick").hidden = false;
     setTheme("alltime");
@@ -2999,6 +3085,7 @@
   const PANELS = { ttt: ["menu", "game"], wordle: ["wmenu", "wordle"], letter: ["lmenu", "letter"], pen: ["pmenu", "pen"], chain: ["kmenu", "chain"], whoami: ["bmenu", "whoami"], tline: ["zmenu", "tline"] };
   function renderAllMenuHelp() { renderMenuHelp(); wdRenderMenuHelp(); lkRenderMenuHelp(); pkRenderMenuHelp(); ckRenderMenuHelp(); wiRenderMenuHelp(); zsRenderMenuHelp(); }
   function toHome() {
+    kbClose(false);
     for (const g in PANELS) { $(PANELS[g][0]).hidden = true; $(PANELS[g][1]).hidden = true; }
     $("home").hidden = false; $("vpick").hidden = true;
     setTheme("alltime");
@@ -3763,6 +3850,9 @@
     ["#00897b", "#ffffff"], ["#c62828", "#1e3a8a"], ["#eceff1", "#c62828"], ["#6d4c41", "#ffcc80"], ["#3949ab", "#ffeb3b"], ["#00acc1", "#0d1b2a"]];
   const PK_KEEPER_KITS = ["#cddc39", "#ff7043", "#26c6da", "#ab47bc", "#9ccc65", "#ffca28"];
   const PK_ARENA = ["Arena", "Park", "Stadion", "Kessel", "Arena", "Stadion"];
+  // Das Stadion wächst mit der Karriere: Sportplatz am Nachmittag → Finalarena unter Flutlicht
+  const PK_VENUE = ["Sportplatz, rund 300 Zuschauer, Sonntag 15 Uhr", "Kleines Stadion, 4.000 Zuschauer, Abendspiel", "Stadion unter Flutlicht, 18.000 Zuschauer", "Großes Stadion, 45.000 Zuschauer", "Finalarena, 70.000 Zuschauer, ausverkauft"];
+  const pkArenaName = (k, last) => [`Sportplatz ${last}`, `${last}-Kampfbahn`, `${last}-Stadion`, `${last}-${g3Rand(["Arena", "Park"])}`, "Ball-Knowledge-Arena"][k] || `${last}-${g3Rand(PK_ARENA)}`;
   const PK_SHOOTERS = [
     { t: "schießen {f} flach links", w: [.4, .2, .4, 3, .4, .5] },
     { t: "schießen {f} flach rechts", w: [.4, .2, .4, .5, .4, 3] },
@@ -3836,15 +3926,14 @@
   const pkShade = (h, f) => { const n = parseInt(h.slice(1), 16), c = [n >> 16, (n >> 8) & 255, n & 255].map(v => Math.round(f < 0 ? v * (1 + f) : v + (255 - v) * f)); return "#" + c.map(v => v.toString(16).padStart(2, "0")).join(""); };
   function pkApplyKits() {
     const xc = pkCss("--x-mark", "#4fd987"), oc = pkCss("--o-mark", "#ffb454"), o = pk.opp;
-    const myKit = pkStored("kaderraster-p-kit", {});
-    const kitX = Object.assign({ pattern: "uni", shirt: xc, shirt2: pkShade(xc, -.35), trim: "#ffffff", shorts: "#f4f6f8", shorts2: xc, socks: xc, socks2: "#ffffff", boots: "#f2f2f2", boots2: xc }, myKit);
+    const eqX = kbEq(), kitX = pkMyKit(eqX);
     let kitO;
     if (o) {
       const pats = ["uni", "uni", "uni", "streifen", "ringel", "haelften", "schärpe", "chevron", "nadel", "verlauf", "viertel", "zacken"];
       kitO = { pattern: pats[pkHash(o.club) % pats.length], shirt: o.color, shirt2: o.color2, trim: o.color2, shorts: o.color2 !== o.color ? o.color2 : "#1d2328", shorts2: o.color, socks: o.color, socks2: o.color2, boots: "#15181c", boots2: o.color };
     } else kitO = { pattern: "uni", shirt: oc, shirt2: pkShade(oc, -.35), trim: "#1d2328", shorts: "#1d2328", shorts2: oc, socks: oc, socks2: "#1d2328", boots: "#15181c", boots2: oc };
     const kitOf = t => t === "X" ? kitX : kitO;
-    const me = pkMyChar(), myAcc = pkStored("kaderraster-p-acc", []);
+    const me = pkMyChar(), myAcc = eqX.acc;
     const p2 = PKCHAR.CHARACTERS[(PKCHAR.CHARACTERS.indexOf(me) + 3) % PKCHAR.CHARACTERS.length];
     const lookFor = (t, role) => t === "X" ? pkLookOf(me) : pk.mode === "pvp" ? pkLookOf(p2) : pkLookOf(PKCHAR.randomLook(pkHash(role === "keeper" ? (o ? o.club : "Computer") + "-tw" : pk.shooterName)));
     const sk = kitOf(pk.kicker), kk = pk.keeper === "X" ? xc : (o ? o.keeperColor : oc);
@@ -3862,7 +3951,7 @@
     pk.humanShots = Array(6).fill(0); pk.humanDives = Array(6).fill(0);
     pk.pool = [];
     for (let i = 0; i < NP; i++) { const r = RANKPOS[i]; if (r >= 0 && r < (TIER_CUT.okay || 180)) pk.pool.push(i); }
-    $("pk-result-banner").classList.remove("show"); $("pk-confetti").innerHTML = "";
+    $("pk-result-banner").classList.remove("show"); $("pk-confetti").innerHTML = ""; $("pk-coins-earn").hidden = true; pk.saves = 0;
     pkResetScene(); pkShowZones(false); $("pk-meter-wrap").hidden = true; $("pk-handoff").hidden = true;
     PK3.matchStart();
     pkSetShirt();
@@ -3885,7 +3974,7 @@
   }
   // Stadion des Gegners: Fans, Banden und Dach in Vereinsfarben
   function pkStadium(o) {
-    PK3.setStadium(o ? { color: o.color, color2: o.color2, club: o.club } : { color: pkCss("--x-mark", "#4fd987"), color2: pkCss("--o-mark", "#ffb454"), club: "" });
+    PK3.setStadium(o ? { color: o.color, color2: o.color2, club: o.club, tier: pk.mode === "career" && pk.career ? pk.career.stage : 3 } : { color: pkCss("--x-mark", "#4fd987"), color2: pkCss("--o-mark", "#ffb454"), club: "", tier: 3 });
   }
   // Flug von Stadion zu Stadion (Karriere): Klick überspringt
   function pkTravel(done) {
@@ -3893,9 +3982,9 @@
     const from = c.stage === 0 ? "Heimat" : c.opps[c.stage - 1].arena;
     const tv = $("pk-travel"), tok = pk.token, P = "tv_";
     let finished = false;
-    const end = () => { if (finished || tok !== pk.token) return; finished = true; tv.hidden = true; tv.innerHTML = ""; const cv = $("pk-3d"); cv.classList.remove("arrive"); void cv.offsetWidth; cv.classList.add("arrive"); done(); };
-    tv.innerHTML = PKFLY.build({ stage: st.name, from, arena: o.arena, club: o.club, color: o.color, color2: o.color2 }, P);
-    tv.hidden = false;
+    const end = () => { if (finished || tok !== pk.token) return; finished = true; PK3.hold(false); tv.hidden = true; tv.innerHTML = ""; const cv = $("pk-3d"); cv.classList.remove("arrive"); void cv.offsetWidth; cv.classList.add("arrive"); done(); };
+    tv.innerHTML = PKFLY.build({ stage: st.name, from, arena: o.arena, club: o.club, color: o.color, color2: o.color2, tier: c.stage, fromTier: Math.max(0, c.stage - 1) }, P);
+    tv.hidden = false; PK3.hold(true);
     // Helikopter-Kamera: Ball fliegt mit Schatten über die Landkarte, dann Zoom bis auf den Platz
     try {
       const root = tv.querySelector && tv.querySelector("svg");
@@ -3915,6 +4004,7 @@
   function pkShowScout() {
     const o = pk.opp, st = PK_STAGES[pk.career.stage];
     $("pk-scout").innerHTML = `${pkPathHTML()}<span class="pk-scout-stage">${esc(st.name)} · Scouting-Bericht</span><span class="pk-scout-opp">${esc(o.club)}</span>` +
+      `<div class="pk-scout-row"><span aria-hidden="true">🏟️</span><span><b>Spielort</b>${esc(o.arena)} · ${esc(PK_VENUE[Math.min(pk.career.stage, PK_VENUE.length - 1)])}</span></div>` +
       `<div class="pk-scout-row"><span aria-hidden="true">🧤</span><span><b>Torwart</b>${esc(o.keeper.t)}</span></div>` +
       `<div class="pk-scout-row"><span aria-hidden="true">⚽</span><span><b>Schützen</b>${esc(o.shooter.t)}</span></div>` +
       `<div class="pk-scout-row"><span aria-hidden="true">🧠</span><span><b>Quizfragen</b>${pk.quiz ? `Stufe ${esc(LEVEL_NAME[st.quiz])} – je weiter du kommst, desto schwerer` : "aus"}</span></div>` +
@@ -3945,7 +4035,7 @@
   function pkSetShirt() {
     const human = pkHuman(pk.kicker);
     const name = human ? pkWho(pk.kicker) : pk.shooterName.split(/\s+/).pop();
-    pk.shirt = { name: (name || "").toUpperCase().slice(0, 14), num: human ? (pk.kicker === "X" ? "10" : "9") : String(2 + Math.floor(Math.random() * 30)) };
+    pk.shirt = { name: (name || "").toUpperCase().slice(0, 14), num: human ? (pk.kicker === "X" ? kbEq().num : "9") : String(2 + Math.floor(Math.random() * 30)) };
     pkApplyKits();
   }
   function pkShooterPhase() {
@@ -4735,11 +4825,11 @@
         const H = [0, 0, 0], h = (x, y, z) => add(H, [x, y, z]);
         return [{ prims: [-1, 1].map(s => TO(h(s * .09, .088, .004), [1, 0, 0], .009, .0025)), col: 0, box: [h(-.11, .07, -.02), h(.11, .11, .03)] }];
       } },
-      uhr: { name: "Uhr", slot: "handgelenk", bone: 7, colors: [SILVER, "#14181e"], metal: 1, build: J => {
+      uhr: { name: "Uhr", slot: "handgelenk-links", bone: 7, colors: [SILVER, "#14181e"], metal: 1, build: J => {
         const Wr = J.lWr, d = J.ldA, B = limbBasis(d), c = lin(Wr, d, -.012), outv = scl(B[0], B[0][0] < 0 ? 1 : -1);
         return [{ prims: [BA(c, d, .031, .005, .009)], col: 0, box: [sub(c, [.05, .05, .05]), add(c, [.05, .05, .05])] }, { prims: [EL(lin(c, outv, .034), [.006, .016, .016], .002, "u", B)], col: 1, box: [sub(c, [.06, .06, .06]), add(c, [.06, .06, .06])] }];
       } },
-      schweissband: { name: "Schweißband", slot: "handgelenk", bone: 13, colors: ["#f4f6f8"], build: J => {
+      schweissband: { name: "Schweißband", slot: "handgelenk-rechts", bone: 13, colors: ["#f4f6f8"], build: J => {
         const c = lin(J.rWr, J.rdA, -.02);
         return [{ prims: [BA(c, J.rdA, .033, .007, .018)], col: 0, box: [sub(c, [.06, .06, .06]), add(c, [.06, .06, .06])] }];
       } },
@@ -5126,7 +5216,7 @@
     const xf = (g, m) => { for (let k = 0; k < g.p.length; k += 3) { const q = M.ap(m, [g.p[k], g.p[k + 1], g.p[k + 2]]); g.p[k] = q[0]; g.p[k + 1] = q[1]; g.p[k + 2] = q[2]; const nn = nrm(sub(M.ap(m, [g.n[k], g.n[k + 1], g.n[k + 2]]), M.ap(m, [0, 0, 0]))); g.n[k] = nn[0]; g.n[k + 1] = nn[1]; g.n[k + 2] = nn[2]; } return g; };
 
     // ===== Texturen (werden im Browser gezeichnet) =====
-    function texPitch() {
+    function texPitch(old) {
       const N = 2048, c = cnv(N, N), x = c.getContext("2d"), s = N / 80, X = v => (v + 40) * s, Z = v => (v + 10) * s;
       x.fillStyle = "#1f5a2c"; x.fillRect(0, 0, N, N);
       for (let k = -2; k < 15; k++) { x.fillStyle = k % 2 ? "#2a6e36" : "#22602e"; x.fillRect(X(-34), Z(k * 5.5), 68 * s, 5.5 * s); }
@@ -5138,8 +5228,10 @@
       // Abnutzung vor dem Tor und am Punkt
       const worn = (cx, cz, rx, rz, a) => { const g = x.createRadialGradient(X(cx), Z(cz), 0, X(cx), Z(cz), rx * s); g.addColorStop(0, `rgba(78,70,44,${a})`); g.addColorStop(1, "rgba(78,70,44,0)"); x.save(); x.translate(X(cx), Z(cz)); x.scale(1, rz / rx); x.translate(-X(cx), -Z(cz)); x.fillStyle = g; x.beginPath(); x.arc(X(cx), Z(cz), rx * s, 0, 7); x.fill(); x.restore(); };
       worn(0, 1.6, 3.2, 1.6, .45); worn(0, 11, 1.4, 1.1, .4); worn(0, 4, 1.6, 2.5, .18);
+      // Sportplatz: stärker abgenutzt (Torraum, Mittelkreis, Laufwege)
+      if (old) { worn(0, 2.2, 5.5, 2.8, .55); worn(0, 11, 2.2, 1.8, .5); worn(0, 52.5, 6, 5, .4); worn(-12, 20, 5, 9, .16); worn(12, 26, 5, 10, .16); worn(0, 32, 8, 10, .14); for (let k = 0; k < 26; k++) worn(-30 + r() * 60, 2 + r() * 60, .6 + r() * 1.6, .5 + r() * 1.4, .12 + r() * .18); }
       // Lichtkegel der Flutlichter auf dem Rasen
-      for (const [lx, lz, lr] of [[-14, 8, 16], [14, 8, 16], [0, 26, 20], [-20, 40, 18], [20, 40, 18]]) { const g = x.createRadialGradient(X(lx), Z(lz), 0, X(lx), Z(lz), lr * s); g.addColorStop(0, "rgba(255,255,230,.07)"); g.addColorStop(1, "rgba(255,255,230,0)"); x.fillStyle = g; x.fillRect(0, 0, N, N); }
+      if (!old) for (const [lx, lz, lr] of [[-14, 8, 16], [14, 8, 16], [0, 26, 20], [-20, 40, 18], [20, 40, 18]]) { const g = x.createRadialGradient(X(lx), Z(lz), 0, X(lx), Z(lz), lr * s); g.addColorStop(0, "rgba(255,255,230,.07)"); g.addColorStop(1, "rgba(255,255,230,0)"); x.fillStyle = g; x.fillRect(0, 0, N, N); }
       x.strokeStyle = "rgba(240,245,240,.93)"; x.lineWidth = .12 * s; x.lineCap = "butt";
       const ln = (a, b, c2, d2) => { x.beginPath(); x.moveTo(X(a), Z(b)); x.lineTo(X(c2), Z(d2)); x.stroke(); };
       ln(-34, 0, 34, 0); ln(-34, 0, -34, 70); ln(34, 0, 34, 70); ln(-34, 52.5, 34, 52.5);
@@ -5172,11 +5264,6 @@
       const c = cnv(N, N), x = c.getContext("2d"), g = x.createRadialGradient(N / 2, N / 2, 0, N / 2, N / 2, N / 2);
       for (const [o, col] of stops) g.addColorStop(o, col);
       x.fillStyle = g; x.fillRect(0, 0, N, N); return texture(c, { clamp: true });
-    }
-    function texSky() {
-      const c = cnv(4, 256), x = c.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
-      g.addColorStop(0, "#02050c"); g.addColorStop(.55, "#0a1730"); g.addColorStop(.85, "#1a3150"); g.addColorStop(1, "#2a4363");
-      x.fillStyle = g; x.fillRect(0, 0, 4, 256); return texture(c, { clamp: true });
     }
     function texBack(name, num, ink, shirt) {
       const c = cnv(256, 256), x = c.getContext("2d"); x.clearRect(0, 0, 256, 256);
@@ -5525,7 +5612,7 @@
       blendMode(null, true, 0);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, body.ib); gl.drawElements(gl.TRIANGLES, body.cnt, gl.UNSIGNED_SHORT, 0);
       // Haare
-      const hm = getHair(look.hair, lod);
+      const hat = (fig.acc || []).some(a => a === "cap" || a === "beanie"), hm = getHair(hat && look.hair !== "glatze" ? "buzz" : look.hair, lod);
       const headM = M.ch(mats[4], M.T(...body.J.Hd), M.S(PKCHAR.HS, PKCHAR.HS, PKCHAR.HS));
       if (hm) { const mat = fig._hairMat || (fig._hairMat = {}); mat.c = c(look.hairC); mat.tex = texStrand(); mat.sp = .35; draw(hm, headM, mat); }
       // Accessoires
@@ -5537,75 +5624,239 @@
       return true;
     }
 
-    // ===== Stadion =====
+    // ===== Stadion: wächst mit der Karriere (0 Sportplatz · 1 kleines Stadion · 2 Stadion · 3 großes Stadion · 4 Finalarena) =====
     let ST = null;
+    const TIERS = [
+      { time: "day", photo: 1, village: true, masts: { h: 16, on: false, pos: [[-39, 3], [39, 3], [-39, 50], [39, 50]] } },
+      { time: "dusk", photo: 2, masts: { h: 26, on: true, pos: [[-45, -15], [45, -15], [-45, 68], [45, 68]] },
+        stands: [{ side: 0, rows: 9, roof: "small", kurve: true, len: 60 }, { side: 2, rows: 8, roof: "small", len: 54 }], rails: [1, 3] },
+      { time: "night", photo: 4, masts: { h: 32, on: true, pos: [[-48, -17], [48, -17], [-48, 70], [48, 70]] },
+        stands: [{ side: 0, rows: 14, roof: "none", kurve: true, len: 84 }, { side: 1, rows: 12, roof: "none", len: 84 }, { side: 2, rows: 14, roof: "small", len: 70 }, { side: 3, rows: 14, roof: "small", len: 70 }] },
+      { time: "night", photo: 6, stands: [0, 1, 2, 3].map(sd => ({ side: sd, rows: 16, upper: true, roof: "full", kurve: sd === 0, len: sd < 2 ? 92 : 76 })) },
+      { time: "night", photo: 6, arena: true, stands: [0, 1, 2, 3].map(sd => ({ side: sd, rows: 16, upper: true, roof: "full", kurve: sd === 0, len: sd < 2 ? 96 : 80 })) },
+    ];
+    const PHOTO_SET = { 1: [4], 2: [1, 4], 4: [0, 2, 3, 5], 6: [0, 1, 2, 3, 4, 5] };
+    // Lage der Tribünen je Seite: hinter dem Tor, hinter dem Schützen, links, rechts. P(u, d, h): u entlang, d nach hinten, h Höhe
+    const SIDE_P = [(u, d, h) => [u, h, -9 - d], (u, d, h) => [-u, h, 64 + d], (u, d, h) => [-42 - d, h, 27 + u], (u, d, h) => [42 + d, h, 27 - u]];
+    const LIGHTS = {
+      day: { L1: nrm([-.5, .8, .35]), L1c: [1.02, .97, .88], L2: nrm([.6, .5, -.4]), L2c: [.3, .35, .44], sky: [.46, .53, .64], gnd: [.22, .25, .19], fogC: [.66, .75, .86], fog: [80, 360], crowd: 1.05, clear: [.6, .72, .86] },
+      dusk: { L1: nrm([-.8, .38, .3]), L1c: [1.0, .72, .5], L2: nrm([.55, .7, -.45]), L2c: [.42, .42, .55], sky: [.38, .35, .46], gnd: [.17, .16, .15], fogC: [.42, .33, .4], fog: [60, 260], crowd: .92, clear: [.3, .22, .3] },
+      night: { L1: nrm([-.35, .85, .45]), L1c: [.95, .93, .86], L2: nrm([.55, .7, -.45]), L2c: [.42, .46, .55], sky: [.32, .36, .45], gnd: [.16, .2, .15], fogC: [.05, .08, .13], fog: [45, 180], crowd: 1, clear: [.02, .03, .05] },
+    };
+    function texSky(time) {
+      const c = cnv(4, 256), x = c.getContext("2d"), g = x.createLinearGradient(0, 0, 0, 256);
+      const st = time === "day" ? [[0, "#2c69c8"], [.5, "#5f99dc"], [.82, "#a9cbec"], [1, "#d6e6f2"]] : time === "dusk" ? [[0, "#18204a"], [.42, "#45366a"], [.68, "#a85563"], [.86, "#ee9555"], [1, "#f6c47c"]] : [[0, "#02050c"], [.55, "#0a1730"], [.85, "#1a3150"], [1, "#2a4363"]];
+      for (const [o, cc] of st) g.addColorStop(o, cc);
+      x.fillStyle = g; x.fillRect(0, 0, 4, 256); return texture(c, { clamp: true });
+    }
+    function texCloud() {
+      const c = cnv(256, 128), x = c.getContext("2d"), r = rnd(5);
+      for (let k = 0; k < 30; k++) { const px = 40 + r() * 176, py = 52 + r() * 34 - Math.abs(px - 128) * .12, rr = 16 + r() * 30, g = x.createRadialGradient(px, py, 0, px, py, rr); g.addColorStop(0, "rgba(255,255,255,.5)"); g.addColorStop(1, "rgba(255,255,255,0)"); x.fillStyle = g; x.fillRect(0, 0, 256, 128); }
+      return texture(c, { clamp: true });
+    }
+    // Horizont rund ums Stadion: Bäume, Häuser, Hochhäuser, Kirchturm, Kran; abends mit erleuchteten Fenstern
+    function texSkyline(time) {
+      return texDraw(1024, 128, (x, w, h) => {
+        const r = rnd(77), sil = time === "dusk" ? "#2a2433" : "#0b0f18", sil2 = time === "dusk" ? "#3a3142" : "#121a28", win = time === "dusk" ? "rgba(255,214,140,.85)" : "rgba(255,220,150,.9)";
+        x.clearRect(0, 0, w, h);
+        const windows = (x0, y0, ww, hh, p) => { x.fillStyle = win; for (let yy = y0 + 4; yy < h - 4; yy += 6) for (let xx = x0 + 3; xx < x0 + ww - 3; xx += 5) if (r() < p) x.fillRect(xx, yy, 2, 3); };
+        // hintere Reihe: Hochhäuser
+        x.fillStyle = sil2;
+        for (let k = 0; k < 14; k++) { const x0 = r() * w, ww = 18 + r() * 30, hh = 40 + r() * 55; x.fillStyle = sil2; x.fillRect(x0, h - hh, ww, hh); windows(x0, h - hh, ww, hh, .22); }
+        // Kran und Kirchturm
+        x.fillStyle = sil; x.fillRect(700, 30, 3, 98); x.fillRect(640, 30, 110, 3); x.fillRect(700, 24, 3, 8);
+        x.beginPath(); x.moveTo(300, 20); x.lineTo(308, 52); x.lineTo(292, 52); x.fill(); x.fillRect(293, 52, 14, 76);
+        // vordere Reihe: Häuser und Bäume
+        for (let k = 0; k < 40; k++) { const x0 = k * w / 40 + r() * 10, ww = 16 + r() * 14, hh = 16 + r() * 18; x.fillStyle = sil; x.fillRect(x0, h - hh, ww, hh); x.beginPath(); x.moveTo(x0 - 2, h - hh); x.lineTo(x0 + ww / 2, h - hh - 9); x.lineTo(x0 + ww + 2, h - hh); x.fill(); windows(x0, h - hh, ww, hh, .14); }
+        for (let k = 0; k < 70; k++) { const cx = r() * w, rr = 6 + r() * 10; x.fillStyle = sil; x.beginPath(); x.arc(cx, h - 6 - rr * .6, rr, 0, 7); x.fill(); x.fillRect(cx - rr, h - 8 - rr * .6, rr * 2, 10 + rr); }
+      }, { clamp: false });
+    }
+    function texDraw(w, h, fn, opt) { const c = cnv(w, h), x = c.getContext("2d"); fn(x, w, h); return texture(c, opt); }
+    const PITCH = {};
+    function pitchTex(worn) {
+      if (PITCH[worn]) return PITCH[worn];
+      const keep = RES; RES = null; const t = texPitch(worn); RES = keep;
+      return (PITCH[worn] = t);
+    }
+    // Satteldach-Haus (Vereinsheim, Häuser im Ort)
+    function house(w, h, d, rh) {
+      const W = w / 2 + .3, D = d / 2 + .3;
+      const roof = merge([quad([-W, h, D], [W, h, D], [W, h + rh, 0], [-W, h + rh, 0]), quad([W, h, -D], [-W, h, -D], [-W, h + rh, 0], [W, h + rh, 0])]);
+      const gable = s => ({ p: [s * w / 2, h, d / 2, s * w / 2, h, -d / 2, s * w / 2, h + rh - .25, 0], n: [s, 0, 0, s, 0, 0, s, 0, 0], t: [0, 0, 1, 0, .5, 1], i: [0, 1, 2] });
+      return { walls: merge([box(w, h, d, 0, h / 2, 0), gable(-1), gable(1)]), roof };
+    }
     function buildStadium(o) {
-      const col = hx(o.color), col2 = hx(o.color2), s = { list: [], glows: [], stands: [], flags: [] };
+      const tierIx = o.tier === undefined || o.tier === null ? 3 : Math.max(0, Math.min(4, o.tier | 0)), T = TIERS[tierIx];
+      const col = hx(o.color), col2 = hx(o.color2), s = { list: [], glows: [], stands: [], flags: [], props: [], time: T.time, tier: tierIx, sun: null, clouds: [], pyro: [], legs: [] };
       const add = (g, mat, model) => s.list.push({ m: mesh(g), mat, model: model || null });
-      // Himmel (Kuppel)
+      const day = T.time === "day", L = LIGHTS[T.time];
+      s.L = L;
+      // Himmel (Kuppel), Sonne, Wolken
       const sky = loft(Array.from({ length: 9 }, (_, k) => { const a = Math.PI / 2 * (k / 8); return [Math.sin(a) * 260 - 30, Math.cos(a) * 300, Math.cos(a) * 300]; }), 24);
       for (let k = 1; k < sky.t.length; k += 2) sky.t[k] = 1 - sky.t[k];
-      add(sky, { tex: texSky(), em: 1, fog: false, dw: false });
-      // Boden
-      add(quad([-260, -.05, 260], [260, -.05, 260], [260, -.05, -260], [-260, -.05, -260]), { c: [.06, .12, .08], fog: true });
+      s.sky = { m: mesh(sky), mat: { tex: texSky(T.time), em: 1, fog: false, dw: false } };
+      if (T.time !== "night") {
+        s.sun = { p: day ? [-120, 150, -150] : [-200, 20, -150], r: day ? 60 : 110, mat: { tex: null, blend: "add", dw: false, em: 1, a: day ? .9 : 1, fog: false, c: day ? [1, .97, .9] : [1, .62, .34] } };
+        s.cloudTex = texCloud(); const r = rnd(31);
+        for (let k = 0; k < 11; k++) { const a = -2.9 + k * .58 + r() * .3; s.clouds.push({ p: [Math.sin(a) * 235, (day ? 75 : 45) + r() * 50, Math.cos(a) * 235 + 25], w: 120 + r() * 90, h: 36 + r() * 22, mat: { tex: s.cloudTex, blend: "a", dw: false, em: 1, fog: false, a: day ? .8 : .55, c: day ? [1, 1, 1] : [1, .74, .62] } }); }
+      }
+      // Boden und Rasen
+      add(quad([-260, -.05, 260], [260, -.05, 260], [260, -.05, -260], [-260, -.05, -260]), { c: tierIx === 0 ? [.21, .34, .16] : day ? [.16, .3, .15] : T.time === "dusk" ? [.1, .17, .1] : [.06, .12, .08], fog: true });
       const pt = { p: [-40, 0, 70, 40, 0, 70, 40, 0, -10, -40, 0, -10], n: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], t: [0, 1, 1, 1, 1, 0, 0, 0], i: [0, 1, 2, 0, 2, 3] };
-      add(pt, { tex: texPitch(), c: [.86, .9, .86], sp: .04 });
-      // Werbebanden (LED, laufender Text)
-      const ledA = texLED(`${(o.club || "BALL KNOWLEDGE").toUpperCase()}  ·  BALL KNOWLEDGE  ·  PLAY  ·  `, css(col), "#0b0f15");
-      const ledB = texLED("BALL KNOWLEDGE  ·  PLAY  ·  FLUTLICHT-ARENA  ·  ", "#f2f5f8", css(mixc(col, [0, 0, 0], .55)));
+      add(pt, { tex: pitchTex(tierIx === 0 ? 1 : 0), c: day ? [.8, .84, .78] : T.time === "dusk" ? [.84, .86, .84] : [.86, .9, .86], sp: .04 });
+      // Werbebanden
+      const clubT = (o.club || "BALL KNOWLEDGE").toUpperCase(), fin = tierIx === 4 ? "FINALE" : "BALL KNOWLEDGE";
+      const ledA = texLED(`${clubT}  ·  ${fin}  ·  PLAY  ·  `, css(col), "#0b0f15");
+      const ledB = texLED(`BALL KNOWLEDGE  ·  PLAY  ·  ${tierIx === 4 ? "FINALE" : "FLUTLICHT-ARENA"}  ·  `, "#f2f5f8", css(mixc(col, [0, 0, 0], .55)));
       s.ledMats = [{ tex: ledA, em: 1, uv: [0, 0], uvs: [4, 1] }, { tex: ledB, em: 1, uv: [0, 0], uvs: [3, 1] }];
-      const boardQ = (x0, z0, x1, z1, mat) => {
-        add(quad([x0, 0, z0], [x1, 0, z1], [x1, .95, z1], [x0, .95, z0]), mat);
+      const boardQ = (x0, z0, x1, z1, mat, h = .95) => {
+        add(quad([x0, 0, z0], [x1, 0, z1], [x1, h, z1], [x0, h, z0]), mat);
         const dx = x1 - x0, dz = z1 - z0, l = Math.hypot(dx, dz), ox = dz / l * .25, oz = -dx / l * .25;
-        add(quad([x1 + ox, 0, z1 + oz], [x0 + ox, 0, z0 + oz], [x0 + ox, .95, z0 + oz], [x1 + ox, .95, z1 + oz]), { c: [.05, .06, .08] });
-        add(quad([x0, .95, z0], [x1, .95, z1], [x1 + ox, .95, z1 + oz], [x0 + ox, .95, z0 + oz]), { c: [.08, .09, .11] });
+        add(quad([x1 + ox, 0, z1 + oz], [x0 + ox, 0, z0 + oz], [x0 + ox, h, z0 + oz], [x1 + ox, h, z1 + oz]), { c: [.05, .06, .08] });
+        add(quad([x0, h, z0], [x1, h, z1], [x1 + ox, h, z1 + oz], [x0 + ox, h, z0 + oz]), { c: [.08, .09, .11] });
       };
-      boardQ(-30, -4.5, 30, -4.5, s.ledMats[0]);
-      boardQ(36, -4, 36, 46, s.ledMats[1]); boardQ(-36, 46, -36, -4, s.ledMats[1]);
+      const railM = { c: [.8, .82, .85], sp: .6 };
+      if (tierIx === 0) {
+        // Sportplatz: Holzbanden mit Werbung aus dem Ort, Geländer rundherum
+        const ads = [["BÄCKEREI BALLKORN", "#f4efe2", "#8a2a1a"], ["AUTOHAUS ABSEITS", "#1f4f8a", "#ffffff"], ["GETRÄNKE ECKFAHNE", "#c0392b", "#ffffff"], ["SPORT STEILPASS", "#2e7d32", "#ffffff"], ["PIZZERIA ELFMETER", "#f2c94c", "#2b2b2b"], ["FAHRSCHULE FLANKE", "#ffffff", "#1f4f8a"]];
+        const woodTex = texDraw(1024, 64, (x, w, h) => {
+          ads.forEach(([t, bg, fg], k) => {
+            const x0 = k * w / 6; x.fillStyle = "#6b4a2c"; x.fillRect(x0, 0, w / 6, h); x.fillStyle = bg; x.fillRect(x0 + 3, 4, w / 6 - 6, h - 8);
+            x.fillStyle = fg; x.font = `700 26px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(t, x0 + w / 12, h / 2 + 1, w / 6 - 18);
+          });
+        });
+        boardQ(-27, -4.2, 27, -4.2, { tex: woodTex, sp: .05, uvs: [1, 1] }, .8);
+        boardQ(36.2, 2, 36.2, 38, { tex: woodTex, sp: .05, uvs: [1, 1] }, .8);
+        const parts = [];
+        const rail = (x0, z0, x1, z1) => {
+          const Ln = Math.hypot(x1 - x0, z1 - z0), n = Math.max(1, Math.round(Ln / 2.5)), ang = Math.atan2(x1 - x0, z1 - z0);
+          for (let k = 0; k <= n; k++) { const u = k / n; parts.push(box(.06, 1.05, .06, lerp(x0, x1, u), .52, lerp(z0, z1, u))); }
+          for (const y of [.55, 1.02]) parts.push(xf(box(.05, .05, Ln), M.ch(M.T((x0 + x1) / 2, y, (z0 + z1) / 2), M.Ry(ang))));
+        };
+        rail(-37.5, -6, 37.5, -6); rail(-37.5, -6, -37.5, 62); rail(37.5, -6, 37.5, 62);
+        add(merge(parts), railM);
+        // Stehplatz-Traverse hinter dem Tor (5 Stufen), davor eine Mauer
+        const tP = (u, d, h) => [u + 3, h, -12.2 - d];
+        s.stands.push({ P: tP, len: 32, kurve: true, sections: [{ d0: 0, h0: 1.085, rows: 5, dd: .85, hh: .3, occ: .58, stand: true, kurve: true }] });
+        const conc = { c: [.5, .5, .48], sp: .05 };
+        for (let k = 0; k < 5; k++) add(box(32, .25 + k * .3, .85, 3, (.25 + k * .3) / 2, -12.2 - .85 * k - .425), conc);
+        add(box(32, .9, .2, 3, .45, -12.05), { c: [.62, .6, .56], sp: .05 });
+        add(box(32, 2.4, .3, 3, 1.2, -16.6), { c: [.46, .45, .43] });
+        // Zuschauer an den Seiten hinter dem Geländer
+        for (const sd of [2, 3]) s.stands.push({ len: 50, P: sd === 2 ? (u, d, h) => [-38.2 - d, h, 26 + u] : (u, d, h) => [38.2 + d, h, 26 - u], sections: [{ d0: 0, h0: 1.0, rows: 2, dd: .7, hh: 0, occ: .2, stand: true }] });
+        // Vereinsheim, Bäume, Hügel und Häuser
+        const wall = { c: [.88, .82, .7], sp: .05 }, roofC = { c: [.58, .24, .17], sp: .1 }, winM = { c: [.2, .26, .32], sp: .9 };
+        const VH = M.ch(M.T(-24, 0, -16), M.Ry(.3)), hv = house(14, 4, 7, 2.4);
+        add(hv.walls, wall, VH); add(hv.roof, roofC, VH);
+        for (let k = 0; k < 5; k++) add(box(1.6, 1.2, .1, -5.2 + k * 2.6, 2.3, 3.53), winM, VH);
+        add(box(1.2, 2.2, .1, 5.6, 1.1, 3.53), { c: [.36, .24, .16] }, VH);
+        const sign = texDraw(512, 64, (x, w, h) => { x.fillStyle = "#1f3d2a"; x.fillRect(0, 0, w, h); x.strokeStyle = "#f4efe2"; x.lineWidth = 4; x.strokeRect(4, 4, w - 8, h - 8); x.fillStyle = "#f4efe2"; x.font = `700 44px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("VEREINSHEIM", w / 2, h / 2 + 2); });
+        add(quad([-3.4, 3.1, 3.58], [3.4, 3.1, 3.58], [3.4, 3.85, 3.58], [-3.4, 3.85, 3.58]), { tex: sign, em: .25, sp: .1 }, VH);
+        const tree = merge([colored(xf(loft([[0, .2, .2], [-3.2, .32, .32]], 8), M.T(0, 3.2, 0)), [.34, .24, .16]), colored(ellipsoid(2.3, 2.7, 2.3, 5.3, 0, 12, 8), [.17, .33, .14]), colored(ellipsoid(1.7, 2.0, 1.7, 7.2, .3, 12, 8), [.22, .4, .18]), colored(ellipsoid(1.5, 1.6, 1.5, 5.8, -1.1, 10, 6), [.19, .37, .15])]);
+        const treeM = mesh(tree), r = rnd(12), treeMat = { vc: true, sp: .05 };
+        for (let k = 0; k < 46; k++) {
+          const side = k % 4; let x, z;
+          if (side === 0) { x = -70 + r() * 140; z = -24 - r() * 26; } else if (side === 1) { x = -70 + r() * 140; z = 76 + r() * 26; } else { x = (side === 2 ? -1 : 1) * (46 + r() * 24); z = -12 + r() * 84; }
+          if (Math.abs(x + 24) < 10 && Math.abs(z + 16) < 8) continue;
+          const sc = .8 + r() * .7; s.props.push({ m: treeM, model: M.ch(M.T(x, 0, z), M.S(sc, sc * (.9 + r() * .3), sc), M.Ry(r() * 6)), mat: treeMat });
+        }
+        const hill = { c: [.24, .36, .2], sp: 0 }, hillFar = { c: [.3, .4, .32], sp: 0 };
+        for (const [hx2, hz, hw, hh2, far] of [[-150, -190, 130, 30, 1], [40, -215, 170, 40, 1], [200, -70, 110, 24, 0], [-210, 60, 140, 32, 0], [160, 180, 150, 30, 0], [-60, 220, 140, 26, 0]]) add(ellipsoid(hw, hh2, hw * .6, -4, 0, 18, 8), far ? hillFar : hill, M.T(hx2, 0, hz));
+        const houseW = { c: [.9, .86, .8] }, houseW2 = { c: [.86, .76, .62] }, roof2 = { c: [.42, .2, .16] };
+        for (let k = 0; k < 10; k++) { const x = -78 + k * 17 + r() * 6, z = -64 - r() * 26, hs = house(8, 5.5 + r() * 2, 7, 3), m = M.ch(M.T(x, 0, z), M.Ry((r() - .5) * .4)); add(hs.walls, k % 3 ? houseW : houseW2, m); add(hs.roof, k % 2 ? roofC : roof2, m); }
+        // Kirchturm im Ort
+        const CT = M.T(18, 0, -88); add(box(5, 16, 5, 0, 8, 0), houseW, CT); add(merge([quad([-2.8, 16, 2.8], [2.8, 16, 2.8], [0, 24, 0], [0, 24, 0]), quad([2.8, 16, -2.8], [-2.8, 16, -2.8], [0, 24, 0], [0, 24, 0]), quad([2.8, 16, 2.8], [2.8, 16, -2.8], [0, 24, 0], [0, 24, 0]), quad([-2.8, 16, -2.8], [-2.8, 16, 2.8], [0, 24, 0], [0, 24, 0])]), { c: [.25, .36, .32], sp: .3 }, CT);
+      } else {
+        if (tierIx <= 2) {
+          // Stadt am Horizont (bei großen Stadien vom Dach verdeckt)
+          const ring = loft([[26, 175, 175, 0, 27], [-1, 175, 175, 0, 27]], 48);
+          ring.t = ring.t.map((v, k) => k % 2 ? (v < .5 ? 0 : 1) : v * 4);
+          add(ring, { tex: texSkyline(T.time), em: 1, blend: "a", fog: false, sp: 0 });
+        }
+        boardQ(-30, -4.5, 30, -4.5, s.ledMats[0]);
+        boardQ(36, -4, 36, 46, s.ledMats[1]); boardQ(-36, 46, -36, -4, s.ledMats[1]);
+      }
       // Tribünen: Sitzreihen, darauf die Fans als einzelne Figuren
       const seats = { tex: texSeats(col), c: [.8, .8, .85], sp: 0 };
       const concrete = { c: [.2, .22, .25], sp: .05 }, dark = { c: [.07, .08, .1] }, roofM = { c: [.55, .58, .63], sp: .3 }, under = { c: [.12, .13, .16] };
-      const fascia = { tex: texLED(`${(o.club || "BALL KNOWLEDGE").toUpperCase()}  ·  BALL KNOWLEDGE  ·  `, css(col), "#06080b"), em: 1, uvs: [5, 1], uv: [0, 0] };
+      if (day || T.time === "dusk") { concrete.c = [.42, .43, .45]; dark.c = [.2, .21, .24]; under.c = [.24, .25, .28]; }
+      const fascia = { tex: texLED(`${clubT}  ·  ${fin}  ·  `, css(col), "#06080b"), em: 1, uvs: [5, 1], uv: [0, 0] };
       s.ledMats.push(fascia);
-      // P(u, d, h): u entlang, d nach hinten, h Höhe
-      const stand = (P, len, kurve) => {
+      const lampM = { c: [1, .98, .9], em: 1 };
+      for (const D of T.stands || []) {
+        const P = SIDE_P[D.side], len = D.len, R = D.rows, rise = .58;
         const sl = (d0, h0, d1, h1, mat, ru, rv) => add(quad(P(-len / 2, d0, h0), P(len / 2, d0, h0), P(len / 2, d1, h1), P(-len / 2, d1, h1), ru, rv), mat);
+        const sec = [{ d0: 0, h0: 1.25, rows: R, dd: 1, hh: rise, occ: D.kurve ? .96 : tierIx === 1 ? .8 : .86, kurve: D.kurve }];
         sl(0, 0, 0, 1.25, concrete, len / 14, 1);
-        sl(0, 1.25, 16, 10.5, seats, len / 12, 4);
-        sl(16, 10.5, 17.5, 10.5, dark, 1, 1);
-        sl(17.5, 10.5, 17.5, 11.4, dark, 1, 1);
-        add(quad(P(-len / 2, 17.5, 11.4), P(len / 2, 17.5, 11.4), P(len / 2, 17.5, 12.6), P(-len / 2, 17.5, 12.6)), fascia);
-        sl(17.5, 12.6, 32, 23, seats, len / 12, 3.6);
-        sl(32, 23, 32, 31, dark, 1, 1);
-        sl(8, 30.5, 34, 31.5, under, 1, 1);
-        sl(8, 31.2, 34, 32.2, roofM, 1, 1);
-        sl(8, 30.5, 8, 31.2, { c: [.9, .92, .95], em: .6 }, 1, 1);
-        for (let k = 0; k < 9; k++) { const u = -len / 2 + (k + .5) * len / 9, gp = P(u, 8.6, 30.2); s.glows.push({ p: gp, r: 5.5 }); add(box(2.6, .5, .9), { c: [1, .98, .9], em: 1 }, M.T(...gp)); }
-        s.stands.push({ P, len, kurve });
-      };
-      stand((u, d, h) => [u, h, -9 - d], 92, true);
-      stand((u, d, h) => [-u, h, 64 + d], 92, false);
-      stand((u, d, h) => [-42 - d, h, 27 + u], 76, false);
-      stand((u, d, h) => [42 + d, h, 27 - u], 76, false);
-      s.fans = PR.crowd ? buildFans(s.stands, col, col2) : [];
+        sl(0, 1.25, R, 1.25 + R * rise, seats, len / 12, R / 4);
+        let topD = R, topH = 1.25 + R * rise;
+        if (D.upper) {
+          sl(16, 10.5, 17.5, 10.5, dark, 1, 1); sl(17.5, 10.5, 17.5, 11.4, dark, 1, 1);
+          add(quad(P(-len / 2, 17.5, 11.4), P(len / 2, 17.5, 11.4), P(len / 2, 17.5, 12.6), P(-len / 2, 17.5, 12.6)), fascia);
+          sl(17.5, 12.6, 32, 23, seats, len / 12, 3.6);
+          sec.push({ d0: 17.5, h0: 12.6, rows: 14, dd: 14.5 / 14, hh: (23 - 12.6) / 14, occ: tierIx === 4 ? (D.kurve ? 1 : .92) : .74, upper: true, kurve: T.arena && D.kurve });
+          topD = 32; topH = 23;
+        } else {
+          // Seitenwände (offene Ecken bei kleineren Stadien)
+          for (const e of [-1, 1]) { const u = e * len / 2, q = quad(P(u, 0, 0), P(u, topD + .3, 0), P(u, topD + .3, topH + 1.2), P(u, 0, 1.25)); add(q, concrete); }
+        }
+        const roofH = D.roof === "full" ? topH + 8 : D.roof === "small" ? topH + 4.2 : topH + 1.4;
+        sl(topD, topH, topD, D.roof === "none" ? topH + 1.4 : roofH + .5, dark, 1, 1);
+        if (D.roof !== "none") {
+          const r0 = D.roof === "full" ? 8 : topD * .35;
+          sl(r0, roofH, topD + 2, roofH + 1, under, 1, 1); sl(r0, roofH + .7, topD + 2, roofH + 1.7, roofM, 1, 1); sl(r0, roofH, r0, roofH + .7, { c: [.9, .92, .95], em: day ? 0 : .6 }, 1, 1);
+          if (D.roof === "full") { const nL = tierIx === 4 ? 13 : 9; for (let k = 0; k < nL; k++) { const u = -len / 2 + (k + .5) * len / nL, gp = P(u, r0 + .6, roofH - .3); s.glows.push({ p: gp, r: tierIx === 4 ? 6.2 : 5.5 }); add(box(2.6, .5, .9), lampM, M.T(...gp)); } }
+          else if (!day) for (let k = -2; k <= 2; k++) { const gp = P(k * len / 5.5, r0 + .5, roofH - .2); s.glows.push({ p: gp, r: 3 }); add(box(1.8, .35, .6), lampM, M.T(...gp)); }
+          // Stützen für kleine Dächer
+          if (D.roof === "small") for (let k = -2; k <= 2; k++) { const a = P(k * len / 4.4, topD + 1.6, 0); add(box(.3, roofH + .2, .3, a[0], (roofH + .2) / 2, a[2]), { c: [.5, .52, .56], sp: .3 }); }
+        }
+        s.stands.push({ P, len, kurve: !!D.kurve, sections: sec });
+      }
+      // Einfache Stehplätze an Seiten ohne Tribüne (kleines Stadion)
+      for (const sd of T.rails || []) {
+        const P = sd === 1 ? (u, d, h) => [-u, h, 61.5 + d] : (u, d, h) => [39.6 + d, h, 26 - u], len = sd === 1 ? 50 : 52;
+        s.stands.push({ P, len, sections: [{ d0: 0, h0: 1.0, rows: 3, dd: .75, hh: .12, occ: .5, stand: true }] });
+        for (let k = 0; k < 3; k++) { const a = P(-len / 2, (k + .5) * .75, 0), b = P(len / 2, (k + .5) * .75, 0); add(box(Math.abs(b[0] - a[0]) || .75, .12 * (k + 1), Math.abs(b[2] - a[2]) || .75, (a[0] + b[0]) / 2, .06 * (k + 1), (a[2] + b[2]) / 2), { c: [.4, .41, .42] }); }
+        const parts = [], a = P(-len / 2, -.4, 0), b = P(len / 2, -.4, 0);
+        for (const y of [.55, 1.02]) parts.push(box(Math.abs(b[0] - a[0]) || .05, .05, Math.abs(b[2] - a[2]) || .05, (a[0] + b[0]) / 2, y, (a[2] + b[2]) / 2));
+        for (let k = 0; k <= 20; k++) { const q = P(-len / 2 + k * len / 20, -.4, 0); parts.push(box(.06, 1.05, .06, q[0], .52, q[2])); }
+        add(merge(parts), railM);
+      }
+      // Flutlichtmasten in den Ecken
+      if (T.masts) {
+        const pole = { c: [.62, .64, .68], sp: .4 };
+        for (const [mx, mz] of T.masts.pos) {
+          const H = T.masts.h, ang = Math.atan2(-mx, 27 - mz);
+          add(loft([[0, .2, .2], [-H, .42, .42]], 10), pole, M.T(mx, H, mz));
+          const head = M.ch(M.T(mx, H + 1.2, mz), M.Ry(ang), M.Rx(.35)), hw = H > 20 ? 5 : 2.6;
+          add(box(hw, hw * .62, .5), { c: [.18, .2, .23], sp: .3 }, head);
+          add(box(hw * .9, hw * .52, .1, 0, 0, .27), T.masts.on ? lampM : { c: [.55, .57, .6], sp: .6 }, head);
+          if (T.masts.on) s.glows.push({ p: M.ap(head, [0, 0, .8]), r: 12 });
+        }
+      }
+      s.fans = PR.crowd ? buildFans(s.stands, col, col2, s.legs) : [];
+      if (s.legs.length) add(merge(s.legs), { vc: true, sp: .05 });
       const ft = texFans(); s.fanTex = ft[0]; s.fanMask = ft[1]; s.col = col; s.col2 = col2;
-      // Fahnen an der Bande der Kurve und an den Seiten
+      // Fahnen
       s.flagTex = [0, 1, 2].map(v => texFlag(col, v === 1 ? [.95, .95, .95] : col2, v));
       const poleM = { c: [.75, .76, .8], sp: .5 }, pole = loft([[0, .022, .022], [-3.1, .022, .022]], 8);
-      [[-17, -9.6], [-7, -9.6], [6, -9.6], [16, -9.6], [-42.6, 8], [-42.6, 30], [42.6, 14], [42.6, 36]].forEach(([fx, fz], k) => {
-        const base = [fx, 1.9 + (Math.abs(fz) > 9.5 ? 0 : 0), fz];
-        add(pole, poleM, M.T(base[0], base[1] + 3.1, base[2]));
+      const flagPos = tierIx === 0 ? [[-8, -12.6, .3], [12, -12.6, .3]] : tierIx === 1 ? [[-17, -9.6, 1.9], [6, -9.6, 1.9], [-42.6, 14, 1.9]] : [[-17, -9.6, 1.9], [-7, -9.6, 1.9], [6, -9.6, 1.9], [16, -9.6, 1.9], [-42.6, 8, 1.9], [-42.6, 30, 1.9], [42.6, 14, 1.9], [42.6, 36, 1.9]];
+      flagPos.forEach(([fx, fz, fy], k) => {
+        add(pole, poleM, M.T(fx, fy + 3.1, fz));
         const g = { p: [], n: [], t: [], i: [] }, NX = 10, NY = 6;
         for (let r = 0; r <= NY; r++) for (let q = 0; q <= NX; q++) { g.p.push(0, 0, 0); g.n.push(0, 0, 1); g.t.push(q / NX, r / NY); }
         for (let r = 0; r < NY; r++) for (let q = 0; q < NX; q++) { const a = r * (NX + 1) + q; g.i.push(a, a + NX + 1, a + 1, a + 1, a + NX + 1, a + NX + 2); }
         const dir = Math.abs(fx) > 40 ? [0, 0, fx < 0 ? 1 : -1] : [1, 0, 0];
-        s.flags.push({ m: mesh(g, true), base: [base[0], base[1] + 3.1, base[2]], dir, ph: k * 1.7, mat: { tex: s.flagTex[k % 3], sp: .15 } });
+        s.flags.push({ m: mesh(g, true), base: [fx, fy + 3.1, fz], dir, ph: k * 1.7, mat: { tex: s.flagTex[k % 3], sp: .15 } });
       });
+      // Pyro in der Kurve (Finale)
+      if (T.arena) { const r = rnd(41); for (let k = 0; k < 9; k++) { const u = -30 + k * 7.5 + r() * 2, d = 1.5 + (k % 3) * 3.5 + r() * 1.5; s.pyro.push({ p: SIDE_P[0](u, d + .5, 1.25 + (d + .5) * .58 + 1.25), ph: r() * 6 }); } }
       // Kamera der Fotografen
       s.camMesh = mesh(merge([colored(box(.13, .09, .08), [.1, .11, .12]), colored(xf(loft([[0, .036, .036], [-.12, .04, .04]], 12), M.Rx(Math.PI / 2)), [.06, .06, .07]), colored(box(.02, .02, .02, .05, .055, 0), [.2, .2, .22])]));
+      s.photoIx = PHOTO_SET[T.photo];
       // Tor: runde Pfosten, Latte, Netzhalter
       const post = { c: [.96, .97, .98], sp: .8 };
-      const cyl = (r, L) => loft([[0, r, r], [-L, r, r]], 14);
+      const cyl = (r, Ln) => loft([[0, r, r], [-Ln, r, r]], 14);
       add(cyl(.06, 2.5), post, M.T(-3.72, 2.5, 0)); add(cyl(.06, 2.5), post, M.T(3.72, 2.5, 0));
       add(cyl(.06, 7.56), post, M.mul(M.T(-3.78, 2.5, 0), M.Rz(Math.PI / 2)));
       const bar = { c: [.75, .78, .82], sp: .4 };
@@ -5627,34 +5878,40 @@
       s.glowTex = texRadial([[0, "rgba(255,252,235,1)"], [.18, "rgba(255,246,215,.55)"], [.5, "rgba(255,240,200,.12)"], [1, "rgba(255,240,200,0)"]]);
       s.shadowTex = texRadial([[0, "rgba(0,0,0,.55)"], [.5, "rgba(0,0,0,.3)"], [1, "rgba(0,0,0,0)"]], 64);
       s.flashTex = texRadial([[0, "rgba(255,255,255,1)"], [.3, "rgba(230,240,255,.5)"], [1, "rgba(230,240,255,0)"]], 64);
+      if (s.sun) s.sun.mat.tex = texRadial([[0, "rgba(255,255,255,1)"], [.07, "rgba(255,252,240,1)"], [.12, "rgba(255,245,215,.45)"], [.4, "rgba(255,235,190,.1)"], [1, "rgba(255,230,180,0)"]]);
+      if (T.arena) { s.sparkTex = texRadial([[0, "rgba(255,255,255,1)"], [.25, "rgba(255,255,255,.6)"], [1, "rgba(255,255,255,0)"]], 32); s.smokeTex = texRadial([[0, "rgba(200,200,205,.55)"], [.6, "rgba(190,190,195,.22)"], [1, "rgba(180,180,185,0)"]], 64); }
+      // Blitzlichter im Publikum: Plätze aus der Kurve hinter dem Tor
+      s.flashN = [0, 5, 9, 14, 18][tierIx];
+      const k0 = s.stands.find(x => x.kurve);
+      s.flashAt = (r) => { if (!k0) return null; const sc = k0.sections[Math.floor(r() * k0.sections.length)], k = Math.floor(r() * sc.rows); return k0.P(-k0.len / 2 + r() * k0.len, sc.d0 + (k + .55) * sc.dd, sc.h0 + (k + .55) * sc.hh + .75); };
       return s;
     }
-    // Fans: eine Bildtafel pro besetztem Platz; Kurve hinter dem Tor mit Farbtafel-Choreo
-    function buildFans(stands, col, col2) {
+    // Fans: eine Bildtafel pro besetztem Platz; Kurve hinter dem Tor mit Farbtafel-Choreo. Stehplätze bekommen Beine.
+    function buildFans(stands, col, col2, legs) {
       const out = [], r = rnd(17);
       const shirts = [col, col, col, col, col, col2, col2, [.9, .89, .86], [.18, .2, .23], [.26, .28, .32], [.13, .14, .16], [.72, .74, .78], mixc(col, [0, 0, 0], .35)];
-      stands.forEach((S, si) => {
-        for (const tier of [0, 1]) {
-          const rows = tier ? 14 : 16, d0 = tier ? 17.5 : 0, h0 = tier ? 12.6 : 1.25, dd = tier ? 14.5 / 14 : 1, hh = tier ? (23 - 12.6) / 14.5 : 9.25 / 16;
-          const occ = S.kurve && !tier ? .96 : tier ? .74 : .86, nSeat = Math.floor((S.len - .8) / .56);
-          const g = { p: [], t: [], c: [], n: [], i: [] };
-          for (let k = 0; k < rows; k++) for (let j = 0; j < nSeat; j++) {
-            if (r() > occ) continue;
-            const u = -S.len / 2 + .4 + (j + .5) * (S.len - .8) / nSeat + (r() - .5) * .12, d = d0 + (k + .55) * dd, base = S.P(u, d, h0 + (k + .55) * dd * hh);
+      const pants = [[.16, .2, .3], [.1, .11, .13], [.22, .26, .36], [.3, .3, .32], [.12, .15, .22]];
+      stands.forEach(S => {
+        const a = S.P(-1, 5, 0), b = S.P(1, 5, 0), right = nrm(sub(b, a)), yaw = Math.atan2(-right[2], right[0]);
+        for (const sec of S.sections) {
+          const nSeat = Math.floor((S.len - .8) / .56), g = { p: [], t: [], c: [], n: [], i: [] };
+          for (let k = 0; k < sec.rows; k++) for (let j = 0; j < nSeat; j++) {
+            if (r() > sec.occ) continue;
+            const u = -S.len / 2 + .4 + (j + .5) * (S.len - .8) / nSeat + (r() - .5) * .12, base = S.P(u, sec.d0 + (k + .55) * sec.dd, sec.h0 + (k + .55) * sec.hh);
             const sh = shirts[Math.floor(r() * shirts.length)], var8 = Math.floor(r() * 8), ph = r();
-            // Choreo in der Kurve: Streifen in Vereinsfarben, oben und unten weiß
             let card = 0;
-            if (S.kurve && !tier) { card = k === 0 || k === rows - 1 ? 3 : (Math.floor((u + 46 + k * 1.6) / 5.5) % 2 ? 2 : 1); }
+            if (S.kurve && sec.kurve && !sec.stand) card = k === 0 || k === sec.rows - 1 ? 3 : (Math.floor((u + 46 + k * 1.6) / 5.5) % 2 ? 2 : 1);
             const v0 = g.p.length / 3;
             for (const [tx, ty] of [[0, 0], [1, 0], [1, 1], [0, 1]]) { g.p.push(...base); g.t.push(tx, ty); g.c.push(...sh); g.n.push(var8, ph, card); }
             g.i.push(v0, v0 + 1, v0 + 2, v0, v0 + 2, v0 + 3);
+            if (sec.stand && legs) legs.push(colored(xf(box(.32, 1.06, .2), M.ch(M.T(base[0], base[1] - .47, base[2]), M.Ry(yaw))), pants[Math.floor(r() * pants.length)]));
           }
-          const a = S.P(-1, 5, 0), b = S.P(1, 5, 0), right = nrm(sub(b, a));
+          if (!g.i.length) continue;
           const n = g.p.length / 3, d = new Float32Array(n * 11);
           for (let v = 0; v < n; v++) { d.set([g.p[v * 3], g.p[v * 3 + 1], g.p[v * 3 + 2], g.t[v * 2], g.t[v * 2 + 1], g.c[v * 3], g.c[v * 3 + 1], g.c[v * 3 + 2], g.n[v * 3], g.n[v * 3 + 1], g.n[v * 3 + 2]], v * 11); }
           const vb = gl.createBuffer(); if (RES) RES.push(["b", vb]); gl.bindBuffer(gl.ARRAY_BUFFER, vb); gl.bufferData(gl.ARRAY_BUFFER, d, gl.STATIC_DRAW);
           const ib = gl.createBuffer(); if (RES) RES.push(["b", ib]); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(g.i), gl.STATIC_DRAW);
-          out.push({ vb, ib, cnt: g.i.length, right, light: tier ? .74 : .92, kurve: S.kurve && !tier });
+          out.push({ vb, ib, cnt: g.i.length, right, light: sec.upper ? .74 : .92, kurve: !!(S.kurve && sec.kurve && !sec.stand), stand: !!sec.stand });
         }
       });
       return out;
@@ -5669,7 +5926,7 @@
       for (const f of ST.fans) {
         gl.bindBuffer(gl.ARRAY_BUFFER, f.vb);
         attr(A.aP, 3, 44, 0); attr(A.aT, 2, 44, 12); attr(A.aC, 3, 44, 20); attr(A.aN, 3, 44, 32);
-        gl.uniform3fv(U.uRight, f.right); gl.uniform1f(U.uLight, f.light); gl.uniform1f(U.uCheer, cheer); gl.uniform1f(U.uCards, f.kurve && cards ? 1 : 0);
+        gl.uniform3fv(U.uRight, f.right); gl.uniform1f(U.uLight, f.light * ST.L.crowd); gl.uniform1f(U.uCheer, cheer); gl.uniform1f(U.uCards, f.kurve && cards ? 1 : 0);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, f.ib); gl.drawElements(gl.TRIANGLES, f.cnt, gl.UNSIGNED_SHORT, 0);
       }
     }
@@ -5954,12 +6211,12 @@
     function finalCam(F, tf, hero) {
       if (tf < 1700) return { eye: [hero[0] + 2.6, 1.9, hero[2] + 5.8], target: [hero[0], 1.2, hero[2]], fov: 36 };
       if (tf < 4300) { const u = cl(tf, 1700, 4300); return { eye: [F.M[0] + 15 - u * 3, 6.2 - u * 1.5, F.M[2] + 7 - u * 2], target: [F.M[0], 1, F.M[2] + 6 - u * 5], fov: 42 }; }
-      const a = (tf - 4300) / 7000 + 1.1;
-      return { eye: [F.M[0] + Math.sin(a) * 7.2, 2.9, F.M[2] + Math.cos(a) * 7.2], target: [F.M[0], 1.15, F.M[2]], fov: 40 };
+      const a = (tf - 4300) / 7000 + 1.1, up = ST && ST.sparkTex ? eio(cl(tf, 4300, 6300)) : 0;
+      return { eye: [F.M[0] + Math.sin(a) * 7.2, 2.9 - up * .9, F.M[2] + Math.cos(a) * 7.2], target: [F.M[0], 1.15 + up * 1.9, F.M[2]], fov: 40 + up * 6 };
     }
 
     // ===== Zeichnen =====
-    const S = { dprCap: 2, ema: 16, slow: 0, cv: null, ok: false, stadO: { color: "#4fd987", color2: "#ffb454", club: "" }, stadKey: "", figs: null, figKey: "", sh: null, mode: "idle", t0: 0, onDone: null, last: 0, run: false, kicks: 0, final: null, camOverride: null };
+    const S = { dprCap: 2, ema: 16, slow: 0, cv: null, ok: false, stadO: { color: "#4fd987", color2: "#ffb454", club: "", tier: 3 }, stadKey: "", figs: null, figKey: "", sh: null, mode: "idle", t0: 0, onDone: null, last: 0, run: false, kicks: 0, final: null, camOverride: null };
     function prepare(o, info) {
       const r = rnd(Math.floor(Math.random() * 1e9)), sim = simulate(o, r);
       const dv = o.dive, dir = dv[0] - 1;
@@ -6008,7 +6265,8 @@
       const cv = S.cv;
       const dpr = Math.min(S.mode === "replay" ? Math.min(1.6, S.dprCap) : S.dprCap, window.devicePixelRatio || 1), W = Math.max(2, Math.round(cv.clientWidth * dpr)), H = Math.max(2, Math.round(cv.clientHeight * dpr));
       if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
-      const key = S.stadO.color + S.stadO.color2 + S.stadO.club;
+      if (S.mode === "kabine") { gl.viewport(0, 0, W, H); frameKabine(now, W, H); return; }
+      const key = S.stadO.color + S.stadO.color2 + S.stadO.club + "|" + S.stadO.tier;
       if (S.stadKey !== key) { if (ST) freeRes(ST.res); RES = []; ST = buildStadium(S.stadO); ST.res = RES; RES = null; S.stadKey = key; SH1 = { tex: ST.shadowTex, blend: "a", dw: false, a: .75, em: 1, fog: false, po: 1 }; SH2 = { tex: ST.shadowTex, blend: "a", dw: false, a: .28, em: 1, fog: false, po: 1 }; GLOW = { tex: ST.glowTex, blend: "add", dw: false, em: 1, a: .9, fog: false }; FLASH = { tex: ST.flashTex, blend: "add", dw: false, em: 1, a: 1, fog: false }; CAMM = { vc: true, sp: .8 }; }
       ensureFigs();
       const F = S.figs;
@@ -6023,11 +6281,13 @@
       if (!cam) cam = fin ? finalCam(fin, tf, (fin.hero === "shooter" ? shP : kpP).root) : S.mode === "kick" ? tvCam(sh, t, shP.root) : AIM;
       if (S.camOverride) cam = S.camOverride;
       gl.viewport(0, 0, W, H);
-      gl.clearColor(.02, .03, .05, 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      const Lt = ST.L; gl.depthMask(true); curMat = null; gl.clearColor(Lt.clear[0], Lt.clear[1], Lt.clear[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       const proj = M.persp(cam.fov * Math.PI / 180, W / H, .1, 600), view = M.look(cam.eye, cam.target, cam.up || [0, 1, 0]), VP = M.mul(proj, view);
       frameNo++;
-      FU = { VP, cam: cam.eye, L1: nrm([-.35, .85, .45]), L1c: [.95, .93, .86], L2: nrm([.55, .7, -.45]), L2c: [.42, .46, .55], sky: [.32, .36, .45], gnd: [.16, .2, .15], fogC: [.05, .08, .13], fog: [45, 180] };
+      FU = { VP, cam: cam.eye, L1: Lt.L1, L1c: Lt.L1c, L2: Lt.L2, L2c: Lt.L2c, sky: Lt.sky, gnd: Lt.gnd, fogC: Lt.fogC, fog: Lt.fog };
       curMat = null; use(PR.base);
+      const inv = billboard(view);
+      drawSky(inv);
       // Stimmung: Jubel nach Toren und Paraden, Choreo vor dem ersten Schuss
       let cheer = 0;
       if (sh) { const tt = tA; if (sh.sim.netT !== null && tt > sh.sim.netT) cheer = Math.max(cheer, 1 - cl(tt, sh.sim.netT + 3000, sh.sim.netT + 5500)); if (sh.o.kind === "save" && tt > ARR) cheer = Math.max(cheer, .75 * (1 - cl(tt, ARR + 2500, ARR + 4500))); }
@@ -6035,6 +6295,7 @@
       const cards = S.mode === "idle" && S.kicks === 0;
       for (const lm of ST.ledMats) lm.uv = [(now / 26000) % 1, 0];
       for (const it of ST.list) if (!it.late) draw(it.m, it.model, it.mat);
+      for (const it of ST.props) draw(it.m, it.model, it.mat);
       drawFans(now, cheer, cards);
       drawFlags(now, cheer);
       // Spieler
@@ -6051,9 +6312,9 @@
       // Schiedsrichter und Fotografen
       const rP = [onGround(refPose(now, false), F.refs[0]), onGround(refPose(now, true), F.refs[1])];
       drawFig(rP[0], F.refs[0]); drawFig(rP[1], F.refs[1]);
-      const pP = F.photo.map((fig, i) => { const P = onGround(photoPose(i, now), fig); drawFig(P, fig); return P; });
+      const pP = ST.photoIx.map(i => { const fig = F.photo[i], P = onGround(photoPose(i, now), fig); drawFig(P, fig); P._i = i; return P; });
       if (S.showcase) for (const it of S.showcase) drawFig(onGround(it.P, it.fig), it.fig);
-      pP.forEach((P, i) => { const B = PKCHAR.skeleton(P, PKCHAR.makeSK(quantBuild(F.photo[i].look.build))); draw(ST.camMesh, M.ch(B[4], M.T(0, .13, -.16)), CAMM); });
+      pP.forEach(P => { const B = PKCHAR.skeleton(P, PKCHAR.makeSK(quantBuild(F.photo[P._i].look.build))); draw(ST.camMesh, M.ch(B[4], M.T(0, .13, -.16)), CAMM); });
       const b = ballAt(sh && sh.sim, tA);
       if (b.show) { const R = Math.abs(b.ang) > 1e-6 ? axisRot(b.ax, b.ang) : M.id(); draw(BALL, M.mul(M.T(...b.p), R), BALLM); }
       // Schatten
@@ -6069,15 +6330,205 @@
       }
       for (const it of ST.list) if (it.late) draw(it.m, it.model, it.mat);
       // Flutlicht-Schein, Blitzlichter im Publikum und bei den Fotografen
-      const inv = billboard(view);
       for (const g of ST.glows) draw(SPR, M.ch(M.T(...g.p), inv, M.S(g.r * 2, g.r * 2, 1)), GLOW);
       if (cheer > .3) {
         const rr = rnd(Math.floor(now / 70));
-        for (let k = 0; k < 14; k++) { const u = rr() * 80 - 40, d = rr() * 28, z = -9 - d - (d > 16 ? 1.5 : 0), y = d > 16 ? 12.6 + (d - 16) * .72 : 1.3 + d * .58; draw(SPR, M.ch(M.T(u, y, z), inv, M.S(.9, .9, 1)), FLASH); }
-        pP.forEach((P, i) => { if (rr() < .35) { const B = PKCHAR.skeleton(P, PKCHAR.makeSK(quantBuild(F.photo[i].look.build))), q = M.ap(B[4], [0, .14, -.24]); draw(SPR, M.ch(M.T(...q), inv, M.S(.7, .7, 1)), FLASH); } });
+        for (let k = 0; k < ST.flashN; k++) { const q = ST.flashAt(rr); if (q) draw(SPR, M.ch(M.T(...q), inv, M.S(.9, .9, 1)), FLASH); }
+        if (ST.time !== "day") pP.forEach(P => { if (rr() < .35) { const B = PKCHAR.skeleton(P, PKCHAR.makeSK(quantBuild(F.photo[P._i].look.build))), q = M.ap(B[4], [0, .14, -.24]); draw(SPR, M.ch(M.T(...q), inv, M.S(.7, .7, 1)), FLASH); } });
       }
+      // Finale: Pyro in der Kurve, Feuerwerk beim Jubel
+      if (ST.pyro.length && (cheer > .3 || cards || fin)) drawPyro(now, inv);
+      if (ST.sparkTex && fin) drawFireworks(fin, now - fin.t0, inv, cam);
       if (replay) overlay(t);
       else hideOverlay();
+    }
+    // Himmel mit Sonne und Wolken (Tag, Abend)
+    function drawSky(inv) {
+      draw(ST.sky.m, null, ST.sky.mat);
+      if (ST.sun) draw(SPR, M.ch(M.T(...ST.sun.p), inv, M.S(ST.sun.r, ST.sun.r, 1)), ST.sun.mat);
+      for (const c of ST.clouds) draw(SPR, M.ch(M.T(...c.p), inv, M.S(c.w, c.h, 1)), c.mat);
+    }
+    const PYM = { tex: null, blend: "add", dw: false, em: 1, a: 1, fog: false, c: [1, .45, .2] }, SMK = { tex: null, blend: "a", dw: false, em: 1, a: .3, fog: false, c: [1, 1, 1] };
+    function drawPyro(now, inv) {
+      const t = now / 1000; PYM.tex = ST.glowTex; SMK.tex = ST.smokeTex;
+      for (const f of ST.pyro) {
+        // Rauch steigt auf, die Fackel flackert
+        for (let k = 0; k < 7; k++) { const u = (t * .22 + k / 7 + f.ph) % 1, sz = 2 + u * 7; SMK.a = (1 - u) * .42 * Math.min(1, u * 6); SMK.c = [.95 - u * .15, .92 - u * .15, .92 - u * .12]; curMat = null; draw(SPR, M.ch(M.T(f.p[0] + Math.sin(u * 3 + f.ph) * 1.2 + u * 2, f.p[1] + .6 + u * 9, f.p[2] - u * 2.5), inv, M.S(sz, sz, 1)), SMK); }
+        const fl = .75 + .25 * Math.sin(t * 31 + f.ph * 7) * Math.sin(t * 17 + f.ph);
+        PYM.a = fl; PYM.c = [1, .4 + .1 * fl, .16]; curMat = null; draw(SPR, M.ch(M.T(...f.p), inv, M.S(6.5 * fl, 6.5 * fl, 1)), PYM);
+        PYM.a = .9; PYM.c = [1, .7, .4]; curMat = null; draw(SPR, M.ch(M.T(...f.p), inv, M.S(2.4, 2.4, 1)), PYM);
+        PYM.a = 1; PYM.c = [1, .97, .85]; curMat = null; draw(SPR, M.ch(M.T(...f.p), inv, M.S(.9, .9, 1)), PYM);
+      }
+      curMat = null;
+    }
+    const FWC = [[1, .35, .3], [1, .85, .3], [.4, .8, 1], [.6, 1, .5], [1, .5, .9], [1, 1, 1]];
+    const FWM = { tex: null, blend: "add", dw: false, em: 1, a: 1, fog: false, c: [1, 1, 1] };
+    // Feuerwerk über dem Spielfeld: jede Rakete platzt im Blickfeld der Kamera (Position beim Start gemerkt)
+    function drawFireworks(fin, tf, inv, cam) {
+      if (tf < 1500) return;
+      FWM.tex = ST.sparkTex; const fw = fin.fw || (fin.fw = {});
+      const per = 650, n0 = Math.floor((tf - 1500) / per);
+      for (let b = Math.max(0, n0 - 3); b <= n0; b++) {
+        const age = (tf - 1500 - b * per) / 1000; if (age < 0 || age > 2.2) continue;
+        const r = rnd(b * 7 + 3);
+        if (!fw[b]) {
+          const f = nrm([cam.target[0] - cam.eye[0], 0, cam.target[2] - cam.eye[2]]), rt = [-f[2], 0, f[0]], dist = 34 + r() * 16, lat = (r() - .5) * dist * .7;
+          fw[b] = [cam.eye[0] + f[0] * dist + rt[0] * lat, 13 + r() * 9, cam.eye[2] + f[2] * dist + rt[2] * lat];
+        } else { r(); r(); r(); }
+        const c = fw[b], col = FWC[Math.floor(r() * FWC.length)], N = 28, sp = 6 + r() * 4;
+        const fade = Math.max(0, 1 - age / 2.2);
+        for (let k = 0; k < N; k++) {
+          const th = r() * Math.PI * 2, ph = Math.acos(r() * 2 - 1), d = [Math.sin(ph) * Math.cos(th), Math.cos(ph), Math.sin(ph) * Math.sin(th)];
+          const ex = sp * (1 - Math.exp(-age * 2.4)) / 2.4 * 2.4, q = [c[0] + d[0] * ex, c[1] + d[1] * ex - 2.2 * age * age, c[2] + d[2] * ex];
+          FWM.c = col; FWM.a = fade * (age < .08 ? age / .08 : 1) * (.7 + .3 * Math.sin(age * 40 + k)); curMat = null;
+          draw(SPR, M.ch(M.T(...q), inv, M.S(2.1, 2.1, 1)), FWM);
+          if (k % 2 === 0 && age > .15) { const q2 = [c[0] + d[0] * ex * .82, c[1] + d[1] * ex * .82 - 2.2 * age * age + .15, c[2] + d[2] * ex * .82]; FWM.a *= .45; curMat = null; draw(SPR, M.ch(M.T(...q2), inv, M.S(1.4, 1.4, 1)), FWM); }
+        }
+        if (age < .25) { FWM.c = [1, 1, .95]; FWM.a = 1 - age / .25; curMat = null; draw(SPR, M.ch(M.T(...c), inv, M.S(9, 9, 1)), FWM); }
+      }
+      curMat = null;
+    }
+    // ===== Kabine (Shop): dein Spieler steht drehbar in der Umkleide =====
+    const KB = { room: null, res: null, lockKey: "", lockRes: null, lockers: [], fig: null, yaw: 0, yawT: 0, view: "full", camFrom: null, camT: -1e9, cheer: -1e9, touch: -1e9, t0: 0 };
+    const KBCAM = { full: { eye: [0, 1.02, 3.9], target: [0, .93, 0], fov: 36 }, back: { eye: [0, 1.1, 3.5], target: [0, 1.0, 0], fov: 36 }, feet: { eye: [.3, .55, 1.65], target: [0, .2, 0], fov: 34 } };
+    const KBL = { L1: nrm([.3, .85, .75]), L1c: [1.0, .95, .87], L2: nrm([-.55, .5, -.65]), L2c: [.42, .48, .6], sky: [.34, .34, .38], gnd: [.17, .15, .14], fogC: [.08, .09, .1], fog: [40, 90] };
+    // Trikot zum Aufhängen (Rückansicht mit Name und Nummer)
+    function texJersey(k, name, num) {
+      return texDraw(256, 256, (x, W, H) => {
+        x.clearRect(0, 0, W, H);
+        const path = () => { x.beginPath(); x.moveTo(84, 26); x.quadraticCurveTo(128, 40, 172, 26); x.lineTo(226, 56); x.lineTo(246, 112); x.lineTo(208, 124); x.lineTo(196, 100); x.lineTo(194, 236); x.quadraticCurveTo(128, 246, 62, 236); x.lineTo(60, 100); x.lineTo(48, 124); x.lineTo(10, 112); x.lineTo(30, 56); x.closePath(); };
+        const c1 = k.shirt || "#4fd987", c2 = k.shirt2 || c1, p = k.pattern || "uni";
+        x.save(); path(); x.clip();
+        x.fillStyle = c1; x.fillRect(0, 0, W, H); x.fillStyle = c2;
+        if (p === "streifen") for (let i = 0; i < 9; i++) { if (i % 2) x.fillRect(i * 28, 0, 28, H); }
+        else if (p === "ringel") for (let i = 0; i < 10; i++) { if (i % 2) x.fillRect(0, 20 + i * 24, W, 24); }
+        else if (p === "haelften") x.fillRect(128, 0, 128, H);
+        else if (p === "schärpe") { x.beginPath(); x.moveTo(30, 40); x.lineTo(70, 40); x.lineTo(226, 236); x.lineTo(186, 236); x.fill(); }
+        else if (p === "chevron") { x.beginPath(); x.moveTo(40, 70); x.lineTo(128, 130); x.lineTo(216, 70); x.lineTo(216, 100); x.lineTo(128, 160); x.lineTo(40, 100); x.fill(); }
+        else if (p === "nadel") for (let i = 0; i < 26; i++) x.fillRect(i * 10, 0, 2, H);
+        else if (p === "verlauf") { const g = x.createLinearGradient(0, 30, 0, 240); g.addColorStop(0, c1); g.addColorStop(1, c2); x.fillStyle = g; x.fillRect(0, 0, W, H); }
+        else if (p === "viertel") { x.fillRect(128, 0, 128, 132); x.fillRect(0, 132, 128, 124); }
+        else if (p === "zacken") for (let i = 0; i < 8; i++) { x.beginPath(); const y = 30 + i * 28; x.moveTo(0, y); for (let j = 0; j <= 16; j++) x.lineTo(j * 16, y + (j % 2 ? 10 : 0)); x.lineTo(W, y + 12); for (let j = 16; j >= 0; j--) x.lineTo(j * 16, y + 12 + (j % 2 ? 10 : 0)); x.fill(); i++; }
+        // Falten und Licht
+        const sh = x.createLinearGradient(0, 0, W, 0); sh.addColorStop(0, "rgba(0,0,0,.28)"); sh.addColorStop(.3, "rgba(0,0,0,0)"); sh.addColorStop(.7, "rgba(0,0,0,0)"); sh.addColorStop(1, "rgba(0,0,0,.28)"); x.fillStyle = sh; x.fillRect(0, 0, W, H);
+        x.restore();
+        x.lineWidth = 6; x.strokeStyle = k.trim || "#ffffff"; x.beginPath(); x.moveTo(86, 28); x.quadraticCurveTo(128, 42, 170, 28); x.stroke();
+        const lum = (() => { const m = /^#?([0-9a-f]{6})$/i.exec(c1); if (!m) return .5; const n = parseInt(m[1], 16); return (.299 * (n >> 16) + .587 * ((n >> 8) & 255) + .114 * (n & 255)) / 255; })();
+        x.fillStyle = k.ink || (lum > .6 ? "#11151a" : "#ffffff"); x.textAlign = "center";
+        x.font = `700 24px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.fillText(String(name || "").toUpperCase(), 128, 74, 120);
+        x.font = `700 92px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.fillText(String(num || ""), 128, 170);
+        // Bügel
+        x.strokeStyle = "#c9ccd1"; x.lineWidth = 4; x.beginPath(); x.moveTo(70, 34); x.lineTo(128, 14); x.lineTo(186, 34); x.stroke(); x.beginPath(); x.arc(128, 8, 6, Math.PI, 0); x.stroke();
+      }, { clamp: true });
+    }
+    function kbBuildRoom() {
+      const keep = RES; RES = []; const r = { list: [], glows: [] };
+      const add = (g, mat, model) => r.list.push({ m: mesh(g), mat, model: model || null });
+      const tiles = texDraw(256, 256, (x, W) => { x.fillStyle = "#0e141b"; x.fillRect(0, 0, W, W); const rr = rnd(3); for (let i = 0; i < 8; i++) for (let j = 0; j < 8; j++) { const v = 22 + Math.floor(rr() * 8); x.fillStyle = `rgb(${v - 2},${v + 8},${v + 20})`; x.fillRect(i * 32 + 1.5, j * 32 + 1.5, 29, 29); } });
+      const floorT = texDraw(512, 512, (x, W) => { x.fillStyle = "#1c2128"; x.fillRect(0, 0, W, W); const rr = rnd(8); for (let i = 0; i < 4000; i++) { x.fillStyle = `rgba(${rr() < .5 ? "255,255,255" : "0,0,0"},.04)`; x.fillRect(rr() * W, rr() * W, 2, 2); } x.strokeStyle = "rgba(0,0,0,.45)"; x.lineWidth = 3; for (let i = 0; i <= 4; i++) { x.beginPath(); x.moveTo(i * 128, 0); x.lineTo(i * 128, W); x.stroke(); x.beginPath(); x.moveTo(0, i * 128); x.lineTo(W, i * 128); x.stroke(); } });
+      const wood = texDraw(256, 256, (x, W) => { x.fillStyle = "#6a4a32"; x.fillRect(0, 0, W, W); const rr = rnd(4); for (let i = 0; i < 70; i++) { const y = rr() * W; x.strokeStyle = `rgba(${rr() < .5 ? "40,24,14" : "150,110,76"},${.15 + rr() * .2})`; x.lineWidth = 1 + rr() * 2; x.beginPath(); x.moveTo(0, y); for (let k = 0; k <= 8; k++) x.lineTo(k * 32, y + Math.sin(k * .9 + i) * 3); x.stroke(); } });
+      const emblem = texDraw(256, 256, (x, W) => { x.clearRect(0, 0, W, W); x.translate(128, 128); x.strokeStyle = "rgba(255,180,84,.85)"; x.lineWidth = 6; x.beginPath(); x.arc(0, 0, 118, 0, 7); x.stroke(); x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 104, 0, 7); x.stroke(); x.fillStyle = "rgba(255,180,84,.85)"; x.font = `700 24px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; const t = "BALL KNOWLEDGE · PLAY · "; for (let i = 0; i < t.length * 2; i++) { const a = -Math.PI / 2 + i * Math.PI * 2 / (t.length * 2); x.save(); x.rotate(a + Math.PI / 2); x.fillText(t[i % t.length], 0, -88); x.restore(); } x.strokeStyle = "rgba(255,180,84,.5)"; x.lineWidth = 3; x.beginPath(); x.arc(0, 0, 60, 0, 7); x.stroke(); }, { clamp: true });
+      const board = texDraw(512, 256, (x, W, H) => {
+        x.fillStyle = "#f2f4f6"; x.fillRect(0, 0, W, H); x.strokeStyle = "#9aa3ad"; x.lineWidth = 10; x.strokeRect(5, 5, W - 10, H - 10);
+        x.strokeStyle = "#2e7d4f"; x.lineWidth = 3; x.strokeRect(40, 30, 432, 196); x.beginPath(); x.moveTo(256, 30); x.lineTo(256, 226); x.stroke(); x.beginPath(); x.arc(256, 128, 36, 0, 7); x.stroke(); x.strokeRect(40, 78, 60, 100); x.strokeRect(412, 78, 60, 100);
+        x.font = `700 26px "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle";
+        for (const [px, py] of [[130, 70], [130, 186], [190, 128], [300, 90], [320, 170]]) { x.fillStyle = "#c62828"; x.fillText("X", px, py); }
+        for (const [px, py] of [[230, 60], [372, 128], [350, 200]]) { x.strokeStyle = "#1e4fa3"; x.lineWidth = 3; x.beginPath(); x.arc(px, py, 11, 0, 7); x.stroke(); }
+        x.strokeStyle = "#c62828"; x.lineWidth = 3; x.setLineDash([8, 6]); x.beginPath(); x.moveTo(190, 128); x.quadraticCurveTo(260, 100, 300, 90); x.stroke(); x.setLineDash([]);
+        x.beginPath(); x.moveTo(320, 170); x.lineTo(400, 130); x.stroke(); x.beginPath(); x.moveTo(400, 130); x.lineTo(386, 132); x.moveTo(400, 130); x.lineTo(392, 142); x.stroke();
+      });
+      const banner = texDraw(1024, 128, (x, W, H) => { x.fillStyle = "#0b0f14"; x.fillRect(0, 0, W, H); x.fillStyle = "#ffb454"; x.fillRect(0, 0, W, 6); x.fillRect(0, H - 6, W, 6); x.font = `700 76px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillStyle = "#f2f5f8"; x.fillText("BALL KNOWLEDGE · KABINE", W / 2, H / 2 + 4, W - 60); });
+      const woodM = { tex: wood, sp: .25, c: [1, 1, 1] }, woodD = { tex: wood, sp: .2, c: [.55, .5, .48] }, wallM = { tex: tiles, sp: .35, uvs: [1, 1] }, led = { c: [1, .93, .8], em: 1 };
+      // Boden, Decke, Wände
+      add(quad([-3.6, 0, 3.6], [3.6, 0, 3.6], [3.6, 0, -2.4], [-3.6, 0, -2.4], 3, 2.5), { tex: floorT, sp: .18 });
+      add(quad([-1.25, .004, 1.25], [1.25, .004, 1.25], [1.25, .004, -1.25], [-1.25, .004, -1.25]), { tex: emblem, blend: "a", dw: false, a: .9, sp: .2, po: 1 });
+      add(quad([-3.6, 3, -2.4], [3.6, 3, -2.4], [3.6, 3, 3.6], [-3.6, 3, 3.6]), { c: [.09, .1, .12] });
+      add(quad([-3.6, 0, -2.4], [3.6, 0, -2.4], [3.6, 3, -2.4], [-3.6, 3, -2.4], 7, 3), wallM);
+      add(quad([-3.6, 0, 3.6], [-3.6, 0, -2.4], [-3.6, 3, -2.4], [-3.6, 3, 3.6], 6, 3), wallM);
+      add(quad([3.6, 0, -2.4], [3.6, 0, 3.6], [3.6, 3, 3.6], [3.6, 3, -2.4], 6, 3), wallM);
+      // Spinde: 7 offene Holzfächer mit Sitz, Licht oben und Namensschild
+      const N = 7, cw = .96, x0 = -N * cw / 2, zB = -2.36, zF = -1.82;
+      for (let i = 0; i <= N; i++) add(box(.06, 2.3, zB - zF, x0 + i * cw, 1.15, (zB + zF) / 2), woodM);
+      add(box(N * cw + .06, .26, zF - zB + .08, 0, 2.43, (zB + zF) / 2 + .04), woodM);
+      for (let i = 0; i < N; i++) {
+        const cx = x0 + (i + .5) * cw;
+        add(quad([cx - cw / 2, 0, zB + .02], [cx + cw / 2, 0, zB + .02], [cx + cw / 2, 2.3, zB + .02], [cx - cw / 2, 2.3, zB + .02]), woodD);
+        add(box(cw - .06, .07, .5, cx, .46, zF - .22), woodM); add(box(cw - .06, .46, .05, cx, .23, zF - .02), woodD);
+        add(box(cw - .1, .02, .04, cx, 2.27, zF - .05), led);
+        r.glows.push({ p: [cx, 2.22, zF - .12], r: .55 });
+      }
+      // Bank, Ball, Tasche
+      add(box(5.6, .06, .42, 0, .45, -1.3), woodM); for (const bx of [-2.4, 0, 2.4]) add(box(.08, .42, .34, bx, .21, -1.3), { c: [.25, .26, .29], sp: .5 });
+      add(box(.6, .32, .3, -1.7, .16, -.75), { c: [.13, .15, .18], sp: .2 }); add(box(.62, .05, .1, -1.7, .3, -.75), { c: [1, .7, .33], sp: .2 });
+      // Taktiktafel links, Banner rechts
+      add(quad([-3.58, .95, -.9], [-3.58, .95, 1.1], [-3.58, 2.05, 1.1], [-3.58, 2.05, -.9]), { tex: board, sp: .35 });
+      add(quad([3.58, 1.6, 1.6], [3.58, 1.6, -1.6], [3.58, 2.0, -1.6], [3.58, 2.0, 1.6]), { tex: banner, em: .35, sp: .2 });
+      // Deckenlichter
+      for (const [lx, lz] of [[-1.6, .2], [1.6, .2], [0, -1.2], [0, 1.8]]) { add(box(1.1, .04, .45, lx, 2.98, lz), led); r.glows.push({ p: [lx, 2.9, lz], r: 1.4 }); }
+      r.glowTex = texRadial([[0, "rgba(255,246,225,.9)"], [.3, "rgba(255,240,210,.3)"], [1, "rgba(255,240,210,0)"]], 64);
+      r.shadowTex = texRadial([[0, "rgba(0,0,0,.6)"], [.5, "rgba(0,0,0,.32)"], [1, "rgba(0,0,0,0)"]], 64);
+      r.SH = { tex: r.shadowTex, blend: "a", dw: false, a: .8, em: 1, fog: false, po: 1 }; r.GL = { tex: r.glowTex, blend: "add", dw: false, em: 1, a: .55, fog: false };
+      r.cubby = i => [x0 + (i + .5) * cw, zB];
+      KB.res = RES; RES = keep; return r;
+    }
+    // Trikots und Namensschilder in den Spinden
+    function kbLockers(list) {
+      const key = JSON.stringify(list || []);
+      if (key === KB.lockKey) return;
+      KB.lockKey = key; if (KB.lockRes) freeRes(KB.lockRes);
+      const keep = RES; RES = [];
+      KB.lockers = (list || []).slice(0, 7).map((it, i) => {
+        const [cx, zB] = KB.room.cubby(i);
+        const jt = texJersey(it.kit || {}, it.name, it.num);
+        const plate = texDraw(256, 64, (x, W, H) => { x.fillStyle = "#e9e3d6"; x.fillRect(0, 0, W, H); x.strokeStyle = "#8a7a62"; x.lineWidth = 4; x.strokeRect(2, 2, W - 4, H - 4); x.fillStyle = "#1c2128"; x.font = `700 40px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(`${it.num || ""}  ${String(it.name || "").toUpperCase()}`, W / 2, H / 2 + 3, W - 20); }, { clamp: true });
+        return { m: mesh(quad([cx - .36, 1.02, zB + .12], [cx + .36, 1.02, zB + .12], [cx + .36, 1.74, zB + .12], [cx - .36, 1.74, zB + .12])), mat: { tex: jt, blend: "a", sp: .12 },
+          pm: mesh(quad([cx - .3, 2.36, -1.73], [cx + .3, 2.36, -1.73], [cx + .3, 2.5, -1.73], [cx - .3, 2.5, -1.73])), pmat: { tex: plate, sp: .3 } };
+      });
+      KB.lockRes = RES; RES = keep;
+    }
+    const KB_POSE = (t, yaw) => pose({ root: [0, 1.0 + Math.sin(t / 900) * .004, 0], yaw, sp: [.03 + Math.sin(t / 900) * .01, 0, 0], nk: [-.04, Math.sin(t / 2300) * .1],
+      lS: [.02, .15 + Math.sin(t / 1100) * .015, 0], rS: [.02, .15 + Math.cos(t / 1200) * .015, 0], lE: .22, rE: .22, lH: [.02, .06], rH: [.0, .04], lK: .05, rK: .02, lA: 0, rA: 0 });
+    function kbCam(now, P, fig) {
+      const v = KB.view;
+      let target;
+      if (v === "head") {
+        const B = PKCHAR.skeleton(P, PKCHAR.makeSK(quantBuild(fig.look.build))), h = (fig.look.build && fig.look.build.h) || 1, hp = M.ap(B[4], [0, .1, 0]);
+        target = { eye: [hp[0] * h + .42, hp[1] * h + .1, hp[2] + 1.32], target: [hp[0] * h, hp[1] * h - .04, hp[2]], fov: 30 };
+      } else target = KBCAM[v] || KBCAM.full;
+      if (!KB.camFrom) { KB.camFrom = target; KB.camT = -1e9; }
+      const u = eio(cl(now - KB.camT, 0, 650)), cam = mixCam(KB.camFrom, target, u);
+      KB.camNow = cam; return cam;
+    }
+    function frameKabine(now, W, H) {
+      if (!KB.room) KB.room = kbBuildRoom();
+      if (KB.pendingLockers) { kbLockers(KB.pendingLockers); KB.pendingLockers = null; }
+      const fig = KB.fig || S.figs && S.figs.shooter || defaultFig("shooter");
+      // Drehen: direkt beim Ziehen, sonst sanft zum Ziel; nach 4 s ohne Berührung leichtes Pendeln
+      KB.yaw += (KB.yawT - KB.yaw) * .14;
+      const idle = cl(now - KB.touch, 4000, 6000), sway = Math.sin((now - KB.t0) / 2600) * .32 * idle * (KB.view === "back" ? .3 : 1);
+      const t = now - KB.t0, yaw = Math.PI + KB.yaw + sway;
+      let P = KB_POSE(t, yaw);
+      const tc = now - KB.cheer;
+      if (tc < 2200) {
+        const jump = Math.max(0, Math.sin(tc / 150)) * .28 * (1 - cl(tc, 1500, 2200));
+        const C = pose({ root: [0, 1.0 + jump, 0], yaw, sp: [-.1, 0, 0], nk: [-.3, 0], lS: [.2, 2.8 + Math.sin(tc / 120) * .1, 0], rS: [.2, 2.8 + Math.cos(tc / 130) * .1, 0], lE: .25, rE: .25, lK: .3 + jump, rK: .3 + jump, lH: [.15, .06], rH: [.15, .06] });
+        P = blend(P, C, eio(cl(tc, 0, 220)) * (1 - eio(cl(tc, 1700, 2200))));
+      }
+      P = onGround(P, fig);
+      const cam = kbCam(now, P, fig);
+      const Lt = KBL; gl.depthMask(true); curMat = null; gl.clearColor(.05, .06, .08, 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      const proj = M.persp(cam.fov * Math.PI / 180, W / H, .05, 60), view = M.look(cam.eye, cam.target, [0, 1, 0]), VP = M.mul(proj, view);
+      frameNo++;
+      FU = { VP, cam: cam.eye, L1: Lt.L1, L1c: Lt.L1c, L2: Lt.L2, L2c: Lt.L2c, sky: Lt.sky, gnd: Lt.gnd, fogC: Lt.fogC, fog: Lt.fog };
+      curMat = null; use(PR.base);
+      for (const it of KB.room.list) draw(it.m, it.model, it.mat);
+      for (const L of KB.lockers) { draw(L.m, null, L.mat); draw(L.pm, null, L.pmat); }
+      drawFig(P, fig);
+      const m = M.ch(M.T(P.root[0], .008, P.root[2]), M.Rx(-Math.PI / 2));
+      draw(SPR, M.mul(m, M.S(.95, .7, 1)), KB.room.SH);
+      const inv = billboard(view);
+      for (const g of KB.room.glows) draw(SPR, M.ch(M.T(...g.p), inv, M.S(g.r * 2, g.r * 2, 1)), KB.room.GL);
+      hideOverlay();
     }
     let BALLM = { vc: true, sp: .9 };
     function axisRot(a, ang) {
@@ -6114,7 +6565,7 @@
     function finishReplay() { if (S.mode !== "replay") return; const cb = S.onDone; S.onDone = null; hideOverlay(); if (S.sh && S.sh.decisive) startFinal(); else { S.mode = "kick"; S.t0 = performance.now() - 99999; } if (cb) cb(); }
     function loop(now) {
       if (!S.run) return;
-      const vis = S.cv && S.cv.offsetParent !== null && document.visibilityState !== "hidden";
+      const vis = !S.hold && S.cv && S.cv.offsetParent !== null && document.visibilityState !== "hidden";
       const gap = S.mode === "kick" && now - S.t0 > 9000 ? 120 : S.mode === "idle" ? 30 : 0;
       if (vis && now - S.last >= gap) {
         // Ruckelt es (unter ~25 Bildern pro Sekunde), wird die Auflösung schrittweise reduziert
@@ -6144,17 +6595,34 @@
         try { if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { S.stadKey = ""; for (const t of CH.back.values()) gl.deleteTexture(t); CH.back.clear(); }); } catch (e) {}
         ensureLoop(); return true;
       },
-      setStadium(o) { S.stadO = { color: o.color, color2: o.color2, club: o.club || "" }; },
+      setStadium(o) { S.stadO = { color: o.color, color2: o.color2, club: o.club || "", tier: o.tier === undefined || o.tier === null ? 3 : o.tier }; },
       setKits(k) { S.kits = k; },
       matchStart() { S.kicks = 0; },
       idle() { if (S.mode === "replay") S.onDone = null; S.mode = "idle"; S.sh = null; S.final = null; hideOverlay(); ensureLoop(); },
       kick(o, info) { S.sh = prepare(o, info); S.mode = "kick"; S.final = null; S.t0 = now(); S.kicks++; ensureLoop(); },
       replay(done) { if (!S.ok || !S.sh || !window.requestAnimationFrame) { done(); return false; } S.mode = "replay"; S.onDone = done; S.t0 = now(); ensureLoop(); return true; },
       replaying: () => S.mode === "replay",
+      // Kabine: Spieler drehbar in der Umkleide (Shop-Vorschau)
+      kabine(on) {
+        if (!S.ok) return false;
+        if (on) { if (S.mode !== "kabine") { KB.t0 = now(); KB.camFrom = null; KB.view = "full"; KB.yaw = KB.yawT = 0; KB.touch = now(); } if (S.mode === "replay") S.onDone = null; S.mode = "kabine"; S.sh = null; S.final = null; hideOverlay(); }
+        else if (S.mode === "kabine") S.mode = "idle";
+        ensureLoop(); return true;
+      },
+      kabineSet(o) { if (o && o.fig) KB.fig = o.fig; if (o && o.lockers) KB.pendingLockers = o.lockers; },
+      kabineRotate(d) { KB.yawT += d; KB.yaw += d; KB.touch = now(); },
+      kabineView(v) {
+        if (KB.view === v) return; KB.camFrom = KB.camNow || null; KB.camT = now(); KB.view = v; KB.touch = now();
+        const T2 = Math.PI * 2, base = Math.round(KB.yawT / T2) * T2;
+        if (v === "back") KB.yawT = Math.abs(base + Math.PI - KB.yawT) < Math.abs(base - Math.PI - KB.yawT) ? base + Math.PI : base - Math.PI;
+        else KB.yawT = Math.round(KB.yawT / T2) * T2;
+      },
+      kabineCheer() { KB.cheer = now(); },
+      hold(on) { S.hold = !!on; },
       ready: () => !!PR.skin && [...CH.body.values()].some(Boolean),
       canBody: () => !!PR.skin,
       AIM, REACT,
-      _frame: t => frame(t), _S: S, _CH: CH,
+      _frame: t => frame(t), _S: S, _CH: CH, _KB: KB,
     };
   })();
 
@@ -6179,6 +6647,8 @@
       matchStart: () => { if (impl === PKGL) PKGL.matchStart(); },
       idle: () => impl.idle(), kick: (o, info) => impl.kick(o, info), replay: d => impl.replay(d), replaying: () => impl.replaying(),
       goalRect: () => PK3_2D.goalRect(), isGL: () => impl === PKGL, bodies: () => impl === PKGL && PKGL.canBody(),
+      kabine: on => impl === PKGL && PKGL.kabine(on), kabineSet: o => { if (impl === PKGL) PKGL.kabineSet(o); }, kabineRotate: d => { if (impl === PKGL) PKGL.kabineRotate(d); },
+      kabineView: v => { if (impl === PKGL) PKGL.kabineView(v); }, hold: on => { if (impl === PKGL) PKGL.hold(on); }, kabineCheer: () => { if (impl === PKGL) PKGL.kabineCheer(); },
     };
   })();
 
@@ -6241,28 +6711,54 @@
         g += `<path d="M-10 60 C80 40 120 120 200 110 S320 150 380 120" fill="none" stroke="#173a57" stroke-width="7"/><path d="M-10 60 C80 40 120 120 200 110 S320 150 380 120" fill="none" stroke="#25577f" stroke-width="2" opacity=".6"/>`;
         g += `<path d="M0 214 L120 170 L230 160 L380 30 M150 250 L170 165 L140 0" fill="none" stroke="#2b3530" stroke-width="2.2"/><path d="M0 214 L120 170 L230 160 L380 30" fill="none" stroke="#f2c96b" stroke-width=".5" stroke-dasharray="2 3" opacity=".5"/>`;
         for (let k = 0; k < 60; k++) { const cx = k < 30 ? 30 + r() * 70 : 200 + r() * 90, cy = k < 30 ? 140 + r() * 40 : 140 + r() * 60; g += `<rect x="${f1(cx)}" y="${f1(cy)}" width="${f1(3 + r() * 4)}" height="${f1(3 + r() * 4)}" fill="${r() < .5 ? "#2a333d" : "#323d48"}"/>${r() < .4 ? `<circle cx="${f1(cx + 2)}" cy="${f1(cy + 2)}" r=".7" fill="#ffd27a" opacity=".8"/>` : ""}`; }
-        const stad = (x, y, s, col, col2, id, dim) => {
-          const r2 = rnd(id ? 3 : 5); let crowd = "";
+        const stad = (x, y, s, col, col2, id, dim, tier = 3) => {
+          const r2 = rnd(id ? 3 : 5);
+          const dots = (rects, n) => { let c = ""; for (let k = 0; k < n; k++) { const R = rects[Math.floor(r2() * rects.length)], px = R[0] + r2() * R[2], py = R[1] + r2() * R[3]; c += `<rect x="${f1(px)}" y="${f1(py)}" width=".9" height=".9" fill="${r2() < .5 ? col2 : "#f1ece0"}" opacity=".75"/>`; } return c; };
+          const mastsAt = (pos, on, big) => pos.map(([mx, my]) => (on ? `<circle cx="${mx}" cy="${my}" r="${big ? 22 : 15}" fill="url(#${P}glow)" opacity="${dim ? .35 : .8}"/>` : "") + `<rect x="${mx - 3}" y="${my - 2}" width="6" height="4" rx="1" fill="${on ? "#fffbe0" : "#8b939c"}" stroke="#59626c" stroke-width=".6" transform="rotate(${mx * my > 0 ? 35 : -35} ${mx} ${my})"/>`).join("");
+          const wrap = inner => `<g transform="translate(${x} ${y}) scale(${s})" ${dim ? 'opacity=".8"' : ""}>${inner}</g>`;
+          if (tier === 0) {
+            // Sportplatz: Wiese, Bäume, Vereinsheim, kleine Stehtraverse
+            let trees = ""; for (let k = 0; k < 26; k++) { const a = r2() * Math.PI * 2, rr = 1 + r2() * .18, tx = Math.cos(a) * 62 * rr, ty = Math.sin(a) * 44 * rr; trees += `<circle cx="${f1(tx)}" cy="${f1(ty)}" r="${f1(4 + r2() * 3)}" fill="${r2() < .5 ? "#1f4d24" : "#285c2b"}" stroke="#163a1a" stroke-width=".6"/>`; }
+            return wrap(`<rect x="-58" y="-40" width="116" height="80" rx="12" fill="#2a5a2f"/>${trees}
+              <g>${pitchTop(80, 54, 10, .7)}</g>
+              <rect x="-49" y="-15" width="6" height="30" fill="#8d8a84"/>${dots([[-49, -15, 6, 30]], 40)}
+              <rect x="-30" y="-41" width="22" height="9" fill="#d9cfb8"/><polygon points="-31,-36.5 -7,-36.5 -9,-41.5 -29,-41.5" fill="#a13b25"/>
+              <rect x="-42.5" y="-29" width="85" height="58" fill="none" stroke="#c9d0d6" stroke-width=".5" stroke-dasharray="1.5 1.5"/>
+              ${mastsAt([[-43, -30], [43, -30], [-43, 30], [43, 30]], false)}`);
+          }
+          if (tier <= 2) {
+            // Kleines Stadion (Tribüne hinter einem Tor und an einer Seite) bzw. Stadion mit vier Tribünen und offenen Ecken
+            const R = tier === 1 ? [[-54, -24, 10, 48], [-30, -39, 60, 9]] : [[-56, -27, 12, 54], [44, -27, 12, 54], [-36, -41, 72, 11], [-36, 30, 72, 11]];
+            let st = ""; for (const [rx, ry, rw, rh] of R) st += `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="${col}"/><rect x="${rx + .8}" y="${ry + .8}" width="${rw - 1.6}" height="${rh - 1.6}" fill="none" stroke="${col2}" stroke-opacity=".35" stroke-width=".6"/>`;
+            const roofs = tier === 1 ? R : R.slice(0, 2);
+            let rf = ""; for (const [rx, ry, rw, rh] of roofs) rf += `<rect x="${rx + (rw > rh ? 0 : rw * .45)}" y="${ry + (rw > rh ? rh * .45 : 0)}" width="${rw > rh ? rw : rw * .55}" height="${rw > rh ? rh * .55 : rh}" fill="#c9d0d8" opacity=".85"/>`;
+            const rails = tier === 1 ? `<path d="M-44 31 H44 M45 -30 V30" stroke="#9aa5b1" stroke-width="1.2" fill="none"/>${dots([[-40, 31, 80, 3], [45, -26, 3, 52]], 50)}` : "";
+            return wrap(`<rect x="-62" y="-46" width="124" height="92" rx="${tier === 1 ? 8 : 12}" fill="#000" opacity=".3" transform="translate(4 5)"/>
+              <rect x="-60" y="-44" width="120" height="88" rx="${tier === 1 ? 8 : 12}" fill="${tier === 1 ? "#24402a" : "#1d252e"}"/>
+              ${st}${dots(R, tier === 1 ? 110 : 190)}<g>${pitchTop(80, 54, 10, .7)}</g>${rf}${rails}
+              ${mastsAt(tier === 1 ? [[-56, -40], [56, -40], [-56, 40], [56, 40]] : [[-60, -44], [60, -44], [-60, 44], [60, 44]], true, tier === 2)}`);
+          }
+          let crowd = "";
           for (let k = 0; k < 220; k++) { const px = -52 + r2() * 104, py = -36 + r2() * 72; if (Math.abs(px) < 39 && Math.abs(py) < 26) continue; crowd += `<rect x="${f1(px)}" y="${f1(py)}" width=".9" height=".9" fill="${r2() < .5 ? col2 : "#f1ece0"}" opacity=".75"/>`; }
           let rows = ""; for (let k = 1; k <= 4; k++) rows += `<rect x="${-52 + k * 3}" y="${-36 + k * 2.4}" width="${104 - k * 6}" height="${72 - k * 4.8}" rx="${20 - k * 2}" fill="none" stroke="${col2}" stroke-opacity=".35" stroke-width=".6"/>`;
           let masts = ""; for (const [mx, my] of [[-60, -44], [60, -44], [-60, 44], [60, 44]]) masts += `<circle cx="${mx}" cy="${my}" r="22" fill="url(#${P}glow)" opacity="${dim ? .35 : .8}"/><rect x="${mx - 3}" y="${my - 2}" width="6" height="4" rx="1" fill="#fffbe0" stroke="#59626c" stroke-width=".6" transform="rotate(${mx * my > 0 ? 35 : -35} ${mx} ${my})"/>`;
-          return `<g transform="translate(${x} ${y}) scale(${s})" ${dim ? 'opacity=".8"' : ""}>
+          let ringLights = ""; if (tier >= 4) for (let k = 0; k < 28; k++) { const a = k / 28 * Math.PI * 2; ringLights += `<circle cx="${f1(Math.cos(a) * 58)}" cy="${f1(Math.sin(a) * 41)}" r="1.1" fill="#fffbe6"/>`; }
+          return wrap(`
             <rect x="-66" y="-48" width="132" height="96" rx="34" fill="#000" opacity=".35" transform="translate(5 6)"/>
             <rect x="-62" y="-45" width="124" height="90" rx="32" fill="#232b34"/>
             <rect x="-54" y="-38" width="108" height="76" rx="24" fill="${col}"/>${rows}${crowd}
             <g transform="translate(0 0)">${pitchTop(80, 54, 10, .7)}</g>
             <rect x="-58.5" y="-41.5" width="117" height="83" rx="29" fill="none" stroke="#d4dbe3" stroke-width="7" opacity=".93"/>
             <rect x="-58.5" y="-41.5" width="117" height="83" rx="29" fill="none" stroke="#9aa5b1" stroke-width=".5" stroke-dasharray="1 3"/>
-            <rect x="-62" y="-45" width="124" height="90" rx="32" fill="none" stroke="${col}" stroke-width="1.4"/>
-            ${masts}
-          </g>`;
+            <rect x="-62" y="-45" width="124" height="90" rx="32" fill="none" stroke="${tier >= 4 ? "#f2c14e" : col}" stroke-width="${tier >= 4 ? 2.2 : 1.4}"/>
+            ${ringLights}${masts}`);
         };
         return `<svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg"><defs>${glowDefs(P)}</defs>
           <rect width="360" height="240" fill="#0e1d14"/>
           <g id="${P}world">${g}
             <line x1="70" y1="178" x2="268" y2="78" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="3 4"/>
-            ${stad(70, 178, .42, "#56606b", "#9aa5b1", null, true)}
-            <g id="${P}dstStad">${stad(268, 78, .78, o.color, o.color2, "d")}</g>
+            ${stad(70, 178, .42, "#56606b", "#9aa5b1", null, true, o.fromTier === undefined ? 3 : o.fromTier)}
+            <g id="${P}dstStad">${stad(268, 78, .78, o.color, o.color2, "d", false, o.tier === undefined ? 3 : o.tier)}</g>
             <ellipse id="${P}shadow" cx="70" cy="178" rx="5" ry="3" fill="#000" opacity=".45"/>
             <g id="${P}ballwrap">${BALL(P + "ball", 6)}</g>
             <text x="70" y="207" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="rgba(255,255,255,.75)">${esc(o.from)}</text>
@@ -6307,6 +6803,7 @@
   function pkEndKick(o) {
     const s = pk.kicker, scored = o.kind === "goal";
     pk.kicks[s].push(scored); if (scored) pk.score[s]++;
+    if (s === "O" && o.kind === "save") pk.saves = (pk.saves || 0) + 1;
     const txt = { goal: "Tor", save: "gehalten", post: "Pfosten", miss: "vorbei" }[o.kind];
     tick_log(`${pkWho(s)}: ${pk.shooterName} – ${txt} (${pk.score.X}:${pk.score.O})`);
     const w = pkDecided();
@@ -6329,6 +6826,7 @@
     const extra = pk.kicks.X.length > pk.shots ? " nach Verlängerung" : "";
     let txt = `${pkWho(w)} ${pkVsCpu() && w === "X" && !state.names.X ? "gewinnst" : "gewinnt"} das Elfmeterschießen ${pk.score.X}:${pk.score.O}${extra}!`;
     let again = "Neues Elfmeterschießen", menu = "Hauptmenü", happy = !(pkVsCpu() && w === "O");
+    const stage0 = pk.career ? pk.career.stage : 0; let trophy = false;
     if (pk.mode === "career") {
       const c = pk.career, st = PK_STAGES[c.stage];
       if (w === "X") {
@@ -6337,7 +6835,7 @@
         if (c.stage >= PK_STAGES.length) {
           const n = pkTrophies() + 1; store("kaderraster-p-trophies", String(n));
           txt = `🏆 Pokalsieger! Finale gegen ${pk.opp.club} ${pk.score.X}:${pk.score.O}${extra} gewonnen. Das ist dein ${n}. Pokal!`;
-          again = "Neue Karriere"; c.done = true; pkConfetti(); pkClearCareer();
+          again = "Neue Karriere"; c.done = true; trophy = true; pkConfetti(); pkClearCareer();
         } else {
           const nx = PK_STAGES[c.stage];
           txt = `${st.name} überstanden: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}! Als Nächstes: ${nx.name} gegen ${c.opps[c.stage].club}. Spielstand gespeichert.`;
@@ -6347,6 +6845,9 @@
     }
     $("pk-menu-btn-2").textContent = menu;
     $("pk-result-text").textContent = txt;
+    const earn = pkEarnCoins(w, stage0, trophy), ce = $("pk-coins-earn");
+    if (earn && earn.total > 0) { ce.innerHTML = `<span class="pk-ce-main"><i class="coin" aria-hidden="true"></i><b>+${earn.total}</b> Münzen · Kontostand ${kbCoins().toLocaleString("de-DE")}</span><span class="pk-ce-sub">${esc(earn.parts.join(" · "))} – einlösen in der Kabine</span>`; ce.hidden = false; setTimeout(() => SFX.play("coin"), 1900); }
+    else ce.hidden = true;
     $("pk-play-again").textContent = again;
     $("pk-result-banner").classList.add("show");
     tick_log(txt.replace(/!$/, ""));
@@ -6373,7 +6874,7 @@
       const nerve = k === 4 ? 0.08 : k === 3 ? g3Rand([0, 0.08, -0.14]) : 0;
       const shooterT = sh.t.replace("{f}", f) + (nerve > 0 ? " – und sind eiskalt, verschießen kaum" : nerve < 0 ? " – werden aber nervös, wenn es eng wird" : "");
       return { club: clubs[k], keeper: { t: kp.t.replace("{f}", f), w: kp.w }, shooter: { t: shooterT, w: sh.w, on: nerve }, follow: PK_FOLLOW[k],
-        color: kit[0], color2: kit[1], keeperColor: g3Rand(PK_KEEPER_KITS), arena: `${last}-${g3Rand(PK_ARENA)}` };
+        color: kit[0], color2: kit[1], keeperColor: g3Rand(PK_KEEPER_KITS), arena: pkArenaName(k, last) };
     }) };
     pkSaveCareer();
   }
@@ -6542,12 +7043,12 @@
   }
   function pkToMenu() {
     pk.token++; pkClearTimers(); pk.over = true; pk.phase = "idle"; pkHideQuiz(); $("pk-scout").hidden = true; PK3.idle();
-    const tv = $("pk-travel"); tv.hidden = true; tv.innerHTML = "";
+    const tv = $("pk-travel"); tv.hidden = true; tv.innerHTML = ""; PK3.hold(false);
     if (pk.levelMenu) { pk.level = pk.levelMenu; pk.shots = pk.shotsMenu; pk.levelMenu = null; }
     pkSetMode(pk.mode);
     pkShowZones(false); $("pk-meter-wrap").hidden = true; $("pk-handoff").hidden = true;
     $("pen").hidden = true; $("pmenu").hidden = false;
-    syncBig(); pkRenderMenuHelp();
+    syncBig(); pkRenderMenuHelp(); kbSyncMenu();
   }
   function pkAskLeave() {
     if (pk.over || pk.phase === "scout") { pkToMenu(); return; }
@@ -6562,13 +7063,256 @@
   $("pstart-btn").addEventListener("click", pkStart);
   $("pk-continue-btn").addEventListener("click", pkContinueCareer);
   PK3.init($("pk-3d"), $("pk-ov"));
-  // Charakter-Auswahl (Grundlage für Kabine und Shop)
-  if (PK3.bodies()) {
-    const sel = $("pk-char"), cur = pkMyChar();
-    sel.innerHTML = PKCHAR.CHARACTERS.map(c => `<option value="${c.id}"${c.id === cur.id ? " selected" : ""}>${esc(c.name)}</option>`).join("");
-    sel.addEventListener("change", () => { store(PK_CHAR_KEY, sel.value); });
-    $("pk-char-wrap").hidden = false;
+  // ---------- Kabine & Shop: Spieler, Trikot, Schuhe, Extras, Nummer ----------
+  const KB_COINS = "kaderraster-p-coins", KB_OWNED = "kaderraster-p-owned", KB_BOOTS = "kaderraster-p-boots", KB_NUM = "kaderraster-p-num", KB_KIT = "kaderraster-p-kit", KB_ACC = "kaderraster-p-acc";
+  const KB_CHAR_PRICE = [0, 0, 150, 200, 250, 250, 350, 300];
+  const kbK = (pattern, shirt, shirt2, trim, shorts, socks, extra) => Object.assign({ pattern, shirt, shirt2, trim, shorts, shorts2: shirt, socks, socks2: trim }, extra || {});
+  const SHOP = {
+    char: PKCHAR.CHARACTERS.map((c, i) => ({ id: c.id, name: c.name, price: KB_CHAR_PRICE[i] === undefined ? 200 : KB_CHAR_PRICE[i], c })),
+    kit: [
+      { id: "verein", name: "Vereinsfarben", price: 0, kit: null },
+      { id: "klassik", name: "Klassik Weiß", price: 60, kit: kbK("uni", "#f4f6f8", "#d5dae0", "#15181d", "#15181d", "#f4f6f8") },
+      { id: "nacht", name: "Nachtschwarz", price: 60, kit: kbK("uni", "#16191e", "#2a2f36", "#f2c14e", "#16191e", "#16191e") },
+      { id: "rotweiss", name: "Rot-Weiß gestreift", price: 100, kit: kbK("streifen", "#c62828", "#ffffff", "#ffffff", "#15181d", "#c62828") },
+      { id: "ringel", name: "Grün-Weiß Ringel", price: 100, kit: kbK("ringel", "#1b7f3b", "#ffffff", "#ffffff", "#ffffff", "#1b7f3b") },
+      { id: "haelften", name: "Halb Blau, halb Gelb", price: 120, kit: kbK("haelften", "#1e4fa3", "#f2c94c", "#f2c94c", "#1e4fa3", "#1e4fa3") },
+      { id: "schaerpe", name: "Weiß mit Schärpe", price: 140, kit: kbK("schärpe", "#f4f6f8", "#c62828", "#c62828", "#f4f6f8", "#f4f6f8") },
+      { id: "chevron", name: "Chevron Navy", price: 150, kit: kbK("chevron", "#14254a", "#6fb6ff", "#6fb6ff", "#14254a", "#14254a") },
+      { id: "nadel", name: "Nadelstreifen", price: 150, kit: kbK("nadel", "#15181d", "#9aa3ad", "#9aa3ad", "#15181d", "#15181d") },
+      { id: "sunset", name: "Sonnenuntergang", price: 180, kit: kbK("verlauf", "#ff8a3d", "#7a1fa2", "#ffffff", "#2a1238", "#7a1fa2") },
+      { id: "viertel", name: "Viertel Orange", price: 200, kit: kbK("viertel", "#ff8a00", "#15181d", "#15181d", "#15181d", "#ff8a00") },
+      { id: "retro", name: "Retro-Zacken 90er", price: 250, kit: kbK("zacken", "#00a3a3", "#f2e14c", "#f2e14c", "#15181d", "#00a3a3") },
+      { id: "gold", name: "Gold-Edition", price: 500, kit: kbK("uni", "#d4af37", "#8a6d1d", "#15181d", "#15181d", "#d4af37", { metal: 1 }) },
+    ],
+    boots: [
+      { id: "schwarz", name: "Klassisch Schwarz", price: 0, c: ["#15181c", "#f2f2f2"] },
+      { id: "weiss", name: "Weiß", price: 40, c: ["#f2f2f2", "#15181c"] },
+      { id: "neon", name: "Neongelb", price: 60, c: ["#e6f24a", "#15181c"] },
+      { id: "pink", name: "Pink", price: 60, c: ["#ff4fa3", "#15181c"] },
+      { id: "blau", name: "Royalblau", price: 60, c: ["#2f6bff", "#f2f2f2"] },
+      { id: "orange", name: "Orange", price: 60, c: ["#ff7a1a", "#15181c"] },
+      { id: "rot", name: "Rot", price: 60, c: ["#d32f2f", "#f2f2f2"] },
+      { id: "gold", name: "Goldschuh", price: 200, c: ["#d4af37", "#15181c"] },
+    ],
+    acc: [["stirnband", 40], ["schweissband", 40], ["schal", 60], ["beanie", 70], ["kapitaen", 80], ["cap", 90], ["ohrringe", 90], ["brille", 100], ["uhr", 120], ["kette", 150]]
+      .map(([id, price]) => ({ id, name: PKCHAR.ACCESSORIES[id].name, price, slot: PKCHAR.ACCESSORIES[id].slot })),
+    num: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 17, 19, 20, 21, 22, 23, 27, 30, 33, 77, 99].map(n => ({ id: String(n), name: "Nummer " + n, price: 0 })),
+  };
+  const KB_TAB = { char: "Spieler", kit: "Trikot", boots: "Schuhe", acc: "Extras", num: "Nummer" };
+  const KB_SLOT = { kopf: "Kopf", hals: "Hals", ohren: "Ohren", augen: "Augen", oberarm: "Oberarm", "handgelenk-links": "linkes Handgelenk", "handgelenk-rechts": "rechtes Handgelenk" };
+  const kb = { tab: "char", sel: null, view: "full", open: false };
+  function kbCoins() { let v = null; try { v = localStorage.getItem(KB_COINS); } catch (e) {} return v === null ? 100 : Math.max(0, parseInt(v, 10) || 0); }
+  function kbSetCoins(n) { store(KB_COINS, String(Math.max(0, Math.round(n)))); }
+  function kbOwned() { const a = pkStored(KB_OWNED, []); return new Set(Array.isArray(a) ? a : []); }
+  const kbHas = (tab, it) => !it.price || kbOwned().has(tab + ":" + it.id);
+  function kbEq() {
+    const kitSt = pkStored(KB_KIT, {}), acc = pkStored(KB_ACC, []), own = kbOwned();
+    let boots = "schwarz", num = "10";
+    try { boots = localStorage.getItem(KB_BOOTS) || boots; num = localStorage.getItem(KB_NUM) || num; } catch (e) {}
+    const okKit = SHOP.kit.find(k => k.id === (kitSt && kitSt.id)), okBoots = SHOP.boots.find(k => k.id === boots);
+    return { char: pkMyChar().id, kit: okKit && kbHas("kit", okKit) ? okKit.id : "verein", boots: okBoots && kbHas("boots", okBoots) ? boots : "schwarz",
+      acc: (Array.isArray(acc) ? acc : []).filter(a => PKCHAR.ACCESSORIES[a] && own.has("acc:" + a)), num: /^\d{1,2}$/.test(num) ? num : "10" };
   }
+  // Trikot deines Spielers (Vereinsfarben der Variante oder aus dem Shop) samt Schuhen
+  function pkMyKit(eq) {
+    eq = eq || kbEq();
+    const xc = pkCss("--x-mark", "#4fd987"), it = SHOP.kit.find(k => k.id === eq.kit), b = SHOP.boots.find(k => k.id === eq.boots) || SHOP.boots[0];
+    return Object.assign({ pattern: "uni", shirt: xc, shirt2: pkShade(xc, -.35), trim: "#ffffff", shorts: "#f4f6f8", shorts2: xc, socks: xc, socks2: "#ffffff" }, it && it.kit ? it.kit : {}, { boots: b.c[0], boots2: b.c[1] });
+  }
+  const kbWithAcc = (list, id) => { const slot = PKCHAR.ACCESSORIES[id].slot; return list.filter(a => PKCHAR.ACCESSORIES[a] && PKCHAR.ACCESSORIES[a].slot !== slot).concat(id); };
+  // Anprobieren: ausgewähltes Teil über die aktuelle Ausrüstung legen
+  function kbPreviewEq() {
+    const eq = kbEq(), s = kb.sel;
+    if (s) { if (kb.tab === "acc") { if (!eq.acc.includes(s)) eq.acc = kbWithAcc(eq.acc, s); } else eq[kb.tab] = s; }
+    return eq;
+  }
+  const kbShortName = c => c.name.replace(/^(Der|Die|Das) /, "");
+  function kbPush() {
+    if (!PK3.bodies()) { kbNoGL(); return; }
+    const eq = kbPreviewEq(), C = PKCHAR.CHARACTERS.find(c => c.id === eq.char) || PKCHAR.CHARACTERS[0], kit = pkMyKit(eq);
+    const name = (cleanName($("pname-input-x").value) || "Du").toUpperCase().slice(0, 14), ink = k => pkLum(k.shirt) > .6 ? "#0b0f14" : "#ffffff";
+    const others = SHOP.kit.filter(k => k.id !== eq.kit).slice(0, 6), mates = PKCHAR.CHARACTERS.filter(c => c.id !== C.id), nums = ["4", "8", "7", "11", "23", "6"];
+    const lockers = others.map((k, i) => { const kk = pkMyKit({ kit: k.id, boots: "schwarz" }); return { kit: Object.assign({}, kk, { ink: ink(kk) }), name: kbShortName(mates[i % mates.length]), num: nums[i] }; });
+    lockers.splice(3, 0, { kit: Object.assign({}, kit, { ink: ink(kit) }), name, num: eq.num });
+    PK3.kabineSet({ fig: { look: pkLookOf(C), kit, acc: eq.acc, name, num: eq.num, ink: ink(kit) }, lockers });
+  }
+  // Kleine Bilder für die Shop-Kacheln
+  function kbJerseySVG(k, id, num) {
+    const c1 = k.shirt, c2 = k.shirt2 || c1, p = k.pattern, cp = "kbj" + id;
+    const body = "M18 6 Q28 10 38 6 L50 13 L54 25 L46 28 L44 22 L44 52 Q28 55 12 52 L12 22 L10 28 L2 25 L6 13 Z";
+    let pat = "";
+    if (p === "streifen") for (let i = 0; i < 7; i++) { if (i % 2) pat += `<rect x="${i * 8}" y="0" width="8" height="56"/>`; }
+    else if (p === "ringel") for (let i = 0; i < 9; i++) { if (i % 2) pat += `<rect x="0" y="${4 + i * 6}" width="56" height="6"/>`; }
+    else if (p === "haelften") pat = `<rect x="28" y="0" width="28" height="56"/>`;
+    else if (p === "schärpe") pat = `<polygon points="8,8 16,8 50,56 42,56"/>`;
+    else if (p === "chevron") pat = `<polygon points="8,16 28,30 48,16 48,23 28,37 8,23"/>`;
+    else if (p === "nadel") for (let i = 0; i < 14; i++) pat += `<rect x="${i * 4}" y="0" width=".9" height="56"/>`;
+    else if (p === "viertel") pat = `<rect x="28" y="0" width="28" height="29"/><rect x="0" y="29" width="28" height="27"/>`;
+    else if (p === "zacken") for (let i = 0; i < 3; i++) pat += `<polyline points="${Array.from({ length: 9 }, (_, j) => `${j * 7},${18 + i * 12 + (j % 2 ? 4 : 0)}`).join(" ")}" fill="none" stroke-width="4"/>`;
+    const grad = p === "verlauf" ? `<linearGradient id="${cp}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient>` : "";
+    const lum = pkLum(c1) > .6 ? "#11151a" : "#fff";
+    return `<svg viewBox="0 0 56 56" aria-hidden="true"><defs><clipPath id="${cp}"><path d="${body}"/></clipPath>${grad}</defs>
+      <g clip-path="url(#${cp})"><rect width="56" height="56" fill="${p === "verlauf" ? `url(#${cp}g)` : c1}"/><g fill="${c2}" stroke="${c2}">${pat}</g>${k.metal ? `<rect width="56" height="56" fill="url(#${cp}m)" opacity=".5"/>` : ""}</g>
+      ${k.metal ? `<defs><linearGradient id="${cp}m" x1="0" y1="0" x2="1" y2="1"><stop offset=".2" stop-color="#fff" stop-opacity="0"/><stop offset=".45" stop-color="#fff" stop-opacity=".9"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>` : ""}
+      <path d="${body}" fill="none" stroke="rgba(0,0,0,.35)" stroke-width="1"/><path d="M19 6.5 Q28 11 37 6.5" fill="none" stroke="${k.trim || "#fff"}" stroke-width="2"/>
+      ${num ? `<text x="28" y="40" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="18" fill="${lum}">${esc(num)}</text>` : ""}</svg>`;
+  }
+  function kbFaceSVG(C) {
+    const L = pkLookOf(C), hc = L.hairC, sk = L.skin, hs = C.hair;
+    const hair = { glatze: "", buzz: `<path d="M12 27 Q12 10 28 10 Q44 10 44 27 Q40 18 28 18 Q16 18 12 27Z" fill="${hc}" opacity=".55"/>`,
+      kurz: `<path d="M11 28 Q10 8 28 8 Q46 8 45 28 Q42 17 28 16 Q15 17 11 28Z" fill="${hc}"/>`,
+      locken: `<g fill="${hc}">${[[14, 20], [19, 13], [26, 10], [33, 10], [39, 13], [43, 20], [17, 16], [37, 16]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="5.5"/>`).join("")}</g>`,
+      afro: `<circle cx="28" cy="20" r="18" fill="${hc}"/>`,
+      dutt: `<path d="M11 28 Q10 9 28 9 Q46 9 45 28 Q42 18 28 17 Q15 18 11 28Z" fill="${hc}"/><circle cx="28" cy="6" r="5" fill="${hc}"/>`,
+      lang: `<path d="M10 40 Q7 8 28 8 Q49 8 46 40 L42 40 Q43 20 28 17 Q14 20 14 40Z" fill="${hc}"/>`,
+      iro: `<path d="M24 22 Q24 4 28 4 Q32 4 32 22Z" fill="${hc}"/>`,
+      tolle: `<path d="M11 28 Q10 10 24 8 Q30 2 42 6 Q47 12 45 28 Q42 17 28 16 Q15 17 11 28Z" fill="${hc}"/>` }[hs] || "";
+    const behind = hs === "afro" || hs === "lang" ? hair : "", front = hs === "afro" || hs === "lang" ? "" : hair;
+    const beard = L.beard > .25 ? `<path d="M15 31 Q16 45 28 47 Q40 45 41 31 Q38 40 28 41 Q18 40 15 31Z" fill="${hc}" opacity="${Math.min(.9, .3 + L.beard * .6).toFixed(2)}"/>` : "";
+    return `<svg viewBox="0 0 56 56" aria-hidden="true"><path d="M6 56 Q8 46 28 45 Q48 46 50 56Z" style="fill:var(--x-mark)"/>${behind}<rect x="23" y="38" width="10" height="9" fill="${sk}"/><ellipse cx="28" cy="29" rx="15" ry="17" fill="${sk}"/>${front}${beard}
+      <circle cx="22.5" cy="28" r="1.6" fill="#1b1f24"/><circle cx="33.5" cy="28" r="1.6" fill="#1b1f24"/><path d="M24 37 Q28 39 32 37" stroke="#5a2f22" stroke-width="1.3" fill="none"/></svg>`;
+  }
+  function kbBootSVG(b) {
+    return `<svg viewBox="0 0 56 56" aria-hidden="true"><path d="M6 24 L22 24 Q24 31 32 33 L46 36 Q52 38 51 43 L51 45 L6 45 Z" fill="${b.c[0]}" stroke="rgba(0,0,0,.4)"/><path d="M6 45 L51 45 L50 48 L7 48 Z" fill="${b.c[1]}"/>
+      <path d="M24 30 L36 41 M29 30 L40 40" stroke="${b.c[1]}" stroke-width="2.4"/>${[12, 22, 34, 44].map(x => `<rect x="${x}" y="48" width="3" height="3" fill="${b.c[1]}"/>`).join("")}</svg>`;
+  }
+  const KB_ACC_SVG = {
+    cap: `<path d="M12 34 Q12 16 28 16 Q44 16 44 34Z" fill="#1c2430"/><path d="M8 34 L50 34 Q54 36 50 38 L10 38Z" fill="#f4f6f8" stroke="#9aa3ad"/><circle cx="28" cy="16" r="2" fill="#1c2430"/>`,
+    beanie: `<path d="M12 36 Q12 14 28 14 Q44 14 44 36Z" fill="#b3262e"/><rect x="11" y="32" width="34" height="9" rx="3" fill="#8f1e25"/><circle cx="28" cy="11" r="5" fill="#f4f6f8"/>`,
+    stirnband: `<ellipse cx="28" cy="28" rx="18" ry="8" fill="none" stroke="#f4f6f8" stroke-width="6"/><ellipse cx="28" cy="28" rx="18" ry="8" fill="none" stroke="#9aa3ad" stroke-width="1"/>`,
+    kette: `<path d="M12 14 Q14 40 28 42 Q42 40 44 14" fill="none" stroke="#e7b74c" stroke-width="3" stroke-dasharray="3 1.5"/><ellipse cx="28" cy="46" rx="4" ry="5" fill="#e7b74c"/>`,
+    ohrringe: `<circle cx="17" cy="30" r="6" fill="none" stroke="#e7b74c" stroke-width="2.6"/><circle cx="39" cy="30" r="6" fill="none" stroke="#e7b74c" stroke-width="2.6"/>`,
+    uhr: `<rect x="22" y="6" width="12" height="44" rx="4" fill="#14181e"/><circle cx="28" cy="28" r="11" fill="#d9dde3"/><circle cx="28" cy="28" r="8" fill="#14181e"/><path d="M28 28 L28 22 M28 28 L32 30" stroke="#d9dde3" stroke-width="1.5"/>`,
+    schweissband: `<rect x="14" y="18" width="28" height="20" rx="6" fill="#f4f6f8" stroke="#9aa3ad"/><path d="M14 24 H42 M14 32 H42" stroke="#d5dae0" stroke-width="1.5"/>`,
+    kapitaen: `<rect x="10" y="18" width="36" height="20" rx="4" fill="#ffd23f" stroke="#b9921c"/><text x="28" y="34" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="17" fill="#1c2430">C</text>`,
+    brille: `<path d="M8 24 Q28 18 48 24 L46 33 Q38 36 30 32 L26 32 Q18 36 10 33Z" fill="#3fd0ff" stroke="#14181e" stroke-width="2.5"/><path d="M12 26 Q20 24 24 28" stroke="#fff" stroke-width="1.4" fill="none" opacity=".7"/>`,
+    schal: `<path d="M14 16 L42 16 L44 40 L12 40 Z" fill="#1c2430"/><path d="M14 22 H42 M13 34 H43" stroke="#2f3a48" stroke-width="2"/>`,
+  };
+  const kbAccSVG = id => `<svg viewBox="0 0 56 56" aria-hidden="true">${KB_ACC_SVG[id] || ""}</svg>`;
+  const kbCoinTxt = n => `<i class="coin" aria-hidden="true"></i>${n.toLocaleString("de-DE")}`;
+  function kbItemHTML(tab, it, eq) {
+    const own = kbHas(tab, it), on = tab === "acc" ? eq.acc.includes(it.id) : eq[tab] === it.id, sel = kb.sel === it.id;
+    const icon = tab === "char" ? kbFaceSVG(it.c) : tab === "kit" ? kbJerseySVG(pkMyKit({ kit: it.id, boots: "schwarz" }), it.id, "") : tab === "boots" ? kbBootSVG(it) : tab === "acc" ? kbAccSVG(it.id) : `<span class="kb-num">${esc(it.id)}</span>`;
+    const price = tab === "num" ? "" : `<span class="kb-p">${own ? (on ? "dabei" : "gekauft") : it.price ? kbCoinTxt(it.price) : "gratis"}</span>`;
+    return `<button type="button" class="kb-item${own ? " owned" : ""}${on ? " on" : ""}${sel ? " sel" : ""}" data-kbi="${esc(it.id)}" aria-pressed="${sel}" title="${esc(it.name)}">${icon}${tab === "num" ? "" : `<span class="kb-n">${esc(tab === "char" ? kbShortName(it) : it.name)}</span>`}${price}</button>`;
+  }
+  function kbSyncMenu() {
+    const c = kbCoins(), C = pkMyChar();
+    $("kb-open-d").innerHTML = `${esc(C.name)} · ${kbCoinTxt(c)} Münzen`;
+  }
+  function kbRender() {
+    const eq = kbEq(), coins = kbCoins(), t = kb.tab, list = SHOP[t];
+    $("kb-coins-n").textContent = coins.toLocaleString("de-DE");
+    const C = PKCHAR.CHARACTERS.find(c => c.id === eq.char) || PKCHAR.CHARACTERS[0], K = SHOP.kit.find(k => k.id === eq.kit);
+    $("kb-sub").textContent = `${C.name} · ${K ? K.name : "Vereinsfarben"} · Nr. ${eq.num}${eq.acc.length ? " · " + eq.acc.length + (eq.acc.length === 1 ? " Extra" : " Extras") : ""}`;
+    document.querySelectorAll("[data-kbt]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.kbt === t)));
+    document.querySelectorAll("[data-kbv]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.kbv === kb.view)));
+    const grid = $("kb-grid"); grid.classList.toggle("nums", t === "num");
+    grid.innerHTML = list.map(it => kbItemHTML(t, it, eq)).join("");
+    // Leiste unten: Name, Preis, Knopf
+    const sel = kb.sel ? list.find(it => it.id === kb.sel) : (t === "acc" ? null : list.find(it => it.id === eq[t]));
+    const btn = $("kb-d-btn"), name = $("kb-d-name"), info = $("kb-d-info");
+    btn.hidden = false; btn.disabled = false; btn.dataset.act = "";
+    if (!sel) { name.textContent = KB_TAB[t]; info.textContent = t === "acc" ? "Tippe auf ein Extra, um es anzuprobieren." : ""; btn.hidden = true; return; }
+    name.textContent = sel.name;
+    const own = kbHas(t, sel), on = t === "acc" ? eq.acc.includes(sel.id) : eq[t] === sel.id;
+    if (t === "acc") {
+      const clash = eq.acc.filter(a => a !== sel.id && PKCHAR.ACCESSORIES[a] && PKCHAR.ACCESSORIES[a].slot === sel.slot).map(a => PKCHAR.ACCESSORIES[a].name);
+      info.innerHTML = `${esc(KB_SLOT[sel.slot] || sel.slot)}${clash.length && !on ? ` · ersetzt ${esc(clash.join(", "))}` : ""}${own ? "" : ` · ${kbCoinTxt(sel.price)}`}`;
+    } else if (t === "num") info.textContent = on ? "Steht auf deinem Trikot" : "Kostenlos – zeigt sich auf dem Rücken";
+    else info.innerHTML = on ? "Trägst du gerade" : own ? "Schon gekauft" : `Preis ${kbCoinTxt(sel.price)}`;
+    if (!own) {
+      const miss = sel.price - coins;
+      if (miss > 0) { btn.innerHTML = `Noch ${kbCoinTxt(miss)} nötig`; btn.disabled = true; }
+      else { btn.innerHTML = `Kaufen · ${kbCoinTxt(sel.price)}`; btn.dataset.act = "buy"; }
+    } else if (t === "acc") { btn.textContent = on ? "Ablegen" : "Anlegen"; btn.dataset.act = on ? "off" : "on"; }
+    else if (on) { btn.textContent = t === "num" ? "Deine Nummer" : "Angezogen"; btn.disabled = true; }
+    else { btn.textContent = t === "char" ? "Auswählen" : t === "num" ? "Übernehmen" : "Anziehen"; btn.dataset.act = "on"; }
+  }
+  function kbEquip(t, id, on) {
+    const eq = kbEq();
+    if (t === "char") store(PK_CHAR_KEY, id);
+    else if (t === "kit") store(KB_KIT, JSON.stringify({ id }));
+    else if (t === "boots") store(KB_BOOTS, id);
+    else if (t === "num") store(KB_NUM, id);
+    else if (t === "acc") store(KB_ACC, JSON.stringify(on ? kbWithAcc(eq.acc, id) : eq.acc.filter(a => a !== id)));
+  }
+  function kbBumpCoins() { const c = $("kb-coins"); c.classList.remove("bump"); void c.offsetWidth; c.classList.add("bump"); }
+  function kbAct() {
+    const act = $("kb-d-btn").dataset.act, t = kb.tab, it = SHOP[t].find(x => x.id === kb.sel) || (t === "acc" ? null : SHOP[t].find(x => x.id === kbEq()[t]));
+    if (!act || !it) return;
+    if (act === "buy") {
+      if (kbCoins() < it.price) return;
+      kbSetCoins(kbCoins() - it.price);
+      const own = kbOwned(); own.add(t + ":" + it.id); store(KB_OWNED, JSON.stringify([...own]));
+      kbEquip(t, it.id, true); SFX.play("coin"); vibrate([30, 30, 60]); kbBumpCoins(); PK3.kabineCheer();
+    } else { kbEquip(t, it.id, act === "on"); SFX.play("pick"); if (act === "on" && t !== "acc") PK3.kabineCheer(); }
+    if (t !== "acc") kb.sel = null;
+    kbRender(); kbPush();
+  }
+  // Ansicht passend zum Bereich: Schuhe von nah, Nummer von hinten, Kopf-Extras von nah
+  function kbAutoView() {
+    const t = kb.tab; let v = "full";
+    if (t === "boots") v = "feet"; else if (t === "num") v = "back";
+    else if (t === "acc") { const it = SHOP.acc.find(a => a.id === kb.sel); if (it && ["kopf", "augen", "ohren", "hals"].includes(it.slot)) v = "head"; }
+    kbSetView(v);
+  }
+  function kbSetView(v) { kb.view = v; PK3.kabineView(v); document.querySelectorAll("[data-kbv]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.kbv === v))); }
+  function kbNoGL() {
+    const eq = kbPreviewEq(), kit = pkMyKit(eq), b = SHOP.boots.find(x => x.id === eq.boots) || SHOP.boots[0];
+    $("kb-nogl").innerHTML = `${kbJerseySVG(kit, "big", eq.num)}<div style="display:flex;gap:10px;align-items:center">${kbBootSVG(b).replace("<svg ", '<svg style="width:52px;height:52px" ')}${eq.acc.map(a => kbAccSVG(a).replace("<svg ", '<svg style="width:34px;height:34px" ')).join("")}</div><span>3D-Vorschau braucht WebGL – Kaufen und Anziehen klappt trotzdem.</span>`;
+    $("kb-nogl").hidden = false;
+  }
+  function kbOpen() {
+    kb.tab = "char"; kb.sel = null; kb.view = "full"; kb.open = true;
+    $("pmenu").hidden = true; $("kabine").hidden = false; $("kb-drag").classList.remove("off");
+    const gl3 = PK3.bodies();
+    if (gl3) { const cv = $("pk-3d"), ks = $("kb-stage"); if (ks.insertBefore) ks.insertBefore(cv, ks.firstChild); $("kb-nogl").hidden = true; PK3.kabine(true); }
+    document.querySelector(".kb-views").hidden = !gl3; $("kb-drag").hidden = !gl3;
+    kbRender(); kbPush(); kbSetView("full");
+    window.scrollTo({ top: 0 });
+  }
+  function kbClose(toMenu) {
+    if (!kb.open) return;
+    kb.open = false; PK3.kabine(false);
+    const cv = $("pk-3d"), st = $("pk-stage"); if (cv && st.insertBefore && cv.parentNode !== st) st.insertBefore(cv, $("pk-ov"));
+    $("kabine").hidden = true;
+    if (toMenu) { $("pmenu").hidden = false; kbSyncMenu(); window.scrollTo({ top: 0 }); }
+  }
+  $("kb-open").addEventListener("click", kbOpen);
+  $("kb-back").addEventListener("click", () => kbClose(true));
+  $("kb-d-btn").addEventListener("click", kbAct);
+  document.querySelectorAll("[data-kbt]").forEach(b => b.addEventListener("click", () => { kb.tab = b.dataset.kbt; kb.sel = null; SFX.play("pick"); kbRender(); kbPush(); kbAutoView(); }));
+  document.querySelectorAll("[data-kbv]").forEach(b => b.addEventListener("click", () => kbSetView(b.dataset.kbv)));
+  $("kb-grid").addEventListener("click", e => {
+    const b = e.target.closest("[data-kbi]"); if (!b) return;
+    const id = b.dataset.kbi, eq = kbEq();
+    kb.sel = kb.sel === id && kb.tab === "acc" ? null : id;
+    if (kb.tab !== "acc" && kb.sel === eq[kb.tab]) kb.sel = null;
+    SFX.play("pick"); kbRender(); kbPush(); kbAutoView();
+  });
+  (() => {
+    const st = $("kb-stage"); let drag = null;
+    st.addEventListener("pointerdown", e => { if (e.target.closest("button")) return; drag = { x: e.clientX, id: e.pointerId }; try { st.setPointerCapture(e.pointerId); } catch (er) {} });
+    st.addEventListener("pointermove", e => { if (!drag || e.pointerId !== drag.id) return; const dx = e.clientX - drag.x; drag.x = e.clientX; if (dx) { PK3.kabineRotate(dx * .013); $("kb-drag").classList.add("off"); } });
+    const end = e => { if (drag && (!e || e.pointerId === drag.id)) drag = null; };
+    st.addEventListener("pointerup", end); st.addEventListener("pointercancel", end); st.addEventListener("lostpointercapture", end);
+  })();
+  // Münzen nach dem Spiel (gegen den Computer und in der Karriere)
+  function pkEarnCoins(w, stage0, trophy) {
+    if (pk.mode !== "cpu" && pk.mode !== "career") return null;
+    const win = w === "X", goals = pk.score.X, saves = pk.saves || 0;
+    const winC = win ? (pk.mode === "career" ? 30 + stage0 * 20 : ({ easy: 15, okay: 25, advanced: 35, pro: 50, ball: 70 })[pk.level] || 25) : 0;
+    const parts = [];
+    if (winC) parts.push(`Sieg ${winC}`);
+    if (trophy) parts.push("Pokal 150");
+    if (goals) parts.push(`${goals} ${goals === 1 ? "Tor" : "Tore"} ${goals * 3}`);
+    if (saves) parts.push(`${saves} ${saves === 1 ? "Parade" : "Paraden"} ${saves * 3}`);
+    const total = winC + (trophy ? 150 : 0) + 3 * (goals + saves);
+    if (total > 0) kbSetCoins(kbCoins() + total);
+    return { total, parts };
+  }
+  kbSyncMenu();
   try { const r = PK3.goalRect(), z = $("pk-zones").style; z.left = r.left.toFixed(2) + "%"; z.top = r.top.toFixed(2) + "%"; z.width = r.width.toFixed(2) + "%"; z.height = r.height.toFixed(2) + "%"; } catch (e) {}
   $("pback-home").addEventListener("click", toVariants);
   $("pk-menu-btn").addEventListener("click", pkAskLeave);
