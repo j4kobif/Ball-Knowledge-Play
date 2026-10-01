@@ -508,6 +508,8 @@ BAD_ANY = re.compile(r"runner|second place|third|fourth|finalist|semi|best|playe
                      r"all-star|dream team|squad|xi\b|award|ballon|qualif|women|youth|u-?\d\d|under-?\d\d|olympic|super ?cup|"
                      r"cup winners|intertoto|club world cup|confederations|nations league|asian|african|afc|caf|concacaf|"
                      r"conmebol|ofc|libertadores|sudamericana", re.I)
+HEAD_OK = {"uefa", "fifa", "the", "winner", "winners", "won", "champion", "champions", "cup", "european", "league",
+           "europa", "conference", "fairs", "inter", "cities", "trophy", "title", "titles", "x", "1x", "2x", "3x", "4x", "5x"}
 YEAR = re.compile(r"\b(1[89]\d{2}|20\d{2})(?:\s*[–\-/]\s*(?:\d{2}|\d{4}))?\b")
 
 
@@ -536,10 +538,18 @@ def count_titles_en(text, section=False):
                     continue
                 if key == "euro" and TITLE_RX["cl"].search(seg):
                     continue
-                m = rx.search(seg)
-                if m:
-                    seasons[key].update(YEAR.findall(seg[m.end():]))   # gleiche Saison nur einmal zählen
-                    break
+                if ":" not in seg:
+                    continue
+                head, tail = seg.split(":", 1)
+                if not rx.search(head):
+                    continue
+                # Vor dem Doppelpunkt darf nur der Titel stehen („UEFA Champions League:“), keine Zusätze
+                # wie „top assist provider“ oder „Final Man of the Match“
+                rest = re.sub(r"[*'\"/().,\-–\s]+", " ", rx.sub(" ", head)).lower().split()
+                if any(w not in HEAD_OK for w in rest):
+                    continue
+                seasons[key].update(YEAR.findall(tail))                # gleiche Saison nur einmal zählen
+                break
     return {k: len(v) for k, v in seasons.items()}
 
 
