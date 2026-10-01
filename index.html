@@ -704,6 +704,28 @@
   .zs-card.bad { border-color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); animation: g3Shake .5s ease both; }
   @keyframes g3Shake { 0%, 100% { transform: none; } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
   @media (prefers-reduced-motion: reduce) { .ck-node.fresh, .wi-hint.fresh, .zs-card.ok, .zs-card.bad { animation: none; } }
+
+  /* ---------- Game-Seite im Sammelkarten-Design ---------- */
+  .game-card { position: relative; overflow: hidden; isolation: isolate; }
+  .game-card .g-icon, .game-card .g-new { display: none; }
+  .g-icon svg { width: 100%; height: 100%; display: block; }
+  .game-pick { grid-template-columns: 1fr 1fr; gap: 10px; perspective: 900px; }
+  .game-card { border: 2px solid transparent; border-radius: 16px; padding: 12px 12px 14px; align-items: flex-start;
+    background: linear-gradient(var(--surface-2), var(--surface-2)) padding-box, linear-gradient(140deg, var(--gc), #ffffff66, var(--gc)) border-box;
+    animation: gd4Flip .7s ease both; animation-delay: calc(var(--i) * 90ms); }
+  .game-card::before { content: ""; position: absolute; inset: -40%; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.18) 47%, color-mix(in srgb, var(--gc) 35%, transparent) 50%, rgba(255,255,255,.12) 53%, transparent 60%); transform: translateX(-60%); animation: gd4Foil 5s ease-in-out infinite; animation-delay: calc(var(--i) * 450ms); z-index: -1; pointer-events: none; }
+  .game-card .g-icon { display: block; width: 100%; height: 64px; margin: 2px 0 6px; padding: 10px; border-radius: 10px; color: var(--gc); background: color-mix(in srgb, var(--gc) 14%, #0b0f14); box-sizing: border-box; }
+  .game-card .g-title { font-size: 22px; hyphens: auto; overflow-wrap: anywhere; max-width: 100%; }
+  .game-card .g-badge { font-size: 9.5px; order: 3; color: var(--gc, var(--accent)); }
+  .game-card .g-desc { font-size: 12px; order: 4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .game-card .g-new { display: block; position: absolute; top: 8px; right: -26px; transform: rotate(35deg); background: var(--gc); color: #0b0f14; font-family: "IBM Plex Mono", monospace; font-size: 9.5px; font-weight: 700; padding: 2px 28px; letter-spacing: .1em; }
+  .game-card:hover { transform: translateY(-3px) rotateX(4deg) rotateY(-5deg); }
+  .game-card[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--gc), 0 10px 24px -12px var(--gc); background: linear-gradient(var(--surface-2), var(--surface-2)) padding-box, linear-gradient(140deg, var(--gc), #fff, var(--gc)) border-box; }
+  @keyframes gd4Flip { from { opacity: 0; transform: rotateY(85deg); } to { opacity: 1; transform: none; } }
+  @keyframes gd4Foil { 0%, 55% { transform: translateX(-60%); } 85%, 100% { transform: translateX(60%); } }
+  .game-card:hover { border-color: transparent; }
+  @media (min-width: 720px) { .game-pick { grid-template-columns: 1fr 1fr 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .game-pick .game-card, .game-pick .game-card::before { animation: none !important; } }
 </style>
 
 </head>
@@ -714,14 +736,14 @@
 <div class="bigscore right" id="big-o" hidden aria-hidden="true"><span id="big-o-name">Gast</span><b id="big-o-num">0</b></div>
 <div class="wrap" lang="de">
   <div class="masthead">
-    <span class="eyebrow" id="eyebrow">Fußball-Quiz · Tic-Tac-Toe</span>
+    <span class="eyebrow" id="eyebrow">Fußball-Quiz · Games</span>
     <h1>Ball Knowledge-Play</h1>
-    <p class="sub" id="sub">Jedes Feld kreuzt zwei Kategorien: eine Nation, einen Verein oder einen Titel wie WM- oder CL-Sieger. Tippe einen Spieler, der zu beiden passt. Wer zuerst drei Felder in einer Reihe hat, gewinnt.</p>
+    <p class="sub" id="sub">Sieben Fußball-Games, eine Spielerdatenbank. Wähle zuerst ein Game, danach den Spielmodus.</p>
   </div>
 
   <div class="panel" id="home">
     <div class="home-tabs" role="tablist" aria-label="Startmenü">
-      <button type="button" role="tab" id="tab-modes" aria-selected="true" aria-controls="home-modes">Spielmodus</button>
+      <button type="button" role="tab" id="tab-modes" aria-selected="true" aria-controls="home-modes">Games</button>
       <button type="button" role="tab" id="tab-settings" aria-selected="false" aria-controls="home-settings">⚙ Einstellungen</button>
     </div>
     <div id="home-modes" role="tabpanel" aria-labelledby="tab-modes" class="home-pane">
@@ -744,7 +766,7 @@
       </button>
       <button type="button" class="game-card" data-game="pen" aria-pressed="false">
         <span class="g-badge">Zwei Spieler oder Computer</span>
-        <span class="g-title">Elfmeterschießen</span>
+        <span class="g-title">Elfmeter&shy;schießen</span>
         <span class="g-desc">Wähle deine Ecke, triff das Timing und halte als Torwart. Wer behält die Nerven?</span>
       </button>
       <button type="button" class="game-card" data-game="chain" aria-pressed="false">
@@ -762,6 +784,31 @@
         <span class="g-title">Zeitstrahl</span>
         <span class="g-desc">Sortiere 10 Spieler nach Geburtsjahr, Vereinen oder Titeln. Drei Leben, jeder Fehler kostet eins.</span>
       </button>
+    </div>
+    </div>
+    <div id="home-settings" role="tabpanel" aria-labelledby="tab-settings" class="home-pane" hidden>
+      <h2 class="menu-title">Töne</h2>
+      <div class="snd-master">
+        <div class="snd-row">
+          <span class="snd-name"><b>Alle Töne</b><small>Gesamtlautstärke</small></span>
+          <button type="button" class="switch" id="snd-all" role="switch" aria-checked="true" aria-label="Alle Töne an oder aus"><i></i></button>
+          <input type="range" id="snd-all-vol" min="0" max="100" step="10" value="100" aria-label="Gesamtlautstärke">
+          <output class="snd-val" id="snd-all-val" for="snd-all-vol">100 %</output>
+        </div>
+      </div>
+      <div class="snd-list" id="snd-list"></div>
+      <div class="snd-foot">
+        <span class="datanote">Einstellungen werden in diesem Browser gespeichert. ▶ spielt den Ton zur Probe.</span>
+        <button type="button" class="ghost-btn" id="snd-reset">Zurücksetzen</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="panel" id="vpick" hidden>
+    <div class="menu-top">
+      <button type="button" class="ghost-btn" id="vback-games">← Games</button>
+      <span class="variant-tag" id="vpick-game"></span>
     </div>
     <h2 class="menu-title">Spielmodus wählen</h2>
     <div class="variant-grid">
@@ -791,23 +838,6 @@
       </button>
     </div>
     <div class="datanote" id="datanote"></div>
-    </div>
-    <div id="home-settings" role="tabpanel" aria-labelledby="tab-settings" class="home-pane" hidden>
-      <h2 class="menu-title">Töne</h2>
-      <div class="snd-master">
-        <div class="snd-row">
-          <span class="snd-name"><b>Alle Töne</b><small>Gesamtlautstärke</small></span>
-          <button type="button" class="switch" id="snd-all" role="switch" aria-checked="true" aria-label="Alle Töne an oder aus"><i></i></button>
-          <input type="range" id="snd-all-vol" min="0" max="100" step="10" value="100" aria-label="Gesamtlautstärke">
-          <output class="snd-val" id="snd-all-val" for="snd-all-vol">100 %</output>
-        </div>
-      </div>
-      <div class="snd-list" id="snd-list"></div>
-      <div class="snd-foot">
-        <span class="datanote">Einstellungen werden in diesem Browser gespeichert. ▶ spielt den Ton zur Probe.</span>
-        <button type="button" class="ghost-btn" id="snd-reset">Zurücksetzen</button>
-      </div>
-    </div>
   </div>
 
   <div class="panel" id="menu" hidden>
@@ -1656,7 +1686,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-3</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-5</footer>
 </div>
 
 <script>
@@ -2810,12 +2840,22 @@
     tline: ["Fußball-Quiz · Zeitstrahl", "Zehn Spieler, eine Reihenfolge: nach Geburtsjahr, nach Vereinen in den Top-5-Ligen oder nach großen Titeln. Drei Leben – jeder Fehler kostet eins."],
     pen: ["Fußball-Spiel · Elfmeterschießen", "Wähle deine Ecke, stoppe die Leiste im grünen Bereich und triff. Als Torwart entscheidest du, wohin du springst. Wer hat die besseren Nerven?"],
   };
+  const HOME_TXT = ["Fußball-Quiz · Games", "Sieben Fußball-Games, eine Spielerdatenbank. Wähle zuerst ein Game, danach den Spielmodus."];
+  function setMasthead(t) { $("eyebrow").textContent = t[0]; $("sub").textContent = t[1]; }
   function setGame(g) {
     activeGame = g;
     pressed("[data-game]", "game", g);
-    $("eyebrow").textContent = GAME_TXT[g][0];
-    $("sub").textContent = GAME_TXT[g][1];
     store("kaderraster-game", g);
+  }
+  // Seite 2: Spielmodus (Variante) für das gewählte Game
+  function toVariants() {
+    for (const g in PANELS) { $(PANELS[g][0]).hidden = true; $(PANELS[g][1]).hidden = true; }
+    $("home").hidden = true; $("vpick").hidden = false;
+    setTheme("alltime");
+    setMasthead(GAME_TXT[activeGame]);
+    $("vpick-game").textContent = GAME_TXT[activeGame][0].split(" · ").pop();
+    syncBig();
+    window.scrollTo({ top: 0 });
   }
   function chooseVariant(v) {
     state.variant = v;
@@ -2824,7 +2864,8 @@
     store("kaderraster-variant", v);
     const tag = `${VARIANT_NAME[v]} · ${n.toLocaleString("de-DE")} Spieler`;
     for (const id of ["variant-tag", "wvariant-tag", "lvariant-tag", "pvariant-tag", "kvariant-tag", "bvariant-tag", "zvariant-tag"]) $(id).textContent = tag;
-    $("home").hidden = true;
+    $("home").hidden = true; $("vpick").hidden = true;
+    setMasthead(GAME_TXT[activeGame]);
     for (const g in PANELS) { $(PANELS[g][0]).hidden = g !== activeGame; $(PANELS[g][1]).hidden = true; }
     renderAllMenuHelp();
     window.scrollTo({ top: 0 });
@@ -2834,8 +2875,9 @@
   function renderAllMenuHelp() { renderMenuHelp(); wdRenderMenuHelp(); lkRenderMenuHelp(); pkRenderMenuHelp(); ckRenderMenuHelp(); wiRenderMenuHelp(); zsRenderMenuHelp(); }
   function toHome() {
     for (const g in PANELS) { $(PANELS[g][0]).hidden = true; $(PANELS[g][1]).hidden = true; }
-    $("home").hidden = false;
+    $("home").hidden = false; $("vpick").hidden = true;
     setTheme("alltime");
+    setMasthead(HOME_TXT);
     syncBig();
     window.scrollTo({ top: 0 });
   }
@@ -2876,8 +2918,9 @@
   document.querySelectorAll("[data-cat]").forEach(b => b.addEventListener("click", () => { setCat(b.dataset.cat); renderMenuHelp(); }));
   $("start-btn").addEventListener("click", startGame);
   document.querySelectorAll("[data-variant]").forEach(b => b.addEventListener("click", () => chooseVariant(b.dataset.variant)));
-  document.querySelectorAll("[data-game]").forEach(b => b.addEventListener("click", () => setGame(b.dataset.game)));
-  $("back-home").addEventListener("click", toHome);
+  document.querySelectorAll("[data-game]").forEach(b => b.addEventListener("click", () => { setGame(b.dataset.game); toVariants(); }));
+  $("vback-games").addEventListener("click", toHome);
+  $("back-home").addEventListener("click", toVariants);
   // Hauptmenü aus einem laufenden Spiel: erst nachfragen (die Zugzeit läuft dabei weiter – kein Zeitgewinn)
   let leaveFn = toMenu;                     // was bei „Spiel verlassen“ passiert (je nach Game)
   function openLeave(text, fn) {
@@ -3239,7 +3282,7 @@
   document.querySelectorAll("[data-wtries]").forEach(b => b.addEventListener("click", () => { wdSetTries(+b.dataset.wtries); wdRenderMenuHelp(); }));
   document.querySelectorAll("[data-wtime]").forEach(b => b.addEventListener("click", () => { wdSetTime(+b.dataset.wtime); wdRenderMenuHelp(); }));
   $("wstart-btn").addEventListener("click", wdStart);
-  $("wback-home").addEventListener("click", toHome);
+  $("wback-home").addEventListener("click", toVariants);
   $("wd-menu-btn").addEventListener("click", wdAskLeave);
   $("wd-menu-btn-2").addEventListener("click", wdAskLeave);
   $("wd-giveup").addEventListener("click", () => { if (!wd.over) wdEnd("giveup"); });
@@ -3540,7 +3583,7 @@
   for (const [attr, fn, conv] of [["lmode", lkSetMode, String], ["llvl", lkSetLevel, String], ["ltries", lkSetTries, Number], ["ltime", lkSetTime, Number]])
     document.querySelectorAll(`[data-${attr}]`).forEach(b => b.addEventListener("click", () => { fn(conv(b.dataset[attr])); lkRenderMenuHelp(); }));
   $("lstart-btn").addEventListener("click", lkStart);
-  $("lback-home").addEventListener("click", toHome);
+  $("lback-home").addEventListener("click", toVariants);
   $("lk-menu-btn").addEventListener("click", lkAskLeave);
   $("lk-menu-btn-2").addEventListener("click", lkAskLeave);
   $("lk-giveup").addEventListener("click", () => { if (!lk.over) lkEnd("giveup"); });
@@ -3839,7 +3882,7 @@
   $("pk-meter").addEventListener("click", () => pkStopMeter());
   $("pk-handoff-btn").addEventListener("click", pkAfterHandoff);
   $("pstart-btn").addEventListener("click", pkStart);
-  $("pback-home").addEventListener("click", toHome);
+  $("pback-home").addEventListener("click", toVariants);
   $("pk-menu-btn").addEventListener("click", pkAskLeave);
   $("pk-menu-btn-2").addEventListener("click", pkAskLeave);
   $("pk-play-again").addEventListener("click", pkNewMatch);
@@ -4182,7 +4225,7 @@
   document.querySelectorAll("[data-ktime]").forEach(b => b.addEventListener("click", () => { ckSetTime(+b.dataset.ktime); ckRenderMenuHelp(); }));
   document.querySelectorAll("[data-kconn]").forEach(b => b.addEventListener("click", () => { ckSetConn(b.dataset.kconn); ckRenderMenuHelp(); }));
   $("kstart-btn").addEventListener("click", ckStart);
-  $("kback-home").addEventListener("click", toHome);
+  $("kback-home").addEventListener("click", toVariants);
   $("ck-menu-btn").addEventListener("click", ckAskLeave);
   $("ck-menu-btn-2").addEventListener("click", ckAskLeave);
   $("ck-sound-btn").addEventListener("click", () => setSound(!SFX.on));
@@ -4381,7 +4424,7 @@
   document.querySelectorAll("[data-brounds]").forEach(b => b.addEventListener("click", () => { wiSetRounds(+b.dataset.brounds); wiRenderMenuHelp(); }));
   document.querySelectorAll("[data-btime]").forEach(b => b.addEventListener("click", () => { wiSetTime(+b.dataset.btime); wiRenderMenuHelp(); }));
   $("bstart-btn").addEventListener("click", wiStart);
-  $("bback-home").addEventListener("click", toHome);
+  $("bback-home").addEventListener("click", toVariants);
   $("wi-menu-btn").addEventListener("click", wiAskLeave);
   $("wi-menu-btn-2").addEventListener("click", wiAskLeave);
   $("wi-sound-btn").addEventListener("click", () => setSound(!SFX.on));
@@ -4588,13 +4631,29 @@
   document.querySelectorAll("[data-zlvl]").forEach(b => b.addEventListener("click", () => { zsSetLevel(b.dataset.zlvl); zsRenderMenuHelp(); }));
   document.querySelectorAll("[data-ztime]").forEach(b => b.addEventListener("click", () => { zsSetTime(+b.dataset.ztime); zsRenderMenuHelp(); }));
   $("zstart-btn").addEventListener("click", zsStart);
-  $("zback-home").addEventListener("click", toHome);
+  $("zback-home").addEventListener("click", toVariants);
   $("zs-menu-btn").addEventListener("click", zsAskLeave);
   $("zs-menu-btn-2").addEventListener("click", zsAskLeave);
   $("zs-sound-btn").addEventListener("click", () => setSound(!SFX.on));
   $("zs-line").addEventListener("click", e => { const b = e.target.closest("button[data-s]"); if (b) zsPlace(+b.dataset.s); });
   $("zs-play-again").addEventListener("click", zsNewGame);
 
+  // ---------- Game-Seite: Sammelkarten: Farbe und Symbol je Game ----------
+  const GAME_LOOK = {
+    ttt: ["#4fd987", '<path d="M14 4v32M26 4v32M4 14h32M4 26h32"/><path d="M6 6l6 6M12 6l-6 6"/><circle cx="32" cy="32" r="3.5"/>'],
+    wordle: ["#f2c14e", '<rect x="3" y="13" width="10" height="14" rx="2"/><rect x="15" y="13" width="10" height="14" rx="2"/><rect x="27" y="13" width="10" height="14" rx="2"/><path d="M6 31h4M18 31h4M30 31h4"/>'],
+    letter: ["#5cc8ff", '<rect x="7" y="5" width="26" height="30" rx="4"/><path d="M13 29l7-18 7 18M15.5 23h9"/>'],
+    pen: ["#ff7a6b", '<path d="M3 30V9h34v21"/><path d="M3 9l5 5h24l5-5M8 14v16M32 14v16"/><circle cx="20" cy="31" r="5"/>'],
+    chain: ["#c77dff", '<rect x="3" y="14" width="18" height="12" rx="6"/><rect x="19" y="14" width="18" height="12" rx="6"/>'],
+    whoami: ["#3ee6cf", '<circle cx="20" cy="13" r="7"/><path d="M6 36c1-8 7-12 14-12s13 4 14 12"/><path d="M17.5 10.5c0-2 1.2-3 2.6-3 1.5 0 2.6 1 2.6 2.4 0 2-2.6 2.2-2.6 4.1M20.1 16.6v.2"/>'],
+    tline: ["#ffb454", '<path d="M3 20h31M30 15l5 5-5 5"/><circle cx="8" cy="20" r="3"/><circle cx="17" cy="20" r="3"/><circle cx="26" cy="20" r="3"/><path d="M8 13v-4M17 27v4M26 13v-4"/>'],
+  };
+  const NEW_GAMES = new Set(["chain", "whoami", "tline"]);
+  document.querySelectorAll(".game-card").forEach((card, k) => {
+    const g = card.dataset.game, look = GAME_LOOK[g]; if (!look) return;
+    card.style.setProperty("--gc", look[0]); card.style.setProperty("--i", k);
+    card.insertAdjacentHTML("afterbegin", `<span class="g-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${look[1]}</svg></span>${NEW_GAMES.has(g) ? '<span class="g-new">NEU</span>' : ""}`);
+  });
   // ---------- Start ----------
   // Erst mit Versionsanhang (umgeht alte Kopien im Browser-Cache), sonst ohne – manche Hosts kennen keine Anhänge
   // no-cache: der Browser fragt nach, ob es eine neuere players.json gibt (z. B. nach einem Daten-Update)
