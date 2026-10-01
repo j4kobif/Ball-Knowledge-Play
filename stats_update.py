@@ -377,7 +377,7 @@ def _num(s):
 
 
 def plausible(g, t):
-    return 1 <= g <= 1500 and 0 <= t <= 1000 and t <= g * 1.6 + 5
+    return 1 <= g <= 1050 and 0 <= t <= 1000 and t <= g * 1.6 + 5           # Rekord: Peter Shilton, 1005 Ligaspiele
 
 
 def infobox_snippet(text):
@@ -413,6 +413,8 @@ def parse_de(text):
         acc = [0, 0, 0]
         for st in find_all_templates(tab, "Team-Station"):
             _, pos = template_params(st)
+            if len(pos) >= 3 and re.search(r"\b(gesamt|insgesamt|total)\b", clean(pos[1]), re.I):
+                continue                                                   # Summenzeile nicht doppelt zählen
             if len(pos) >= 3 and not _cell(pos[2], acc):
                 return None
         return (acc[0], acc[1]) if acc[2] and plausible(acc[0], acc[1]) else None
@@ -485,6 +487,8 @@ def parse_it(text):
     games = goals = rows = 0
     acc = [0, 0, 0]
     for k in range(2, len(pos), 3):                                          # Jahre | Verein | Spiele (Tore); negativ = Gegentore
+        if re.search(r"\btotale?\b", clean(pos[k - 1]), re.I):
+            continue
         if not _cell(pos[k], acc):
             return None
     return (acc[0], acc[1]) if acc[2] and plausible(acc[0], acc[1]) else None
@@ -526,9 +530,17 @@ def honours_section(text):
 def count_titles_en(text, section=False):
     sec = clean(text if section else honours_section(text))
     seasons = {k: set() for k in TITLE_RX}
+    skip = False                                                            # Titel als Trainer nicht mitzählen
     for line in sec.split("\n"):
         line = line.strip()
         if not line.startswith("*"):
+            head = line.strip("=;: ").lower()
+            if re.search(r"manager|coach|trainer|head coach", head):
+                skip = True
+            elif line.startswith("=") or re.search(r"\bplayer\b|international|individual|club\b", head):
+                skip = False
+            continue
+        if skip:
             continue
         for seg in re.split(r";", line):
             if BAD_ANY.search(seg):
@@ -548,6 +560,7 @@ def count_titles_en(text, section=False):
                 rest = re.sub(r"[*'\"/().,\-–\s]+", " ", rx.sub(" ", head)).lower().split()
                 if any(w not in HEAD_OK for w in rest):
                     continue
+                tail = re.sub(r"\{\{[^{}]*\}\}", "", tail)                    # z. B. {{citation needed|date=…}}
                 seasons[key].update(YEAR.findall(tail))                # gleiche Saison nur einmal zählen
                 break
     return {k: len(v) for k, v in seasons.items()}
