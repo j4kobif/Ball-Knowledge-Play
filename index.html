@@ -654,6 +654,41 @@
     position: relative; height: 28px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); cursor: pointer;
     background: linear-gradient(90deg, #c94b4b 0 12.5%, #d9a93a 12.5% 27.5%, #2f9d62 27.5% 72.5%, #d9a93a 72.5% 87.5%, #c94b4b 87.5% 100%);
   }
+  .pk-card { border: 1px solid var(--line-strong); border-radius: 14px; background: var(--surface-2); padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+  .pk-card[hidden] { display: none; }
+  .pk-scout-stage { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--led); }
+  .pk-scout-opp { font-family: "Bebas Neue", "Work Sans", sans-serif; font-size: 30px; line-height: 1; }
+  .pk-scout-row { display: grid; grid-template-columns: 26px 1fr; gap: 8px; align-items: start; font-size: 13.5px; line-height: 1.4; }
+  .pk-scout-row b { display: block; font-size: 11px; font-family: "IBM Plex Mono", monospace; color: var(--text-dim); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .pk-path { display: flex; gap: 4px; flex-wrap: wrap; }
+  .pk-path span { font-size: 10.5px; font-family: "IBM Plex Mono", monospace; padding: 3px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-dim); }
+  .pk-path span.done { background: var(--good-bg); border-color: var(--accent); color: var(--accent); }
+  .pk-path span.now { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 700; }
+  .pk-quiz-top { display: flex; align-items: center; gap: 10px; }
+  .pk-quiz-kind { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--led); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .pk-quiz-time { flex: 1; height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; }
+  .pk-quiz-time i { display: block; height: 100%; width: 100%; background: var(--accent); transform-origin: left; }
+  .pk-quiz-time i.run { animation: pkQuizT var(--qt, 8s) linear forwards; }
+  @keyframes pkQuizT { from { transform: scaleX(1); } to { transform: scaleX(0); background: var(--bad); } }
+  .pk-quiz-q { margin: 0; font-size: 16px; font-weight: 700; line-height: 1.35; }
+  .pk-quiz-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pk-quiz-opts button { font: inherit; font-size: 13.5px; font-weight: 600; text-align: left; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); cursor: pointer; min-height: 44px; overflow-wrap: anywhere; }
+  .pk-quiz-opts button:hover:not(:disabled) { border-color: var(--accent); }
+  .pk-quiz-opts button.ok { background: var(--wd-g); border-color: var(--wd-g); color: var(--wd-g-ink); }
+  .pk-quiz-opts button.no { background: #5a2222; border-color: var(--bad); }
+  .pk-quiz-opts button:disabled { cursor: default; }
+  .pk-quiz-fb { margin: 0; font-size: 13px; min-height: 18px; }
+  .pk-zone.hint { background: rgba(79,217,135,0.22); border: 2px solid var(--accent); }
+  .pk-trophies { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13.5px; background: var(--surface-2); }
+  .pk-trophies[hidden] { display: none; }
+  .pk-ads { animation: pkAds 26s linear infinite; }
+  @keyframes pkAds { from { transform: translateX(0); } to { transform: translateX(-262px); } }
+  #pk-crowd.cheer { animation: pkCheer .32s ease-in-out 5 alternate; }
+  @keyframes pkCheer { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+  .pk-confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 6; }
+  .pk-confetti i { position: absolute; top: -8px; width: 6px; height: 10px; border-radius: 1px; animation: pkConf linear forwards; }
+  @keyframes pkConf { to { transform: translateY(260px) rotate(540deg); opacity: .9; } }
+  @media (prefers-reduced-motion: reduce) { .pk-ads, #pk-crowd.cheer, .pk-confetti i { animation: none; } }
   .pk-marker { position: absolute; top: 0; bottom: 0; width: 5px; margin-left: -2.5px; background: #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); left: 0; }
 
   /* ---------- Vereinskette, Wer bin ich, Zeitstrahl ---------- */
@@ -730,6 +765,16 @@
   @keyframes gd4Flip { from { opacity: 0; transform: rotateY(85deg); } to { opacity: 1; transform: none; } }
   @keyframes gd4Foil { 0%, 55% { transform: translateX(-60%); } 85%, 100% { transform: translateX(60%); } }
   .game-card:hover { border-color: transparent; }
+  .game-card.soon { cursor: not-allowed; }
+  .game-card.soon > :not(.g-soon) { opacity: 0.32; filter: grayscale(0.75); }
+  .game-card.soon:hover { transform: none; }
+  .game-card.soon::before { display: none; }
+  .g-soon { position: absolute; left: 50%; top: 21%; z-index: 2; transform: translate(-50%, -50%) rotate(-12deg); white-space: nowrap;
+    font-family: "Bebas Neue", "Work Sans", sans-serif; font-size: 17px; letter-spacing: 0.08em; line-height: 1; text-transform: uppercase;
+    color: var(--gc); border: 2.5px solid var(--gc); border-radius: 8px; padding: 6px 10px 4px; background: rgba(7,10,14,0.88);
+    box-shadow: 0 0 18px -4px var(--gc); animation: gSoon 2.6s ease-in-out infinite; }
+  @keyframes gSoon { 0%, 100% { transform: translate(-50%, -50%) rotate(-12deg) scale(1); } 50% { transform: translate(-50%, -50%) rotate(-12deg) scale(1.06); } }
+  @media (prefers-reduced-motion: reduce) { .g-soon { animation: none; } }
   @media (min-width: 720px) { .game-pick { grid-template-columns: 1fr 1fr 1fr; } }
   @media (prefers-reduced-motion: reduce) { .game-pick .game-card, .game-pick .game-card::before { animation: none !important; } }
 </style>
@@ -771,9 +816,9 @@
         <span class="g-desc">Errate den Nachnamen eines Fußballers Buchstabe für Buchstabe: grün, gelb oder grau.</span>
       </button>
       <button type="button" class="game-card" data-game="pen" aria-pressed="false">
-        <span class="g-badge">Zwei Spieler oder Computer</span>
+        <span class="g-badge">Karriere, Computer oder Duell</span>
         <span class="g-title">Elfmeter&shy;schießen</span>
-        <span class="g-desc">Wähle deine Ecke, triff das Timing und halte als Torwart. Wer behält die Nerven?</span>
+        <span class="g-desc">Bis zum Pokal: Quizfrage, Ecke, Timing – und als Torwart den Schützen lesen.</span>
       </button>
       <button type="button" class="game-card" data-game="chain" aria-pressed="false">
         <span class="g-badge">Zwei Spieler oder Computer</span>
@@ -1220,8 +1265,14 @@
     <div class="settings">
       <span class="lbl">Modus</span>
       <div class="segmented" role="group" aria-label="Elfmeter-Modus">
+        <button type="button" data-pmode="career" aria-pressed="false">Karriere</button>
         <button type="button" data-pmode="cpu" aria-pressed="true">Gegen Computer</button>
         <button type="button" data-pmode="pvp" aria-pressed="false">2 Spieler</button>
+      </div>
+      <span class="lbl">Quizfragen</span>
+      <div class="segmented" role="group" aria-label="Quizfragen vor jedem Schuss">
+        <button type="button" data-pquiz="1" aria-pressed="true">An</button>
+        <button type="button" data-pquiz="0" aria-pressed="false">Aus</button>
       </div>
       <div class="pk-level-wrap" id="pk-level-wrap">
         <span class="lbl">Stufe</span>
@@ -1233,13 +1284,16 @@
         <button type="button" data-plvl="ball" aria-pressed="false">Ball Knowledge</button>
         </div>
       </div>
+      <div class="pk-level-wrap" id="pk-shots-wrap">
       <span class="lbl">Schüsse</span>
       <div class="segmented" role="group" aria-label="Schüsse pro Team">
         <button type="button" data-pshots="3" aria-pressed="false">3</button>
         <button type="button" data-pshots="5" aria-pressed="true">5</button>
         <button type="button" data-pshots="7" aria-pressed="false">7</button>
       </div>
+      </div>
     </div>
+    <div class="pk-trophies" id="pk-trophies" hidden></div>
     <div class="names">
       <label class="name-field" for="pname-input-x"><span class="lbl" id="pname-label-x">Dein Name</span>
         <input type="text" id="pname-input-x" maxlength="16" placeholder="optional" autocomplete="off" spellcheck="false"></label>
@@ -1286,14 +1340,17 @@
         <defs>
           <linearGradient id="pkSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080c11"/><stop offset="1" stop-color="#152029"/></linearGradient>
           <linearGradient id="pkGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d5d38"/><stop offset="1" stop-color="#0e3821"/></linearGradient>
-          <pattern id="pkCrowd" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.3" fill="rgba(255,255,255,.16)"/></pattern>
+          <pattern id="pkCrowd" width="21" height="9" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3" r="1.7" fill="rgba(255,180,84,.38)"/><circle cx="10.5" cy="5.5" r="1.7" fill="rgba(79,217,135,.3)"/><circle cx="17.5" cy="3" r="1.7" fill="rgba(238,245,255,.3)"/><circle cx="7" cy="8" r="1.4" fill="rgba(92,200,255,.25)"/><circle cx="14" cy="1" r="1.4" fill="rgba(255,122,107,.3)"/></pattern>
           <pattern id="pkNetPat" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0H9M0 0V9" stroke="rgba(255,255,255,.42)" stroke-width=".8" fill="none"/></pattern>
           <radialGradient id="pkGlow" cx="50%" cy="0%" r="75%"><stop offset="0" stop-color="rgba(255,255,255,.26)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
         </defs>
         <rect width="360" height="240" fill="url(#pkSky)"/>
         <rect width="360" height="58" fill="#0d131a"/>
-        <rect width="360" height="58" fill="url(#pkCrowd)"/>
+        <g id="pk-crowd"><rect y="-6" width="360" height="56" fill="url(#pkCrowd)"/></g>
         <rect width="360" height="58" fill="url(#pkGlow)"/>
+        <circle cx="12" cy="6" r="16" fill="rgba(238,245,255,.10)"/><circle cx="348" cy="6" r="16" fill="rgba(238,245,255,.10)"/>
+        <rect y="47" width="360" height="11" fill="#06090d"/>
+        <g class="pk-ads"><text x="0" y="55" font-family="IBM Plex Mono, monospace" font-size="6.2" font-weight="700" letter-spacing="1.2" fill="#ffb454">BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER ·</text></g>
         <rect y="58" width="360" height="182" fill="url(#pkGrass)"/>
         <g fill="rgba(255,255,255,.045)"><rect y="76" width="360" height="18"/><rect y="112" width="360" height="22"/><rect y="152" width="360" height="26"/><rect y="196" width="360" height="30"/></g>
         <g stroke="rgba(255,255,255,.7)" stroke-width="1.6" fill="none"><path d="M0 153H360"/><path d="M104 153V182H256V153"/></g>
@@ -1318,9 +1375,17 @@
       </svg>
       <div class="pk-zones" id="pk-zones" hidden></div>
       <div class="pk-flash" id="pk-flash" aria-live="assertive"></div>
+      <div class="pk-confetti" id="pk-confetti" aria-hidden="true"></div>
       <div class="pk-handoff" id="pk-handoff" hidden>
         <div><p id="pk-handoff-text"></p><button type="button" class="start-btn" id="pk-handoff-btn">Bereit</button></div>
       </div>
+    </div>
+    <div class="pk-card" id="pk-scout" hidden></div>
+    <div class="pk-card pk-quiz" id="pk-quiz" hidden>
+      <div class="pk-quiz-top"><span class="pk-quiz-kind" id="pk-quiz-kind"></span><span class="pk-quiz-time"><i id="pk-quiz-bar"></i></span></div>
+      <p class="pk-quiz-q" id="pk-quiz-q"></p>
+      <div class="pk-quiz-opts" id="pk-quiz-opts"></div>
+      <p class="pk-quiz-fb" id="pk-quiz-fb"></p>
     </div>
     <div class="pk-meter-wrap" id="pk-meter-wrap" hidden>
       <div class="pk-meter" id="pk-meter"><span class="pk-marker" id="pk-marker"></span></div>
@@ -1692,7 +1757,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-7</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-10</footer>
 </div>
 
 <script>
@@ -2854,7 +2919,7 @@
     chain: ["Fußball-Quiz · Vereinskette", "Ein Startspieler, dann seid ihr dran: Nennt abwechselnd Spieler, die mit dem letzten Spieler der Kette beim selben Verein waren. Wer nichts mehr weiß, verliert die Runde."],
     whoami: ["Fußball-Quiz · Wer bin ich?", "Sechs Hinweise, vom Groben zum Genauen: Generation, Nation, Titel, Ligen, Vereine, Initialen. Je früher du den Spieler erkennst, desto mehr Punkte gibt es."],
     tline: ["Fußball-Quiz · Zeitstrahl", "Zehn Spieler, eine Reihenfolge: nach Geburtsjahr, nach Vereinen in den Top-5-Ligen oder nach großen Titeln. Drei Leben – jeder Fehler kostet eins."],
-    pen: ["Fußball-Spiel · Elfmeterschießen", "Wähle deine Ecke, stoppe die Leiste im grünen Bereich und triff. Als Torwart entscheidest du, wohin du springst. Wer hat die besseren Nerven?"],
+    pen: ["Fußball-Spiel · Elfmeterschießen", "Karriere vom Pokal bis ins Finale: Vor jedem Schuss eine Quizfrage – wer Ball Knowledge hat, trifft leichter und liest den Schützen. Dann Ecke wählen und die Leiste im grünen Bereich stoppen."],
   };
   const HOME_TXT = ["Fußball-Quiz · Games", "Sieben Fußball-Games, eine Spielerdatenbank. Wähle zuerst ein Game, danach den Spielmodus."];
   function setMasthead(t) { $("eyebrow").textContent = t[0]; $("sub").textContent = t[1]; }
@@ -2934,7 +2999,13 @@
   document.querySelectorAll("[data-cat]").forEach(b => b.addEventListener("click", () => { setCat(b.dataset.cat); renderMenuHelp(); }));
   $("start-btn").addEventListener("click", startGame);
   document.querySelectorAll("[data-variant]").forEach(b => b.addEventListener("click", () => chooseVariant(b.dataset.variant)));
-  document.querySelectorAll("[data-game]").forEach(b => b.addEventListener("click", () => { setGame(b.dataset.game); toVariants(); }));
+  // Elfmeterschießen braucht keinen Spielmodus (die Spielerdaten ändern nichts am Spiel) – direkt ins Menü
+  const NO_VARIANT = new Set();                // Elfmeter nutzt den Spielmodus für die Quizfragen
+  document.querySelectorAll("[data-game]").forEach(b => b.addEventListener("click", () => {
+    setGame(b.dataset.game);
+    if (NO_VARIANT.has(b.dataset.game) && DB) { chooseVariant("alltime"); $("pvariant-tag").textContent = ""; }
+    else toVariants();
+  }));
   $("vback-games").addEventListener("click", toHome);
   $("back-home").addEventListener("click", toVariants);
   // Hauptmenü aus einem laufenden Spiel: erst nachfragen (die Zugzeit läuft dabei weiter – kein Zeitgewinn)
@@ -3625,11 +3696,37 @@
   const pkZX = c => 108 + c * 72, pkZY = r => 84.5 + r * 45;                           // Mittelpunkt der Zone in der Szene (viewBox 360×240)
   const PK_ADAPT = { easy: 0, okay: 0.15, advanced: 0.3, pro: 0.45, ball: 0.6 };       // Wie stark der Computer das Muster des Menschen nutzt
   const PK_ONTARGET = { easy: 0.62, okay: 0.72, advanced: 0.8, pro: 0.87, ball: 0.93 };// Wie oft der Computer als Schütze das Tor trifft (ohne Parade)
+  // Karriere: fünf Runden gegen immer stärkere Gegner; die Quizfragen werden mit jeder Runde schwerer
+  const PK_STAGES = [
+    { name: "1. Runde", cpu: "easy", quiz: "easy" },
+    { name: "Achtelfinale", cpu: "okay", quiz: "okay" },
+    { name: "Viertelfinale", cpu: "advanced", quiz: "okay" },
+    { name: "Halbfinale", cpu: "pro", quiz: "advanced" },
+    { name: "Finale", cpu: "ball", quiz: "advanced" },
+  ];
+  const PK_CLUBS = ["FC Flutlicht", "Sporting Abseits", "Real Nachspielzeit", "Inter Eckfahne", "Dynamo Doppelpass", "Athletic Grätsche", "Olympique Lattenkreuz",
+    "AC Konter", "Borussia Bananenflanke", "Union Fallrückzieher", "Racing Rabona", "Juventus Joker", "Spartak Steilpass", "Ajax Außenrist", "Vitória Viererkette"];
+  // Eigenheiten der Gegner: Gewichte je Zone [lo, mo, ro, lu, mu, ru] (aus Sicht des Bildschirms)
+  const PK_KEEPERS = [
+    { t: "springt fast immer nach links", w: [3, .3, .6, 3, .3, .6] },
+    { t: "springt fast immer nach rechts", w: [.6, .3, 3, .6, .3, 3] },
+    { t: "bleibt gern lange stehen", w: [.5, 3, .5, .5, 3, .5] },
+    { t: "fliegt am liebsten hoch in die Ecken", w: [2.5, .6, 2.5, .4, .3, .4] },
+    { t: "geht tief und flach in die Ecken", w: [.4, .3, .4, 2.5, .8, 2.5] },
+  ];
+  const PK_SHOOTERS = [
+    { t: "schießt am liebsten flach links", w: [.5, .2, .5, 3, .5, .6], on: 0 },
+    { t: "liebt die Ecke rechts oben", w: [.5, .3, 3, .5, .3, 1], on: 0 },
+    { t: "schiebt gern frech in die Mitte", w: [.3, 2.5, .3, .4, 2.5, .4], on: 0 },
+    { t: "ist eiskalt – verschießt so gut wie nie", w: null, on: 0.08 },
+    { t: "wird nervös, wenn es eng wird", w: null, on: -0.14 },
+  ];
   const pk = {
-    mode: "cpu", level: "okay", shots: 5, score: { X: 0, O: 0 }, kicks: { X: [], O: [] }, kicker: "X", keeper: "O", shooterName: "",
+    mode: "cpu", level: "okay", shots: 5, quiz: true, career: null, opp: null, band: 1, hintCol: null, cpuPlan: null, score: { X: 0, O: 0 }, kicks: { X: [], O: [] }, kicker: "X", keeper: "O", shooterName: "",
     phase: "idle", over: true, dive: null, zone: null, token: 0, humanShots: Array(6).fill(0), humanDives: Array(6).fill(0), pool: [], metStart: 0, metRaf: 0, sudden: false,
   };
-  const pkWho = s => pk.mode === "cpu" ? (s === "X" ? (state.names.X || "Du") : "Computer") : (s === "X" ? (state.names.X || "Spieler 1") : (state.names.O || "Spieler 2"));
+  const pkVsCpu = () => pk.mode !== "pvp";
+  const pkWho = s => pkVsCpu() ? (s === "X" ? (state.names.X || "Du") : (pk.opp ? pk.opp.club : "Computer")) : (s === "X" ? (state.names.X || "Spieler 1") : (state.names.O || "Spieler 2"));
   const pkHuman = s => pk.mode === "pvp" || s === "X";
   const pkAnimate = (el, frames, opts) => (el && el.animate ? el.animate(frames, Object.assign({ fill: "forwards" }, opts)) : null);
   const pkReset = el => { if (el && el.getAnimations) el.getAnimations().forEach(a => a.cancel()); };
@@ -3657,45 +3754,82 @@
     st.setProperty("--pk-keeper", pk.keeper === "X" ? "var(--x-mark)" : "var(--o-mark)");
     const tt = $("pk-turn-text"), tag = $("pk-tag"), nm = esc(pk.shooterName);
     if (pk.over) { tt.textContent = "Elfmeterschießen beendet"; tag.textContent = ""; return; }
+    if (pk.phase === "scout") { tt.innerHTML = `<span class="who">${esc(PK_STAGES[pk.career.stage].name)}</span> · Gegner: ${esc(pk.opp.club)}`; tag.textContent = "Lies den Scouting-Bericht – dann Anpfiff."; return; }
     const kW = pkWho(pk.kicker), gW = pkWho(pk.keeper);
     tt.innerHTML = `<span class="who">${esc(kW)}</span> schießt · Schütze: ${nm}`;
-    if (pk.phase === "keeperPick") tag.textContent = pk.mode === "pvp" ? `${gW} (Torwart): Wohin springst du? ${kW} schaut bitte weg.` : "Du bist der Torwart: Wohin springst du?";
-    else if (pk.phase === "shooterPick") tag.textContent = `${pk.mode === "pvp" ? kW + ": " : ""}Wähle deine Ecke. ${pk.mode === "cpu" ? "Der Torwart springt gleich." : ""}`.trim();
+    const COLN = ["linke Seite", "Mitte", "rechte Seite"];
+    if (pk.phase === "keeperPick") tag.textContent = pk.mode === "pvp" ? `${gW} (Torwart): Wohin springst du? ${kW} schaut bitte weg.`
+      : pk.hintCol !== null ? `Dein Tipp aus dem Quiz: Der Schütze zielt auf die ${COLN[pk.hintCol]} (markiert). Wohin springst du?` : "Du bist der Torwart: Wohin springst du?";
+    else if (pk.phase === "shooterPick") tag.textContent = `${pk.mode === "pvp" ? kW + ": " : ""}Wähle deine Ecke. ${pkVsCpu() ? "Der Torwart springt gleich." : ""}${pk.band > 1 ? " Quiz richtig: grüner Bereich größer!" : pk.band < 1 ? " Quiz falsch: grüner Bereich kleiner." : ""}`.trim();
+    else if (pk.phase === "quiz") tag.textContent = pk.quizKind === "kick" ? "Richtig = größerer grüner Bereich beim Schuss." : "Richtig = du siehst, auf welche Seite der Schütze zielt.";
+    else if (pk.phase === "scout") tag.textContent = "";
     else if (pk.phase === "meter") tag.textContent = `Stoppe die Leiste im grünen Bereich – dort geht der Ball genau in ${PK_ZNAME[pk.zone[1]][pk.zone[0]]}.`;
     else if (pk.phase === "cpu") tag.textContent = "Der Computer legt sich den Ball zurecht …";
     else tag.textContent = "";
   }
   function pkShowZones(on) {
     const z = $("pk-zones"); z.hidden = !on;
-    if (on) z.innerHTML = PK_ZONES.map((zz, i) => `<button type="button" class="pk-zone" data-z="${i}" aria-label="${PK_ZNAME[zz[1]][zz[0]]}">${PK_ZNAME[zz[1]][zz[0]]}</button>`).join("");
+    const hint = pk.phase === "keeperPick" && pk.hintCol !== null ? pk.hintCol : -1;
+    if (on) z.innerHTML = PK_ZONES.map((zz, i) => `<button type="button" class="pk-zone${zz[0] === hint ? " hint" : ""}" data-z="${i}" aria-label="${PK_ZNAME[zz[1]][zz[0]]}">${PK_ZNAME[zz[1]][zz[0]]}</button>`).join("");
   }
   function pkResetScene() {
     for (const id of ["pk-ball", "pk-keeper", "pk-net", "pk-kick-leg", "pk-arm-l", "pk-arm-r", "pk-ball-shadow"]) { const el = $(id); pkReset(el); if (el.style) { el.style.transform = ""; el.style.opacity = ""; } }
     const f = $("pk-flash"); f.classList.remove("show", "goal", "bad"); f.textContent = "";
+    $("pk-crowd").classList.remove("cheer");
   }
   // ----- Ablauf eines Schusses -----
   function pkNewMatch() {
-    pk.token++; pkClearTimers();
+    pk.token++; pkClearTimers(); pkHideQuiz();
     pk.score = { X: 0, O: 0 }; pk.kicks = { X: [], O: [] }; pk.kicker = "X"; pk.keeper = "O"; pk.over = false; pk.sudden = false;
     pk.humanShots = Array(6).fill(0); pk.humanDives = Array(6).fill(0);
     pk.pool = [];
     for (let i = 0; i < NP; i++) { const r = RANKPOS[i]; if (r >= 0 && r < (TIER_CUT.okay || 180)) pk.pool.push(i); }
-    $("pk-result-banner").classList.remove("show");
-    tickerItems = []; tick_log("Anpfiff – Elfmeterschießen");
+    $("pk-result-banner").classList.remove("show"); $("pk-confetti").innerHTML = "";
+    pkResetScene(); pkShowZones(false); $("pk-meter-wrap").hidden = true; $("pk-handoff").hidden = true;
+    if (pk.mode === "career") {
+      const st = PK_STAGES[pk.career.stage];
+      pk.level = st.cpu; pk.shots = 5; pk.opp = pk.career.opps[pk.career.stage];
+      $("pk-summary").textContent = pkSummary();
+      pk.phase = "scout"; pkShowScout(); pkRender(); return;
+    }
+    pk.opp = null;
+    pkKickOff();
+  }
+  function pkKickOff() {
+    $("pk-scout").hidden = true;
+    tickerItems = []; tick_log(pk.opp ? `Anpfiff – ${PK_STAGES[pk.career.stage].name} gegen ${pk.opp.club}` : "Anpfiff – Elfmeterschießen");
     SFX.play("kickoff");
     pkNextKick();
+  }
+  function pkPathHTML() {
+    return `<div class="pk-path">${PK_STAGES.map((s, k) => `<span class="${k < pk.career.stage ? "done" : k === pk.career.stage ? "now" : ""}">${esc(s.name)}</span>`).join("")}</div>`;
+  }
+  function pkShowScout() {
+    const o = pk.opp, st = PK_STAGES[pk.career.stage];
+    $("pk-scout").innerHTML = `${pkPathHTML()}<span class="pk-scout-stage">${esc(st.name)} · Scouting-Bericht</span><span class="pk-scout-opp">${esc(o.club)}</span>` +
+      `<div class="pk-scout-row"><span aria-hidden="true">🧤</span><span><b>Torwart</b>${esc(o.keeper.t)}</span></div>` +
+      `<div class="pk-scout-row"><span aria-hidden="true">⚽</span><span><b>Schützen</b>${esc(o.shooter.t)}</span></div>` +
+      `<div class="pk-scout-row"><span aria-hidden="true">🧠</span><span><b>Quizfragen</b>${pk.quiz ? `Stufe ${esc(LEVEL_NAME[st.quiz])} – je weiter du kommst, desto schwerer` : "aus"}</span></div>` +
+      `<button type="button" class="start-btn" id="pk-scout-go">Anpfiff</button>`;
+    $("pk-scout").hidden = false;
+    $("pk-scout-go").addEventListener("click", pkKickOff);
+    try { $("pk-scout").scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
   }
   function pkNextKick() {
     pk.token++; pkClearTimers();
     pkResetScene(); pkShowZones(false); $("pk-meter-wrap").hidden = true; $("pk-handoff").hidden = true;
     const nx = pk.kicks.X.length > pk.kicks.O.length ? "O" : "X";
-    pk.kicker = nx; pk.keeper = other(nx); pk.dive = null; pk.zone = null;
+    pk.kicker = nx; pk.keeper = other(nx); pk.dive = null; pk.zone = null; pk.band = 1; pk.hintCol = null; pk.cpuPlan = null;
     pk.sudden = pk.kicks.X.length >= pk.shots && pk.kicks.O.length >= pk.shots;
     const pl = pk.pool.length ? pk.pool[Math.floor(Math.random() * pk.pool.length)] : -1;
     pk.shooterName = pl >= 0 ? DB.players[pl][0] : "Schütze";
     tick_log(`${pkWho(pk.kicker)}: ${pk.shooterName} legt sich den Ball zurecht`);
     // Computer-Torwart entscheidet sofort (verdeckt), ein menschlicher Torwart wählt zuerst
     if (!pkHuman(pk.keeper)) { pk.dive = pkCpuDive(); pkShooterPhase(); }
+    else if (!pkHuman(pk.kicker)) {                                          // Computer schießt: Schuss steht schon fest, das Quiz kann einen Tipp geben
+      pk.cpuPlan = pkCpuShot();
+      pkQuizThen("keep", () => { pk.phase = "keeperPick"; pkShowZones(true); pkRender(); });
+    }
     else { pk.phase = "keeperPick"; pkShowZones(true); pkRender(); }
   }
   function pkShooterPhase() {
@@ -3708,10 +3842,10 @@
   }
   function pkAfterHandoff() {
     $("pk-handoff").hidden = true;
-    if (pkHuman(pk.kicker)) { pk.phase = "shooterPick"; pkShowZones(true); pkRender(); }
+    if (pkHuman(pk.kicker)) pkQuizThen("kick", () => { pk.phase = "shooterPick"; pkShowZones(true); pkRender(); });
     else {                                                                   // Computer schießt
       pk.phase = "cpu"; pkShowZones(false); pkRender();
-      pkLater(() => { const z = pkCpuShot(); pkResolve(z.zone, z.q); }, 900);
+      pkLater(() => { const z = pk.cpuPlan || pkCpuShot(); pkResolve(z.zone, z.q); }, 900);
     }
   }
   function pkPickZone(i) {
@@ -3728,8 +3862,13 @@
   }
   // ----- Timing-Leiste -----
   const pkPos = () => { const p = ((Date.now() - pk.metStart) / 950) % 2; return p < 1 ? p : 2 - p; };
+  function pkMeterLook() {                                                     // grüner/gelber Bereich je nach Quiz-Ergebnis
+    const g = Math.min(45, 22.5 * pk.band), y = Math.min(50, 37.5 * pk.band);
+    $("pk-meter").style.background = `linear-gradient(90deg, #c94b4b 0 ${50 - y}%, #d9a93a ${50 - y}% ${50 - g}%, #2f9d62 ${50 - g}% ${50 + g}%, #d9a93a ${50 + g}% ${50 + y}%, #c94b4b ${50 + y}% 100%)`;
+  }
   function pkStartMeter() {
     pk.metStart = Date.now() - Math.floor(Math.random() * 900);
+    pkMeterLook();
     $("pk-meter-wrap").hidden = false;
     const step = () => { if (pk.phase !== "meter") return; $("pk-marker").style.left = (pkPos() * 100) + "%"; pk.metRaf = (window.requestAnimationFrame || (f => setTimeout(f, 16)))(step); };
     step();
@@ -3740,7 +3879,7 @@
     const pos = posOverride === undefined ? pkPos() : posOverride;
     $("pk-marker").style.left = (pos * 100) + "%";
     pk.phase = "anim"; $("pk-meter-wrap").hidden = true;
-    pkResolve(pk.zone, 1 - Math.abs(pos - 0.5) * 2);
+    pkResolve(pk.zone, 1 - Math.min(1, Math.abs(pos - 0.5) * 2 / pk.band));
   }
   // ----- Computer -----
   function pkPickFrom(counts, mostWanted) {
@@ -3753,15 +3892,19 @@
     let r = Math.random() * sum; for (let i = 0; i < 6; i++) { r -= w[i]; if (r <= 0) return i; }
     return 0;
   }
+  function pkFromWeights(w) { const sum = w.reduce((a, b) => a + b, 0); let r = Math.random() * sum; for (let i = 0; i < w.length; i++) { r -= w[i]; if (r <= 0) return i; } return 0; }
   function pkCpuDive() {                                                       // Torwart: höhere Stufen erkennen das Lieblingsmuster des Menschen
+    if (pk.opp && Math.random() < 0.6) return PK_ZONES[pkFromWeights(pk.opp.keeper.w)];
     const total = pk.humanShots.reduce((a, b) => a + b, 0);
     const i = total >= 2 && Math.random() < PK_ADAPT[pk.level] ? pkPickFrom(pk.humanShots, true) : pkWeightedZone();
     return PK_ZONES[i];
   }
   function pkCpuShot() {                                                       // Schütze: zielt dorthin, wohin der Mensch selten springt
     const total = pk.humanDives.reduce((a, b) => a + b, 0);
-    const i = total >= 2 && Math.random() < PK_ADAPT[pk.level] ? pkPickFrom(pk.humanDives, false) : pkWeightedZone();
-    const r = Math.random(), on = PK_ONTARGET[pk.level];
+    const sw = pk.opp && pk.opp.shooter.w;
+    const i = sw && Math.random() < 0.6 ? pkFromWeights(sw) : total >= 2 && Math.random() < PK_ADAPT[pk.level] ? pkPickFrom(pk.humanDives, false) : pkWeightedZone();
+    const late = pk.kicks.O.length >= 3 || pk.sudden;                          // Nervosität wirkt erst, wenn es eng wird
+    const r = Math.random(), on = Math.max(0.4, Math.min(0.98, PK_ONTARGET[pk.level] + (pk.opp ? (pk.opp.shooter.on < 0 && !late ? 0 : pk.opp.shooter.on) : 0)));
     const q = r < on ? 0.6 + Math.random() * 0.4 : (r < on + (1 - on) * 0.55 ? 0.3 + Math.random() * 0.22 : Math.random() * 0.2);
     return { zone: PK_ZONES[i], q };
   }
@@ -3808,6 +3951,7 @@
     const mid = { transform: tf(bx * 0.5, by * 0.5 - (o.shot[1] === 0 ? 10 : 2), 0.8, 240), offset: 0.26 };
     let frames, text, cls, snd;
     if (o.kind === "goal") {
+      pkLater(() => $("pk-crowd").classList.add("cheer"), 0.46 * T);
       frames = [f0, mid, { transform: tf(bx, by, 0.52, 480), offset: 0.46 }, { transform: tf(bx, by + 18, 0.5, 520), offset: 0.7 }, { transform: tf(bx, by + 26, 0.5, 520) }];
       text = "TOOOR!"; cls = "goal"; snd = "goal";
       pkLater(() => pkAnimate(net, [{ transform: "scale(1)" }, { transform: "scale(1.06,1.14)", offset: 0.4 }, { transform: "scale(1)" }], { duration: 600, easing: "ease-out" }), 0.46 * T);
@@ -3851,23 +3995,137 @@
     return null;
   }
   function pkFinish(w) {
-    pk.over = true; pk.phase = "over"; pk.token++; pkClearTimers();
+    pk.over = true; pk.phase = "over"; pk.token++; pkClearTimers(); pkHideQuiz();
     pkShowZones(false); $("pk-meter-wrap").hidden = true;
     const extra = pk.kicks.X.length > pk.shots ? " nach Verlängerung" : "";
-    const txt = `${pkWho(w)} ${pk.mode === "cpu" && w === "X" && !state.names.X ? "gewinnst" : "gewinnt"} das Elfmeterschießen ${pk.score.X}:${pk.score.O}${extra}!`;
+    let txt = `${pkWho(w)} ${pkVsCpu() && w === "X" && !state.names.X ? "gewinnst" : "gewinnt"} das Elfmeterschießen ${pk.score.X}:${pk.score.O}${extra}!`;
+    let again = "Neues Elfmeterschießen", happy = !(pkVsCpu() && w === "O");
+    if (pk.mode === "career") {
+      const c = pk.career, st = PK_STAGES[c.stage];
+      if (w === "X") {
+        c.stage++;
+        pkStoreBest(c.stage);
+        if (c.stage >= PK_STAGES.length) {
+          const n = pkTrophies() + 1; store("kaderraster-p-trophies", String(n));
+          txt = `🏆 Pokalsieger! Finale gegen ${pk.opp.club} ${pk.score.X}:${pk.score.O}${extra} gewonnen. Das ist dein ${n}. Pokal!`;
+          again = "Neue Karriere"; c.done = true; pkConfetti();
+        } else { txt = `${st.name} überstanden: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}! Weiter geht's im ${PK_STAGES[c.stage].name}.`; again = `Weiter: ${PK_STAGES[c.stage].name}`; }
+      } else { txt = `Aus ${c.stage === 0 ? "in der" : "im"} ${st.name}: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}. Beim nächsten Mal!`; again = "Neue Karriere"; c.done = true; }
+    }
     $("pk-result-text").textContent = txt;
+    $("pk-play-again").textContent = again;
     $("pk-result-banner").classList.add("show");
     tick_log(txt.replace(/!$/, ""));
-    SFX.play("goal"); setTimeout(() => SFX.play("final"), 1200); vibrate([60, 40, 60, 40, 120]);
+    if (happy) { SFX.play("goal"); setTimeout(() => SFX.play("final"), 1200); vibrate([60, 40, 60, 40, 120]); }
+    else { SFX.play("lose"); setTimeout(() => SFX.play("final"), 900); }
     pkRender();
+  }
+  const pkTrophies = () => { try { return +localStorage.getItem("kaderraster-p-trophies") || 0; } catch (e) { return 0; } };
+  const pkBest = () => { try { return +localStorage.getItem("kaderraster-p-best") || 0; } catch (e) { return 0; } };
+  function pkStoreBest(stage) { if (stage > pkBest()) store("kaderraster-p-best", String(stage)); }
+  function pkConfetti() {
+    const cols = ["#4fd987", "#ffb454", "#5cc8ff", "#ff7a6b", "#c77dff", "#f2c14e", "#ffffff"];
+    let h = "";
+    for (let k = 0; k < 70; k++) h += `<i style="left:${Math.random() * 100}%;background:${cols[k % cols.length]};animation-duration:${1.6 + Math.random() * 1.8}s;animation-delay:${Math.random() * 0.8}s"></i>`;
+    $("pk-confetti").innerHTML = h;
+  }
+  function pkNewCareer() {
+    const clubs = g3Shuffle(PK_CLUBS.slice());
+    pk.career = { stage: 0, done: false, opps: PK_STAGES.map((s, k) => ({ club: clubs[k], keeper: g3Rand(PK_KEEPERS), shooter: g3Rand(PK_SHOOTERS) })) };
+  }
+  function pkPlayAgain() {
+    if (pk.mode === "career" && (!pk.career || pk.career.done)) pkNewCareer();
+    pkNewMatch();
+  }
+  // ----- Quiz vor dem Schuss -----
+  // Fragen kommen aus der Spielerdatenbank (gewählter Spielmodus, Schwierigkeit je Stufe/Runde).
+  const PK_QTIME = 8;
+  let pkQuizCache = { key: "", pool: [] };
+  function pkQuizPool(tier) {
+    const key = state.variant + ":" + tier;
+    if (pkQuizCache.key === key) return pkQuizCache.pool;
+    const seen = new Map();
+    for (let i = 0; i < NP; i++) if (RANKPOS[i] >= 0) seen.set(NORM[i], (seen.get(NORM[i]) || 0) + 1);
+    const pool = tierPool(tier, null, 40, i => seen.get(NORM[i]) === 1);     // keine Namensvettern in den Antworten
+    pkQuizCache = { key, pool };
+    return pool;
+  }
+  function pkPickN(arr, n, ok) { const out = [], a = g3Shuffle(arr.slice()); for (const x of a) { if (out.length >= n) break; if (ok(x) && !out.includes(x)) out.push(x); } return out; }
+  function pkMakeQuestion(tier) {
+    const pool = pkQuizPool(tier), nm = i => DB.players[i][0];
+    const bigClubs = []; DB.clubs.forEach((c, k) => { if (c[4] === 1) bigClubs.push(k); });
+    const bigNations = DB.nations.map((n, k) => k).sort((a, b) => DB.nations[b][1] - DB.nations[a][1]).slice(0, 45);   // bekannte Fußballnationen als falsche Antworten
+    const mk = (q, right, wrong) => { if (wrong.length < 3) return null; const opts = g3Shuffle([right, ...wrong.slice(0, 3)]); return { q, opts, ok: opts.indexOf(right) }; };
+    for (let tries = 0; tries < 30; tries++) {
+      const type = g3Rand(["club", "club", "nation", "who", "who", "year", "title"]);
+      const i = g3Rand(pool), p = DB.players[i];
+      if (type === "club") {
+        const mine = [...new Set(p[3])], top = mine.filter(c => DB.clubs[c][4] === 1);
+        const right = g3Rand(top.length ? top : mine); if (right === undefined) continue;
+        const lg = DB.clubs[right][1];
+        let wrong = pkPickN(bigClubs, 3, c => !mine.includes(c) && DB.clubs[c][1] === lg);
+        if (wrong.length < 3) wrong = wrong.concat(pkPickN(bigClubs, 3 - wrong.length, c => !mine.includes(c) && !wrong.includes(c)));
+        const r = mk(`Bei welchem Verein spielte ${nm(i)}?`, DB.clubs[right][0], wrong.map(c => DB.clubs[c][0])); if (r) return r;
+      } else if (type === "nation" && p[2].length) {
+        const right = p[2][0], wrong = pkPickN(bigNations, 3, n => n !== right);
+        const r = mk(`Aus welchem Land kommt ${nm(i)}?`, DB.nations[right][0], wrong.map(n => DB.nations[n][0])); if (r) return r;
+      } else if (type === "who") {
+        const c = g3Rand([...new Set(p[3])].filter(k => DB.clubs[k][4] === 1)); if (c === undefined) continue;
+        const wrong = pkPickN(pool, 3, j => !DB.players[j][3].includes(c) && j !== i);
+        const r = mk(`Wer von ihnen hat schon für ${DB.clubs[c][0]} gespielt?`, nm(i), wrong.map(nm)); if (r) return r;
+      } else if (type === "year" && p[1]) {
+        const ds = g3Shuffle([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]).slice(0, 3);
+        const r = mk(`Welcher Jahrgang ist ${nm(i)}?`, String(p[1]), ds.map(d => String(p[1] + d))); if (r) return r;
+      } else if (type === "title" && (p[5] || []).length) {
+        const t = g3Rand(p[5]);
+        const wrong = pkPickN(pool, 3, j => !(DB.players[j][5] || []).includes(t));
+        const r = mk(`Wer von ihnen ist ${DB.titles[t][0]}?`, nm(i), wrong.map(nm)); if (r) return r;
+      }
+    }
+    return null;
+  }
+  function pkQuizTier() { return pk.mode === "career" ? PK_STAGES[pk.career.stage].quiz : (pk.mode === "cpu" ? pk.level : "okay"); }
+  function pkHideQuiz() { $("pk-quiz").hidden = true; }
+  function pkQuizThen(kind, cont) {
+    if (!pk.quiz || (kind === "keep" && pk.mode === "pvp")) { cont(); return; }
+    const q = pkMakeQuestion(pkQuizTier());
+    if (!q) { cont(); return; }
+    pk.phase = "quiz"; pk.quizKind = kind; pkShowZones(false); $("pk-meter-wrap").hidden = true;
+    $("pk-quiz-kind").textContent = kind === "kick" ? `Quiz · ${pkWho(pk.kicker)} schießt` : "Quiz · Torwart-Tipp";
+    $("pk-quiz-q").textContent = q.q;
+    $("pk-quiz-fb").textContent = "";
+    $("pk-quiz-opts").innerHTML = q.opts.map((o, k) => `<button type="button" data-qo="${k}">${esc(o)}</button>`).join("");
+    const bar = $("pk-quiz-bar"); bar.classList.remove("run"); void bar.offsetWidth; bar.style.setProperty("--qt", PK_QTIME + "s"); bar.classList.add("run");
+    $("pk-quiz").hidden = false; pkRender();
+    try { $("pk-quiz").scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
+    const tok = pk.token;
+    let done = false;
+    const finish = k => {
+      if (done || tok !== pk.token) return; done = true;
+      const right = k === q.ok;
+      $("pk-quiz-opts").querySelectorAll("button").forEach((b, j) => { b.disabled = true; if (j === q.ok) b.classList.add("ok"); else if (j === k) b.classList.add("no"); });
+      bar.classList.remove("run");
+      if (kind === "kick") pk.band = right ? 1.5 : 0.65;
+      else pk.hintCol = right ? pk.cpuPlan.zone[0] : null;
+      const fb = k < 0 ? "Zeit abgelaufen. " : right ? "Richtig! " : "Leider falsch. ";
+      $("pk-quiz-fb").textContent = fb + (kind === "kick" ? (right ? "Dein grüner Bereich wird größer." : "Dein grüner Bereich wird kleiner.") : (right ? "Du siehst gleich, auf welche Seite der Schütze zielt." : "Kein Tipp für dich – du musst raten."));
+      SFX.play(right ? "correct" : k < 0 ? "time" : "wrong");
+      pkLater(() => { pkHideQuiz(); cont(); }, 1300);
+    };
+    $("pk-quiz-opts").onclick = e => { const b = e.target.closest("button[data-qo]"); if (b) finish(+b.dataset.qo); };
+    pkLater(() => finish(-1), PK_QTIME * 1000);
   }
   // ----- Menü und Steuerung -----
   function pkSetMode(m) {
     pk.mode = m; pressed("[data-pmode]", "pmode", m); store("kaderraster-p-mode", m);
-    $("pname-field-o").hidden = m === "cpu"; $("pk-level-wrap").hidden = m !== "cpu";
-    $("pname-label-x").textContent = m === "cpu" ? "Dein Name" : "Name Spieler 1";
-    $("pname-input-x").placeholder = m === "cpu" ? "optional" : "Spieler 1";
+    const solo = m !== "pvp";
+    $("pname-field-o").hidden = solo; $("pk-level-wrap").hidden = m !== "cpu"; $("pk-shots-wrap").hidden = m === "career";
+    $("pname-label-x").textContent = solo ? "Dein Name" : "Name Spieler 1";
+    $("pname-input-x").placeholder = solo ? "optional" : "Spieler 1";
+    const tr = $("pk-trophies"); tr.hidden = m !== "career";
+    if (m === "career") { const n = pkTrophies(), b = pkBest(); tr.textContent = `🏆 Deine Pokale: ${n}${b > 0 && b < PK_STAGES.length ? ` · weitestes Ziel ohne Pokal: ${PK_STAGES[b].name}` : ""}`; }
   }
+  function pkSetQuiz(on) { pk.quiz = on; pressed("[data-pquiz]", "pquiz", on ? "1" : "0"); store("kaderraster-p-quiz", on ? "1" : "0"); }
   function pkSetLevel(l) { pk.level = l; pressed("[data-plvl]", "plvl", l); store("kaderraster-p-level", l); }
   function pkSetShots(n) { pk.shots = n; pressed("[data-pshots]", "pshots", n); store("kaderraster-p-shots", String(n)); }
   const PK_LEVEL_TXT = {
@@ -3878,31 +4136,40 @@
     ball: "Ball Knowledge: fast fehlerfreier Schütze, der Torwart erkennt jede Gewohnheit",
   };
   function pkRenderMenuHelp() {
-    const a = pk.mode === "cpu" ? [`Gegen Computer: ihr schießt abwechselnd, du bist Schütze und Torwart`, PK_LEVEL_TXT[pk.level]] : ["2 Spieler: Gerät an einem Bildschirm. Erst wählt der Torwart seine Zone verdeckt, dann gibst du das Gerät an den Schützen weiter"];
-    a.push(`${pk.shots} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt`, "Als Schütze: Zone wählen, dann die Leiste im grünen Bereich stoppen – gelb ist unsauber, rot geht vorbei");
+    const a = pk.mode === "career" ? ["Karriere: 1. Runde, Achtelfinale, Viertelfinale, Halbfinale, Finale – jeder Gegner ist stärker. Wer verliert, fliegt raus", "Vor jedem Spiel gibt es einen Scouting-Bericht: Wohin springt der Torwart, wohin schießen die Schützen?", "5 Schüsse pro Team, bei Gleichstand Verlängerung. Gewinnst du das Finale, gibt es einen Pokal"]
+      : pk.mode === "cpu" ? [`Gegen Computer: ihr schießt abwechselnd, du bist Schütze und Torwart`, PK_LEVEL_TXT[pk.level], `${pk.shots} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt`]
+      : ["2 Spieler: Gerät an einem Bildschirm. Erst wählt der Torwart seine Zone verdeckt, dann gibst du das Gerät an den Schützen weiter", `${pk.shots} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt`];
+    if (pk.quiz) a.push("Quiz vor jedem Schuss (8 Sekunden): Als Schütze macht eine richtige Antwort den grünen Bereich größer, eine falsche kleiner. Als Torwart verrät dir eine richtige Antwort, auf welche Seite der Schütze zielt" + (pk.mode === "pvp" ? " (zu zweit nur für den Schützen)" : ""));
+    a.push("Als Schütze: Zone wählen, dann die Leiste im grünen Bereich stoppen – gelb ist unsauber, rot geht vorbei");
     $("pmenu-help").innerHTML = a.map(x => `<li>${esc(x)}</li>`).join("");
   }
-  function pkSummary() { return [VARIANT_NAME[state.variant], pk.mode === "cpu" ? "Gegen Computer" : "2 Spieler", pk.mode === "cpu" ? LEVEL_NAME[pk.level] : null, pk.shots + " Schüsse"].filter(Boolean).join(" · "); }
+  function pkSummary() {
+    if (pk.mode === "career") return [VARIANT_NAME[state.variant], "Karriere", pk.career ? PK_STAGES[Math.min(pk.career.stage, PK_STAGES.length - 1)].name : null, pk.quiz ? "mit Quiz" : "ohne Quiz"].filter(Boolean).join(" · ");
+    return [VARIANT_NAME[state.variant], pk.mode === "cpu" ? "Gegen Computer" : "2 Spieler", pk.mode === "cpu" ? LEVEL_NAME[pk.level] : null, pk.shots + " Schüsse", pk.quiz ? "mit Quiz" : "ohne Quiz"].filter(Boolean).join(" · ");
+  }
   function pkStart() {
     state.names = { X: cleanName($("pname-input-x").value), O: cleanName($("pname-input-o").value) };
     if (pk.mode === "pvp" && state.names.X && state.names.X === state.names.O) state.names.O += " (2)";
     store("kaderraster-names", JSON.stringify(state.names)); syncNames();
     $("pmenu").hidden = true; $("pen").hidden = false;
+    if (pk.mode === "career") { pk.levelMenu = pk.level; pk.shotsMenu = pk.shots; pkNewCareer(); }
     $("pk-summary").textContent = pkSummary();
     pkNewMatch();
     window.scrollTo({ top: 0 });
   }
   function pkToMenu() {
-    pk.token++; pkClearTimers(); pk.over = true; pk.phase = "idle";
+    pk.token++; pkClearTimers(); pk.over = true; pk.phase = "idle"; pkHideQuiz(); $("pk-scout").hidden = true;
+    if (pk.levelMenu) { pk.level = pk.levelMenu; pk.shots = pk.shotsMenu; pk.levelMenu = null; }
+    pkSetMode(pk.mode);
     pkShowZones(false); $("pk-meter-wrap").hidden = true; $("pk-handoff").hidden = true;
     $("pen").hidden = true; $("pmenu").hidden = false;
     syncBig(); pkRenderMenuHelp();
   }
   function pkAskLeave() {
-    if (pk.over) { pkToMenu(); return; }
+    if (pk.over || pk.phase === "scout") { pkToMenu(); return; }
     openLeave(`Das laufende Elfmeterschießen wird beendet (Stand ${pk.score.X} : ${pk.score.O}).`, pkToMenu);
   }
-  for (const [attr, fn, conv] of [["pmode", pkSetMode, String], ["plvl", pkSetLevel, String], ["pshots", pkSetShots, Number]])
+  for (const [attr, fn, conv] of [["pmode", pkSetMode, String], ["plvl", pkSetLevel, String], ["pshots", pkSetShots, Number], ["pquiz", pkSetQuiz, v => v === "1"]])
     document.querySelectorAll(`[data-${attr}]`).forEach(b => b.addEventListener("click", () => { fn(conv(b.dataset[attr])); pkRenderMenuHelp(); }));
   $("pk-zones").addEventListener("click", e => { const b = e.target.closest("button[data-z]"); if (b) pkPickZone(+b.dataset.z); });
   $("pk-shoot-btn").addEventListener("click", () => pkStopMeter());
@@ -3912,7 +4179,7 @@
   $("pback-home").addEventListener("click", toVariants);
   $("pk-menu-btn").addEventListener("click", pkAskLeave);
   $("pk-menu-btn-2").addEventListener("click", pkAskLeave);
-  $("pk-play-again").addEventListener("click", pkNewMatch);
+  $("pk-play-again").addEventListener("click", pkPlayAgain);
   $("pk-sound-btn").addEventListener("click", () => setSound(!SFX.on));
 
   // ---------- Bausteine für Vereinskette, Wer bin ich und Zeitstrahl ----------
@@ -4676,11 +4943,14 @@
     whoami: ["#3ee6cf", '<circle cx="20" cy="13" r="7"/><path d="M6 36c1-8 7-12 14-12s13 4 14 12"/><path d="M17.5 10.5c0-2 1.2-3 2.6-3 1.5 0 2.6 1 2.6 2.4 0 2-2.6 2.2-2.6 4.1M20.1 16.6v.2"/>'],
     tline: ["#ffb454", '<path d="M3 20h31M30 15l5 5-5 5"/><circle cx="8" cy="20" r="3"/><circle cx="17" cy="20" r="3"/><circle cx="26" cy="20" r="3"/><path d="M8 13v-4M17 27v4M26 13v-4"/>'],
   };
-  const NEW_GAMES = new Set(["chain", "whoami", "tline"]);
+  const NEW_GAMES = new Set();
+  // Noch in Arbeit: sichtbar, aber nicht spielbar
+  const SOON_GAMES = new Set(["chain", "whoami", "tline"]);
   document.querySelectorAll(".game-card").forEach((card, k) => {
     const g = card.dataset.game, look = GAME_LOOK[g]; if (!look) return;
     card.style.setProperty("--gc", look[0]); card.style.setProperty("--i", k);
-    card.insertAdjacentHTML("afterbegin", `<span class="g-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${look[1]}</svg></span>${NEW_GAMES.has(g) ? '<span class="g-new">NEU</span>' : ""}`);
+    card.insertAdjacentHTML("afterbegin", `<span class="g-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${look[1]}</svg></span>${NEW_GAMES.has(g) ? '<span class="g-new">NEU</span>' : ""}${SOON_GAMES.has(g) ? '<span class="g-soon" aria-hidden="true">Coming soon</span>' : ""}`);
+    if (SOON_GAMES.has(g)) { card.disabled = true; card.classList.add("soon"); card.setAttribute("aria-disabled", "true"); card.setAttribute("aria-label", card.querySelector(".g-title").textContent + " – kommt bald"); }
   });
   // ---------- Start ----------
   // Erst mit Versionsanhang (umgeht alte Kopien im Browser-Cache), sonst ohne – manche Hosts kennen keine Anhänge
@@ -4716,7 +4986,7 @@
         if (localStorage.getItem("kaderraster-sound") === "off") setSound(false);
         const nm = JSON.parse(localStorage.getItem("kaderraster-names") || "null");
         if (nm) { for (const f of NAME_PREFIXES) { $(f + "x").value = nm.X || ""; $(f + "o").value = nm.O || ""; } }
-        const g = localStorage.getItem("kaderraster-game"); if (GAME_TXT[g]) setGame(g);
+        const g = localStorage.getItem("kaderraster-game"); if (GAME_TXT[g] && !SOON_GAMES.has(g)) setGame(g);
         const wm = localStorage.getItem("kaderraster-w-mode"); if (wm === "solo" || wm === "duel") wdSetMode(wm);
         const wl = localStorage.getItem("kaderraster-w-level"); if (wl && (LEVELS[wl] || OLD_LVL[wl])) wdSetLevel(OLD_LVL[wl] || wl);
         const wt = localStorage.getItem("kaderraster-w-tries"); if (["6", "8", "10"].includes(wt)) wdSetTries(+wt);
@@ -4727,7 +4997,8 @@
         const ll = localStorage.getItem("kaderraster-l-level"); if (ll && LEVELS[ll]) lkSetLevel(ll);
         const lt = localStorage.getItem("kaderraster-l-tries"); if (["6", "8", "10"].includes(lt)) lkSetTries(+lt);
         const lz = +localStorage.getItem("kaderraster-l-time"); if ([30, 60, 90].includes(lz)) lkSetTime(lz);
-        const pm = localStorage.getItem("kaderraster-p-mode"); if (pm === "cpu" || pm === "pvp") pkSetMode(pm);
+        const pm = localStorage.getItem("kaderraster-p-mode"); if (pm === "cpu" || pm === "pvp" || pm === "career") pkSetMode(pm);
+        const pq = localStorage.getItem("kaderraster-p-quiz"); if (pq === "0" || pq === "1") pkSetQuiz(pq === "1");
         const pl = localStorage.getItem("kaderraster-p-level"); if (pl && LEVELS[pl]) pkSetLevel(pl);
         const ps = localStorage.getItem("kaderraster-p-shots"); if (["3", "5", "7"].includes(ps)) pkSetShots(+ps);
       } catch (e) {}
