@@ -581,6 +581,25 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
     links, ambiguous, missing = match_players(players, wd)
     log(f"Zuordnung: {len(links):,} gefunden, {missing:,} ohne Treffer, {ambiguous:,} mehrdeutig (bekanntester Eintrag genommen)")
 
+    # Bekannter Spielername aus den Wikipedia-Artikeltiteln („Marquinhos“ statt „Marcos Aoas Correa“):
+    # nur wenn der bisherige Name aus 3+ Wörtern besteht und der Artikeltitel kürzer ist
+    alias = {}
+    for i, q in links.items():
+        nm = players[i][0]
+        if len(nm.split()) < 3:
+            continue
+        best = None
+        for lang in ("en", "de", "it"):
+            t = wd[q]["sites"].get(lang)
+            if not t:
+                continue
+            base = re.sub(r"\s*\(.*?\)\s*$", "", t).strip()
+            if base and (best is None or len(base.split()) < len(best.split())):
+                best = base
+        if best and len(best.split()) < len(nm.split()) and normalize(best) != normalize(nm):
+            alias[i] = best
+    log(f"Spielernamen aus Wikipedia: {len(alias):,} kürzere Namen (z. B. Spitznamen)")
+
     todo = sorted(links)
     if args.limit:
         rnd = random.Random(7)
@@ -660,6 +679,7 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
         f"Ligaspiele/Tore gefunden: {have:,} ({have / max(1, len(todo)):.1%} der bearbeiteten)",
         "  nach Sprache: " + ", ".join(f"{l}: {src.count(l):,}" for l in LANGS),
         f"Spieler mit Titeln: {sum(1 for x in titles_total if x >= 0):,}, davon mit Mehrfachtitel aus Honours: {title_found:,}",
+        f"Kürzere Spielernamen aus Wikipedia: {len(alias):,} – z. B. " + "; ".join(f"{players[i][0]} → {a}" for i, a in list(alias.items())[:12]),
         "",
         "Stichprobe (Spiele / Tore / Titel gesamt / Quelle):",
     ]
@@ -691,6 +711,7 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
         "license": "CC BY-SA 4.0 – https://creativecommons.org/licenses/by-sa/4.0/",
         "note": "games/goals = Ligaspiele/-tore der Karriere laut Wikipedia-Infobox (-1 = unbekannt); titles = Anzahl gewonnener Titel der erfassten Titelarten (-1 = keine).",
         "games": games, "goals": goals, "titles": titles_total,
+        "alias": {str(i): a for i, a in sorted(alias.items())},
     }
     out = args.out or args.players
     with open(out, "w", encoding="utf-8") as f:
