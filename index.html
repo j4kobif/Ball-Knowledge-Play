@@ -604,6 +604,11 @@
   .lk-tile.g { background: var(--wd-g); border-color: var(--wd-g); color: var(--wd-g-ink); }
   .lk-tile.y { background: var(--wd-y); border: 2px dashed rgba(255,255,255,0.55); color: var(--wd-y-ink); }
   .lk-tile.n { background: var(--bg, #0b0f14); color: var(--text-dim); }
+  .lk-tile.x { opacity: 0.25; border-style: dashed; }
+  .lk-ask { display: block; color: var(--text); }
+  .lk-ask-btns { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .lk-ask-btns button { font: inherit; font-weight: 700; padding: 8px 14px; font-size: 13px; border-radius: 10px; cursor: pointer; border: 1px solid var(--line); background: var(--surface-2); color: var(--text); }
+  .lk-ask-btns button[data-lkc="yes"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
   .lk-row.skip { display: block; text-align: center; font-size: 12px; color: var(--text-dim); padding: 6px 0; max-width: none; }
   .lk-row.fresh .lk-tile { animation: wdFlip .55s ease both; animation-delay: calc(var(--i) * 120ms); }
   .lk-kb { display: flex; flex-direction: column; gap: 6px; align-items: center; margin-top: 4px; user-select: none; -webkit-user-select: none; }
@@ -699,6 +704,7 @@
   .zs-gap { height: 2px; }
   .zs-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
   .zs-name { font-weight: 700; font-size: 14.5px; min-width: 0; overflow-wrap: anywhere; }
+  .zs-name small { font-weight: 500; font-size: 11.5px; color: var(--text-dim); font-family: "IBM Plex Mono", monospace; margin-left: 4px; white-space: nowrap; }
   .zs-val { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--led); white-space: nowrap; }
   .zs-card.ok { border-color: var(--wd-g); animation: g3In .45s ease both; }
   .zs-card.bad { border-color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); animation: g3Shake .5s ease both; }
@@ -1686,7 +1692,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-5</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-7</footer>
 </div>
 
 <script>
@@ -1725,6 +1731,9 @@
   // Bleibt auch erhalten, wenn players.json neu erzeugt wird.
   const CORRECTIONS = [
     { name: "Ramy Bensebaini", year: 1995, add: ["Borussia Dortmund"] },
+    // Bekannte Spielernamen statt vollem bürgerlichem Namen (wird mit dem Daten-Update auch automatisch aus Wikipedia übernommen)
+    { name: "Marcos Aoas Correa", year: 1994, rename: "Marquinhos" },
+    { name: "Marcelo da Silva Júnior", year: 1988, rename: "Marcelo" },
   ];
 
   // ---------- Bekannte Namen (Ankerliste) ----------
@@ -1805,7 +1814,7 @@
     const byKey = new Map();
     for (let i = db.players.length - 1; i >= 0; i--) byKey.set(db.players[i][0] + "|" + db.players[i][1], i);   // bei gleichem Namen + Jahrgang zählt der erste
     for (const c of CORRECTIONS) {
-      const i = byKey.get(c.name + "|" + c.year);
+      const i = byKey.get(c.name + "|" + c.year) ?? (c.rename ? byKey.get(c.rename + "|" + c.year) : undefined);
       if (i === undefined) { console.warn("Korrektur: Spieler nicht gefunden:", c.name, c.year); continue; }
       const p = db.players[i];
       for (const n of c.add || []) { const k = clubIdx.get(n); if (k === undefined) console.warn("Korrektur: Verein nicht gefunden:", n); else if (!p[3].includes(k)) p[3].push(k); }
@@ -1813,7 +1822,14 @@
       for (const n of c.addTitles || []) { const k = titleIdx.get(n); if (k === undefined) console.warn("Korrektur: Titel nicht gefunden:", n); else { p[5] = p[5] || []; if (!p[5].includes(k)) p[5].push(k); } }
       for (const n of c.removeTitles || []) { const k = titleIdx.get(n); if (k === undefined) console.warn("Korrektur: Titel nicht gefunden:", n); else if (p[5]) p[5] = p[5].filter(x => x !== k); }
       if (c.boost) BOOST.set(i, c.boost);
+      if (c.rename) p[0] = c.rename;
     }
+  }
+  // Spielernamen aus Wikipedia (Daten-Update): z. B. „Marquinhos“ statt „Marcos Aoas Correa“
+  function applyAliases(db) {
+    const al = db.stats && db.stats.alias;
+    if (!al) return;
+    for (const k in al) { const p = db.players[+k]; if (p && typeof al[k] === "string" && al[k].trim()) p[0] = al[k].trim(); }
   }
   function computePop() {
     const cw = DB.clubs.map(c => ELITE_CLUBS.includes(c[0]) ? 4 : EASY_CLUBS.includes(c[0]) ? 2.2 : c[4] === 1 ? 1.2 : 0.4);
@@ -2834,7 +2850,7 @@
   const GAME_TXT = {
     ttt: ["Fußball-Quiz · Tic-Tac-Toe", "Jedes Feld kreuzt zwei Kategorien: eine Nation, einen Verein oder einen Titel wie WM- oder CL-Sieger. Tippe einen Spieler, der zu beiden passt. Wer zuerst drei Felder in einer Reihe hat, gewinnt."],
     wordle: ["Fußball-Quiz · Wordle", "Ein Geheimspieler wartet. Jeder Tipp zeigt dir, was er mit dem Gesuchten gemeinsam hat: Nation, Jahrgang, Vereine, Ligen und Titel. Wer ihn findet, schießt das Tor."],
-    letter: ["Fußball-Quiz · Letterkick", "Ein Nachname wartet auf dich. Tippe Wörter mit gleicher Länge: Grün steht richtig, Gelb kommt woanders vor, Grau gibt es nicht. Wer den Spieler findet, schießt das Tor."],
+    letter: ["Fußball-Quiz · Letterkick", "Ein Nachname wartet auf dich. Tippe Namen mit gleicher Länge – kürzere gehen nach Rückfrage auch: Grün steht richtig, Gelb kommt woanders vor, Grau gibt es nicht. Wer den Spieler findet, schießt das Tor."],
     chain: ["Fußball-Quiz · Vereinskette", "Ein Startspieler, dann seid ihr dran: Nennt abwechselnd Spieler, die mit dem letzten Spieler der Kette beim selben Verein waren. Wer nichts mehr weiß, verliert die Runde."],
     whoami: ["Fußball-Quiz · Wer bin ich?", "Sechs Hinweise, vom Groben zum Genauen: Generation, Nation, Titel, Ligen, Vereine, Initialen. Je früher du den Spieler erkennst, desto mehr Punkte gibt es."],
     tline: ["Fußball-Quiz · Zeitstrahl", "Zehn Spieler, eine Reihenfolge: nach Geburtsjahr, nach Vereinen in den Top-5-Ligen oder nach großen Titeln. Drei Leben – jeder Fehler kostet eins."],
@@ -3300,8 +3316,12 @@
   // grün = richtiger Buchstabe an richtiger Stelle, gelb = Buchstabe kommt woanders vor, grau = kommt nicht (mehr) vor.
   const lk = {
     mode: "solo", level: "okay", tries: 8, time: 0, score: { X: 0, O: 0 }, roundNo: 1,
-    secret: -1, word: "", guesses: [], usedSecrets: new Set(), turn: "X", over: true, busy: false, typed: "", note: "", fresh: -1,
+    secret: -1, word: "", guesses: [], usedSecrets: new Set(), turn: "X", over: true, busy: false, typed: "", note: "", confirm: "", fresh: -1,
   };
+  $("lk-tag").addEventListener("click", e => {
+    const b = e.target.closest("button[data-lkc]"); if (!b) return;
+    if (b.dataset.lkc === "yes") lkSubmit(); else { lk.confirm = ""; lkRender(); }
+  });
   let LKW = null, LKDICT = null, lkDeadline = 0, lkTickH = 0, lkLastSec = 0, lkGoalTimer = 0;
   const lkSolo = () => lk.mode === "solo";
   const lkNoName = () => lkSolo() && !state.names.X;
@@ -3334,10 +3354,11 @@
     const all = []; for (let i = 0; i < NP; i++) if (RANKPOS[i] >= 0 && LKW[i]) all.push(i);
     return all;
   }
+  // Bewertung je Buchstabe des Tipps; ein kürzerer Tipp wird ab dem Wortanfang verglichen
   function lkEval(guess, word) {
-    const n = word.length, res = Array(n).fill("n"), cnt = {};
-    for (let i = 0; i < n; i++) { if (guess[i] === word[i]) res[i] = "g"; else cnt[word[i]] = (cnt[word[i]] || 0) + 1; }
-    for (let i = 0; i < n; i++) if (res[i] !== "g" && cnt[guess[i]] > 0) { res[i] = "y"; cnt[guess[i]]--; }
+    const n = word.length, m = Math.min(guess.length, n), res = Array(m).fill("n"), cnt = {};
+    for (let i = 0; i < n; i++) { if (i < m && guess[i] === word[i]) res[i] = "g"; else cnt[word[i]] = (cnt[word[i]] || 0) + 1; }
+    for (let i = 0; i < m; i++) if (res[i] !== "g" && cnt[guess[i]] > 0) { res[i] = "y"; cnt[guess[i]]--; }
     return res;
   }
   function lkHintHTML() {
@@ -3380,7 +3401,9 @@
     else $("lk-turn-text").innerHTML = `Am Zug: <span class="who">${esc(lkWho(lk.turn))}</span>`;
     $("lk-giveup").disabled = lk.over;
     $("lk-hint").innerHTML = lk.secret >= 0 ? lkHintHTML() : "";
-    if (lk.note) $("lk-tag").innerHTML = `<span style="color:var(--bad)">${esc(lk.note)}</span>`;
+    if (lk.confirm && !lk.over) $("lk-tag").innerHTML = `<span class="lk-ask">„${esc(lk.confirm)}“ hat nur ${lk.confirm.length} von ${n} Buchstaben – trotzdem abschicken? Das kostet einen Versuch.</span>` +
+      `<span class="lk-ask-btns"><button type="button" data-lkc="yes">Ja, abschicken</button><button type="button" data-lkc="no">Weiter tippen</button></span>`;
+    else if (lk.note) $("lk-tag").innerHTML = `<span style="color:var(--bad)">${esc(lk.note)}</span>`;
     else if (lk.over) $("lk-tag").textContent = "";
     else if (solo) $("lk-tag").textContent = "Tippe den gesuchten Nachnamen und bestätige mit Enter.";
     else $("lk-tag").textContent = `${lkWho(lk.turn)}: noch ${lkLeft(lk.turn)} ${lkLeft(lk.turn) === 1 ? "Versuch" : "Versuche"}. Gemeinsames Feld, die Buchstaben gelten für beide.`;
@@ -3393,7 +3416,8 @@
       if (g.timeout) { rows.push(`${cap}<div class="lk-row skip">Zeit abgelaufen – Versuch verbraucht</div>`); return; }
       const st = { g: "richtig", y: "falsche Stelle", n: "nicht enthalten" };
       rows.push(`${cap}<div class="lk-row${k === lk.fresh ? " fresh" : ""}" style="--n:${n}">` +
-        [...g.word].map((c, j) => `<div class="lk-tile ${g.res[j]}" style="--i:${j}" aria-label="${c}: ${st[g.res[j]]}">${c}</div>`).join("") + `</div>`);
+        [...g.word].map((c, j) => `<div class="lk-tile ${g.res[j]}" style="--i:${j}" aria-label="${c}: ${st[g.res[j]]}">${c}</div>`).join("") +
+        '<div class="lk-tile x" aria-hidden="true"></div>'.repeat(Math.max(0, n - g.word.length)) + `</div>`);
     });
     if (!lk.over) {
       const cur = [...lk.typed].map(c => `<div class="lk-tile f">${c}</div>`).join("") + '<div class="lk-tile"></div>'.repeat(n - lk.typed.length);
@@ -3440,7 +3464,7 @@
   function lkTimeUp() {
     if (lk.over || lk.busy) return;
     SFX.play("time"); vibrate(120);
-    lk.typed = "";
+    lk.typed = ""; lk.confirm = "";
     lk.guesses.push({ by: lk.turn, timeout: true });
     tick_log(`Zeit abgelaufen – ${lkWho(lk.turn)} ${lkVerb(lk.turn, "verlierst", "verliert")} den Versuch`);
     lk.note = "Zeit abgelaufen – der Versuch ist verbraucht.";
@@ -3454,7 +3478,7 @@
     lk.secret = pool[Math.floor(Math.random() * pool.length)];
     lk.word = LKW[lk.secret];
     lk.usedSecrets.add(lk.secret);
-    Object.assign(lk, { guesses: [], turn: "X", over: false, busy: false, typed: "", note: "", fresh: -1 });
+    Object.assign(lk, { guesses: [], turn: "X", over: false, busy: false, typed: "", note: "", confirm: "", fresh: -1 });
     $("lk-result-banner").classList.remove("show"); $("lk-reveal").innerHTML = "";
     tickerItems = []; tick_log("Anpfiff – der gesuchte Name ist ausgelost");
     SFX.play("kickoff");
@@ -3464,15 +3488,18 @@
   function lkKey(k) {
     if (lk.over || lk.busy) return;
     if (k === "ENTER") return lkSubmit();
-    if (k === "BACK") { lk.typed = lk.typed.slice(0, -1); lk.note = ""; lkRender(); return; }
-    if (/^[A-Z]$/.test(k) && lk.typed.length < lk.word.length) { lk.typed += k; lk.note = ""; lkRender(); }
+    if (k === "BACK") { lk.typed = lk.typed.slice(0, -1); lk.note = ""; lk.confirm = ""; lkRender(); return; }
+    if (/^[A-Z]$/.test(k) && lk.typed.length < lk.word.length) { lk.typed += k; lk.note = ""; lk.confirm = ""; lkRender(); }
   }
   function lkSubmit() {
     if (lk.over || lk.busy) return;
     const w = lk.word;
-    if (lk.typed.length !== w.length) { lkNote(`Es fehlen noch ${w.length - lk.typed.length} Buchstaben (gesucht: ${w.length}).`); return; }
-    if (!LKDICT.has(lk.typed.toLowerCase())) { lkNote(`„${lk.typed}“ ist kein Spielername aus dem Pool – probier ein anderes Wort.`); return; }
-    if (lk.guesses.some(g => g.word === lk.typed)) { lkNote("Dieses Wort wurde schon getippt."); return; }
+    if (lk.typed.length < 3) { lk.confirm = ""; lkNote(`Mindestens 3 Buchstaben (gesucht: ${w.length}).`); return; }
+    if (!LKDICT.has(lk.typed.toLowerCase())) { lk.confirm = ""; lkNote(`„${lk.typed}“ ist kein Spielername aus dem Pool – probier ein anderes Wort.`); return; }
+    if (lk.guesses.some(g => g.word === lk.typed)) { lk.confirm = ""; lkNote("Dieses Wort wurde schon getippt."); return; }
+    // Kürzerer Name: erst nachfragen (zweites Enter oder „Ja, abschicken“ bestätigt)
+    if (lk.typed.length < w.length && lk.confirm !== lk.typed) { lk.confirm = lk.typed; lk.note = ""; lkRender(); return; }
+    lk.confirm = "";
     lkStopTimer();
     const by = lk.turn, word = lk.typed, res = lkEval(word, w);
     lk.guesses.push({ by, word, res });
@@ -4499,7 +4526,8 @@
     zs.line.forEach((i, k) => {
       const p = DB.players[i], L = zs.last && zs.last.p === i ? zs.last : null;
       const cls = L ? (L.ok ? " ok" : " bad") : "";
-      parts.push(`<div class="zs-card${cls}"><span class="zs-name">${esc(p[0])}</span><span class="zs-val">${esc(C.fmt(C.val(i)))}</span></div>`);
+      const jg = zs.critNow !== "year" && p[1] ? ` <small>Jg. ${p[1]}</small>` : "";
+      parts.push(`<div class="zs-card${cls}"><span class="zs-name">${esc(p[0])}${jg}</span><span class="zs-val">${esc(C.fmt(C.val(i)))}</span></div>`);
       parts.push(slot(k + 1));
     });
     parts.push(`<div class="zs-end">▼ ${esc(C.bottom)}</div>`);
@@ -4661,6 +4689,7 @@
     .then(r => r.ok ? r : fetch("players.json"), () => fetch("players.json"))
     .then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(db => {
+      applyAliases(db);
       prepare(db);
       PRE2000 = new Set(db.pre2000 || []);
       const st = db.stats;
