@@ -699,6 +699,7 @@
   .kb-open:hover { background: color-mix(in srgb, var(--accent) 20%, var(--surface-2)); }
   .kb-open-k { font-family: "Bebas Neue", sans-serif; font-size: 20px; letter-spacing: .04em; color: var(--accent); line-height: 1; }
   .kb-open-d { font-size: 12.5px; color: var(--text-dim); display: inline-flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .kb-tab-coins { display: inline-flex; align-items: center; gap: 4px; margin-left: 4px; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; padding: 1px 7px; border-radius: 999px; background: rgba(0,0,0,.18); }
   .kb-coins { display: inline-flex; align-items: center; gap: 7px; font-family: "IBM Plex Mono", monospace; font-size: 15px; font-weight: 600; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface-2); }
   .kb-coins.bump { animation: kbBump .7s ease; }
   @keyframes kbBump { 25% { transform: scale(1.2); border-color: #f2c14e; } }
@@ -1324,6 +1325,10 @@
       <button type="button" class="ghost-btn" id="pback-home">← Spielmodus</button>
       <span class="variant-tag" id="pvariant-tag"></span>
     </div>
+    <div class="home-tabs" role="tablist" aria-label="Elfmeter-Menü">
+      <button type="button" role="tab" aria-selected="true">⚽ Spiel</button>
+      <button type="button" role="tab" aria-selected="false" id="kb-open">👕 Kabine &amp; Shop <span class="kb-tab-coins" id="kb-open-d"></span></button>
+    </div>
     <h2 class="menu-title">Elfmeterschießen</h2>
     <div class="settings">
       <span class="lbl">Modus</span>
@@ -1336,10 +1341,6 @@
       <div class="segmented" role="group" aria-label="Quizfragen vor jedem Schuss">
         <button type="button" data-pquiz="1" aria-pressed="true">An</button>
         <button type="button" data-pquiz="0" aria-pressed="false">Aus</button>
-      </div>
-      <div class="pk-level-wrap" id="pk-char-wrap">
-        <span class="lbl">Dein Spieler</span>
-        <button type="button" class="kb-open" id="kb-open"><span class="kb-open-k">Kabine &amp; Shop</span><span class="kb-open-d" id="kb-open-d"></span></button>
       </div>
       <div class="pk-level-wrap" id="pk-level-wrap">
         <span class="lbl">Stufe</span>
@@ -1379,6 +1380,10 @@
     <div class="menu-top">
       <button type="button" class="ghost-btn" id="kb-back">← Zurück</button>
       <span class="kb-coins" id="kb-coins" title="Deine Münzen"><i class="coin" aria-hidden="true"></i><b id="kb-coins-n">0</b></span>
+    </div>
+    <div class="home-tabs" role="tablist" aria-label="Elfmeter-Menü">
+      <button type="button" role="tab" aria-selected="false" id="kb-tab-game">⚽ Spiel</button>
+      <button type="button" role="tab" aria-selected="true">👕 Kabine &amp; Shop</button>
     </div>
     <h2 class="menu-title">Kabine</h2>
     <p class="kb-sub" id="kb-sub"></p>
@@ -7198,7 +7203,7 @@
   }
   function kbSyncMenu() {
     const c = kbCoins(), C = pkMyChar();
-    $("kb-open-d").innerHTML = `${esc(C.name)} · ${kbCoinTxt(c)} Münzen`;
+    $("kb-open-d").innerHTML = kbCoinTxt(c); $("kb-open").title = `${C.name} · ${c} Münzen`;
   }
   function kbRender() {
     const eq = kbEq(), coins = kbCoins(), t = kb.tab, list = SHOP[t];
@@ -7281,6 +7286,7 @@
   }
   $("kb-open").addEventListener("click", kbOpen);
   $("kb-back").addEventListener("click", () => kbClose(true));
+  $("kb-tab-game").addEventListener("click", () => kbClose(true));
   $("kb-d-btn").addEventListener("click", kbAct);
   document.querySelectorAll("[data-kbt]").forEach(b => b.addEventListener("click", () => { kb.tab = b.dataset.kbt; kb.sel = null; SFX.play("pick"); kbRender(); kbPush(); kbAutoView(); }));
   document.querySelectorAll("[data-kbv]").forEach(b => b.addEventListener("click", () => kbSetView(b.dataset.kbv)));
