@@ -280,6 +280,28 @@ def find_template(text, names):
     return None
 
 
+def find_all_templates(text, name):
+    """Alle Vorlagen mit diesem Namen (Inhalt ohne äußere Klammern)."""
+    out, pos = [], 0
+    pat = re.compile(r"\{\{\s*" + re.escape(name).replace(r"\ ", r"[ _]+") + r"\s*(?=[|}])", re.I)
+    while True:
+        m = pat.search(text, pos)
+        if not m:
+            return out
+        i, depth = m.start(), 0
+        while i < len(text):
+            if text.startswith("{{", i):
+                depth += 1; i += 2
+            elif text.startswith("}}", i):
+                depth -= 1; i += 2
+                if depth == 0:
+                    break
+            else:
+                i += 1
+        out.append(text[m.start() + 2:i - 2])
+        pos = i
+
+
 def split_top(body):
     """An | auf oberster Ebene trennen (nicht in {{…}} oder [[…]])."""
     parts, depth_t, depth_l, cur, i = [], 0, 0, [], 0
@@ -365,11 +387,36 @@ def infobox_snippet(text):
     return body[:700].replace("\n", " ⏎ ")
 
 
+def _cell(cell, acc):
+    """Eine Zelle „Spiele (Tore)“ auswerten. False = unbekannt (? oder Strich)."""
+    cell = clean(cell).replace("+", "").strip()
+    if not cell:
+        return True
+    if "?" in cell or re.fullmatch(r"[-–—−()\s]+", cell):
+        return False
+    m = PAIR.search(cell)
+    if m:
+        acc[0] += int(m.group(1)); acc[1] += max(0, _num(m.group(2))); acc[2] += 1
+    elif re.fullmatch(r"\d+", cell):
+        acc[0] += int(cell); acc[2] += 1
+    return True
+
+
 def parse_de(text):
     body = find_template(text, ["Infobox Fußballspieler"])
     if not body:
         return None
     named, _ = template_params(body)
+    # neues Format: | vereine_tabelle = {{Team-Station|Jahre|Verein|Spiele (Tore)|leihe=ja}} …
+    tab = named.get("vereine_tabelle")
+    if tab:
+        acc = [0, 0, 0]
+        for st in find_all_templates(tab, "Team-Station"):
+            _, pos = template_params(st)
+            if len(pos) >= 3 and not _cell(pos[2], acc):
+                return None
+        return (acc[0], acc[1]) if acc[2] and plausible(acc[0], acc[1]) else None
+    # altes Format: | spiele (tore) = 35 (16)<br />503 (150)
     val = None
     for k, v in named.items():
         if re.fullmatch(r"spiele\s*\(\s*tore\s*\)", k):
@@ -436,18 +483,11 @@ def parse_it(text):
         return None
     _, pos = template_params(car)
     games = goals = rows = 0
-    for k in range(2, len(pos), 3):                                          # Jahre | Verein | Spiele (Tore)
-        cell = clean(pos[k]).strip()
-        if not cell:
-            continue
-        if "?" in cell or re.fullmatch(r"[-–—−()\s]+", cell):
+    acc = [0, 0, 0]
+    for k in range(2, len(pos), 3):                                          # Jahre | Verein | Spiele (Tore); negativ = Gegentore
+        if not _cell(pos[k], acc):
             return None
-        m = PAIR.search(cell)
-        if m:
-            games += int(m.group(1)); goals += max(0, _num(m.group(2))); rows += 1   # negative Zahl = Gegentore (Torwart)
-        elif re.fullmatch(r"\d+", cell):
-            games += int(cell); rows += 1
-    return (games, goals) if rows and plausible(games, goals) else None
+    return (acc[0], acc[1]) if acc[2] and plausible(acc[0], acc[1]) else None
 
 
 PARSERS = {"de": parse_de, "en": parse_en, "it": parse_it}
@@ -483,7 +523,7 @@ def honours_section(text):
 
 def count_titles_en(text, section=False):
     sec = clean(text if section else honours_section(text))
-    counts = {k: 0 for k in TITLE_RX}
+    seasons = {k: set() for k in TITLE_RX}
     for line in sec.split("\n"):
         line = line.strip()
         if not line.startswith("*"):
@@ -498,9 +538,9 @@ def count_titles_en(text, section=False):
                     continue
                 m = rx.search(seg)
                 if m:
-                    counts[key] += len(YEAR.findall(seg[m.end():]))
+                    seasons[key].update(YEAR.findall(seg[m.end():]))   # gleiche Saison nur einmal zählen
                     break
-    return counts
+    return {k: len(v) for k, v in seasons.items()}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -575,7 +615,7 @@ def run(args, fetch=fetch_wikitext, wikidata=None):
         if not tl:
             continue
         c = count_titles_en(texts_en[i], section=True) if i in texts_en else {}
-        if i in texts_en and len(tdebug) < 15:
+        if i in texts_en and (len(tdebug) < 8 or (len(tdebug) < 25 and sum(c.values()) > len(set(tl)) + 1)):
             tdebug.append(f"{p[0]} {[title_names[t] for t in tl]} -> {c}\n      " + "\n      ".join(
                 ln.strip()[:160] for ln in clean(texts_en[i]).split("\n") if ln.strip().startswith("*") and any(rx.search(ln) for rx in TITLE_RX.values())))
         total = 0
