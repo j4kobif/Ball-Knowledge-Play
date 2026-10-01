@@ -632,10 +632,11 @@
   .pk-dot.g { background: var(--wd-g); border-color: var(--wd-g); color: var(--wd-g-ink); }
   .pk-dot.m { background: #c94b4b; border-color: #c94b4b; color: #fff; }
   .pk-stage { position: relative; width: 100%; max-width: 520px; margin: 0 auto; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 360 / 240; background: #0b1016; }
-  .pk-svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-  .pk-zones { position: absolute; left: 20%; top: 25.83%; width: 60%; height: 37.5%; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+  .pk-3d { position: absolute; inset: 0; width: 100%; height: 100%; display: block; background: #0b1016; }
+  .pk-zones { position: absolute; left: 22%; top: 30%; width: 56%; height: 28%; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
   .pk-zones[hidden] { display: none; }
-  .pk-zone { background: rgba(255,255,255,0); border: 1px dashed rgba(255,255,255,0.4); cursor: pointer; padding: 0; color: transparent; transition: background .12s; }
+  .pk-zone { position: relative; min-height: 0; min-width: 0; font-size: 0; background: rgba(255,255,255,0); border: 1px dashed rgba(255,255,255,0.45); cursor: pointer; padding: 0; color: transparent; transition: background .12s; }
+  .pk-zone::after { content: ""; position: absolute; left: -2px; right: -2px; top: -9px; bottom: -9px; }
   .pk-zone:hover, .pk-zone:focus-visible { background: rgba(255,255,255,0.2); outline: none; }
   .pk-zone.sel { background: rgba(255,255,255,0.32); }
   .pk-flash {
@@ -681,31 +682,22 @@
   .pk-zone.hint { background: rgba(79,217,135,0.22); border: 2px solid var(--accent); }
   .pk-trophies { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13.5px; background: var(--surface-2); }
   .pk-trophies[hidden] { display: none; }
-  .pk-ads { animation: pkAds 26s linear infinite; }
-  #pk-keeper-idle.on { animation: pkKIdle 0.9s ease-in-out infinite alternate; }
-  @keyframes pkKIdle { 0% { transform: translateX(-3.5px); } 50% { transform: translate(0, -1.5px); } 100% { transform: translateX(3.5px); } }
-  .pk-svg.arrive { animation: pkArrive 0.9s cubic-bezier(.2,.8,.3,1) both; }
+  .pk-continue[hidden] { display: none; }
+  .pk-continue-btn { width: 100%; display: flex; flex-direction: column; align-items: flex-start; gap: 3px; text-align: left; font: inherit; cursor: pointer; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface-2)); color: var(--text); }
+  .pk-continue-btn:hover { background: color-mix(in srgb, var(--accent) 22%, var(--surface-2)); }
+  .pk-cont-k { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: .04em; color: var(--accent); line-height: 1; }
+  .pk-cont-d { font-size: 13px; color: var(--text-dim); }
+  .pk-cont-note { margin: 6px 2px 0; font-size: 12px; color: var(--text-dim); }
+  .pk-3d.arrive { animation: pkArrive 0.9s cubic-bezier(.2,.8,.3,1) both; }
   @keyframes pkArrive { from { transform: scale(1.9); filter: blur(4px) brightness(1.6); opacity: .3; } to { transform: none; filter: none; opacity: 1; } }
   .pk-travel { position: absolute; inset: 0; z-index: 8; cursor: pointer; background: #050a12; }
   .pk-travel[hidden] { display: none; }
   .pk-travel svg { width: 100%; height: 100%; display: block; }
-  .pk-travel .tv-cloud { animation: pkCloud 3.2s linear both; }
-  @keyframes pkCloud { from { transform: translateX(80px); } to { transform: translateX(-140px); } }
-  .pk-travel .tv-fade { animation: pkFadeIn .5s ease both; }
-  .pk-travel .tv-late { animation: pkFadeIn .5s ease 1.7s both; }
-  .pk-travel .tv-pulse { animation: pkPulse .5s ease-in-out 1.9s 3 alternate both; transform-box: fill-box; transform-origin: 50% 50%; }
-  @keyframes pkFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-  @keyframes pkPulse { from { transform: scale(1); } to { transform: scale(1.18); } }
-  .pk-travel.zoom svg { animation: pkZoomIn .6s ease-in forwards; transform-origin: var(--zx, 82%) var(--zy, 70%); }
-  @keyframes pkZoomIn { to { transform: scale(5); opacity: 0; } }
-  @media (prefers-reduced-motion: reduce) { #pk-keeper-idle.on, .pk-svg.arrive, .pk-travel *, .pk-travel.zoom svg { animation: none !important; } }
-  @keyframes pkAds { from { transform: translateX(0); } to { transform: translateX(-262px); } }
-  #pk-crowd.cheer { animation: pkCheer .32s ease-in-out 5 alternate; }
-  @keyframes pkCheer { from { transform: translateY(0); } to { transform: translateY(-3px); } }
+  @media (prefers-reduced-motion: reduce) { .pk-3d.arrive { animation: none !important; } }
   .pk-confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 6; }
   .pk-confetti i { position: absolute; top: -8px; width: 6px; height: 10px; border-radius: 1px; animation: pkConf linear forwards; }
   @keyframes pkConf { to { transform: translateY(260px) rotate(540deg); opacity: .9; } }
-  @media (prefers-reduced-motion: reduce) { .pk-ads, #pk-crowd.cheer, .pk-confetti i { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .pk-confetti i { animation: none; } }
   .pk-marker { position: absolute; top: 0; bottom: 0; width: 5px; margin-left: -2.5px; background: #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); left: 0; }
 
   /* ---------- Vereinskette, Wer bin ich, Zeitstrahl ---------- */
@@ -1311,6 +1303,10 @@
       </div>
     </div>
     <div class="pk-trophies" id="pk-trophies" hidden></div>
+    <div class="pk-continue" id="pk-continue" hidden>
+      <button type="button" class="pk-continue-btn" id="pk-continue-btn"><span class="pk-cont-k">▶ Karriere fortsetzen</span><span class="pk-cont-d" id="pk-continue-txt"></span></button>
+      <p class="pk-cont-note">„Neue Karriere“ startet von vorn und ersetzt den gespeicherten Spielstand.</p>
+    </div>
     <div class="names">
       <label class="name-field" for="pname-input-x"><span class="lbl" id="pname-label-x">Dein Name</span>
         <input type="text" id="pname-input-x" maxlength="16" placeholder="optional" autocomplete="off" spellcheck="false"></label>
@@ -1353,83 +1349,7 @@
       </div>
     </div>
     <div class="pk-stage" id="pk-stage">
-      <svg class="pk-svg" id="pk-svg" viewBox="0 0 360 240" role="img" aria-label="Elfmeterpunkt, Ball, Tor mit Torwart">
-        <defs>
-          <linearGradient id="pkSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#080c11"/><stop offset="1" stop-color="#152029"/></linearGradient>
-          <linearGradient id="pkGrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d5d38"/><stop offset="1" stop-color="#0e3821"/></linearGradient>
-          <pattern id="pkCrowd" width="21" height="9" patternUnits="userSpaceOnUse"><circle id="pk-fan1" cx="3.5" cy="3" r="1.7" fill="rgba(255,180,84,.38)"/><circle id="pk-fan2" cx="10.5" cy="5.5" r="1.7" fill="rgba(79,217,135,.3)"/><circle id="pk-fan3" cx="17.5" cy="3" r="1.7" fill="rgba(238,245,255,.3)"/><circle id="pk-fan4" cx="7" cy="8" r="1.4" fill="rgba(92,200,255,.25)"/><circle id="pk-fan5" cx="14" cy="1" r="1.4" fill="rgba(255,122,107,.3)"/></pattern>
-          <pattern id="pkNetPat" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 0H9M0 0V9" stroke="rgba(255,255,255,.42)" stroke-width=".8" fill="none"/></pattern>
-          <radialGradient id="pkGlow" cx="50%" cy="0%" r="75%"><stop offset="0" stop-color="rgba(255,255,255,.26)"/><stop offset="1" stop-color="rgba(255,255,255,0)"/></radialGradient>
-        </defs>
-        <rect width="360" height="240" fill="url(#pkSky)"/>
-        <rect width="360" height="58" fill="#0d131a"/>
-        <g id="pk-crowd"><rect y="-6" width="360" height="56" fill="url(#pkCrowd)"/></g>
-        <rect width="360" height="58" fill="url(#pkGlow)"/>
-        <circle cx="12" cy="6" r="16" fill="rgba(238,245,255,.10)"/><circle cx="348" cy="6" r="16" fill="rgba(238,245,255,.10)"/>
-        <rect y="47" width="360" height="11" fill="#06090d"/>
-        <g class="pk-ads"><text id="pk-ads-text" x="0" y="55" font-family="IBM Plex Mono, monospace" font-size="6.2" font-weight="700" letter-spacing="1.2" fill="#ffb454">BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER ·</text></g>
-        <rect y="58" width="360" height="182" fill="url(#pkGrass)"/>
-        <g fill="rgba(255,255,255,.045)"><rect y="76" width="360" height="18"/><rect y="112" width="360" height="22"/><rect y="152" width="360" height="26"/><rect y="196" width="360" height="30"/></g>
-        <g stroke="rgba(255,255,255,.7)" stroke-width="1.6" fill="none"><path d="M0 153H360"/><path d="M104 153V182H256V153"/></g>
-        <circle cx="180" cy="212" r="2.2" fill="rgba(255,255,255,.8)"/>
-        <rect x="72" y="62" width="216" height="90" fill="rgba(0,0,0,.32)"/>
-        <g id="pk-net" style="transform-origin:180px 62px"><rect x="72" y="62" width="216" height="90" fill="url(#pkNetPat)"/></g>
-        <g id="pk-keeper" transform="translate(180 154)">
-          <ellipse cx="0" cy="1" rx="13" ry="2.6" fill="rgba(0,0,0,.28)"/>
-          <g id="pk-keeper-idle" class="on">
-          <g id="pk-keep-body" style="transform-box:fill-box;transform-origin:50% 72%">
-            <path d="M-5 -24 L-10 -13" stroke="#14181d" stroke-width="6" stroke-linecap="round"/>
-            <path d="M5 -24 L10 -13" stroke="#14181d" stroke-width="6" stroke-linecap="round"/>
-            <path d="M-10 -13 L-9 -3" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="5" stroke-linecap="round"/>
-            <path d="M10 -13 L9 -3" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="5" stroke-linecap="round"/>
-            <ellipse cx="-10" cy="-1.5" rx="4.2" ry="2" fill="#0d0f12"/><ellipse cx="10" cy="-1.5" rx="4.2" ry="2" fill="#0d0f12"/>
-            <path d="M-10 -31 H10 L11.5 -21 H1.5 L0 -23 L-1.5 -21 H-11.5 Z" fill="#14181d"/>
-            <path d="M-11 -48 Q0 -52 11 -48 L12.5 -29 H-12.5 Z" style="fill:var(--pk-keeper,#ffb454)"/>
-            <path d="M-11 -48 Q0 -52 11 -48 L11.4 -45 Q0 -49 -11.4 -45 Z" fill="rgba(0,0,0,.18)"/>
-            <text x="0" y="-33.5" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="10" fill="rgba(0,0,0,.42)">1</text>
-            <g id="pk-k-arm-l" style="transform-box:fill-box;transform-origin:100% 0%"><path d="M-10 -46 L-18 -38 L-23 -30" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="-24" cy="-28.5" r="3.6" fill="#f4f6f8"/></g>
-            <g id="pk-k-arm-r" style="transform-box:fill-box;transform-origin:0% 0%"><path d="M10 -46 L18 -38 L23 -30" style="stroke:var(--pk-keeper,#ffb454)" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="24" cy="-28.5" r="3.6" fill="#f4f6f8"/></g>
-            <rect x="-2.6" y="-54" width="5.2" height="6" fill="#e2b896"/>
-            <circle cx="0" cy="-58.5" r="6.6" fill="#e2b896"/>
-            <path d="M-6.6 -59 A6.6 6.6 0 0 1 6.6 -59 Q3 -63 -6.6 -59 Z" fill="#2a2018"/>
-            <circle cx="-2.3" cy="-58.2" r=".8" fill="#2a2018"/><circle cx="2.3" cy="-58.2" r=".8" fill="#2a2018"/>
-          </g>
-          </g>
-        </g>
-        <rect x="68" y="58" width="6" height="96" fill="#f4f6f8"/><rect x="286" y="58" width="6" height="96" fill="#f4f6f8"/><rect x="68" y="58" width="224" height="6" fill="#f4f6f8"/>
-        <g id="pk-kicker" transform="translate(156 236)">
-          <g id="pk-kick-body" style="transform-box:fill-box;transform-origin:50% 100%;transform:translate(-36px,4px) scale(1.12)">
-            <ellipse cx="0" cy="0" rx="15" ry="3.4" fill="rgba(0,0,0,.32)"/>
-            <g id="pk-leg-l" style="transform-box:fill-box;transform-origin:50% 0%">
-              <path d="M-6 -31 L-7 -17" stroke="#e2b896" stroke-width="7" stroke-linecap="round"/>
-              <path d="M-7 -18 L-7 -5" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6.6" stroke-linecap="round"/>
-              <ellipse cx="-7" cy="-2.6" rx="4.6" ry="3" fill="#0d0f12"/>
-            </g>
-            <g id="pk-leg-r" style="transform-box:fill-box;transform-origin:50% 0%">
-              <path d="M6 -31 L7 -17" stroke="#e2b896" stroke-width="7" stroke-linecap="round"/>
-              <path d="M7 -18 L7 -5" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6.6" stroke-linecap="round"/>
-              <ellipse cx="7" cy="-2.6" rx="4.6" ry="3" fill="#0d0f12"/>
-            </g>
-            <path d="M-13.5 -40 H13.5 L15 -27 H2.5 L0 -30 L-2.5 -27 H-15 Z" fill="#eef1f4"/>
-            <g id="pk-arm-l2" style="transform-box:fill-box;transform-origin:75% 4%">
-              <path d="M-14 -64 L-18.5 -52" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6" stroke-linecap="round"/>
-              <path d="M-18.5 -52 L-20 -41" stroke="#e2b896" stroke-width="4.6" stroke-linecap="round"/>
-            </g>
-            <g id="pk-arm-r2" style="transform-box:fill-box;transform-origin:25% 4%">
-              <path d="M14 -64 L18.5 -52" style="stroke:var(--pk-kicker,#4fd987)" stroke-width="6" stroke-linecap="round"/>
-              <path d="M18.5 -52 L20 -41" stroke="#e2b896" stroke-width="4.6" stroke-linecap="round"/>
-            </g>
-            <path d="M-15 -66 Q0 -70 15 -66 L16.5 -38 H-16.5 Z" style="fill:var(--pk-kicker,#4fd987)"/>
-            <path d="M-15 -66 Q0 -70 15 -66 L14.6 -63.5 Q0 -67.5 -14.6 -63.5 Z" fill="rgba(0,0,0,.16)"/>
-            <text id="pk-back-name" x="0" y="-56.5" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="7.4" letter-spacing=".6" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width=".5" paint-order="stroke">DU</text>
-            <text id="pk-back-num" x="0" y="-41" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="15.5" fill="#fff" stroke="rgba(0,0,0,.35)" stroke-width=".6" paint-order="stroke">10</text>
-            <rect x="-3" y="-73" width="6" height="7" fill="#e2b896"/>
-            <circle cx="-7.6" cy="-77" r="2" fill="#e2b896"/><circle cx="7.6" cy="-77" r="2" fill="#e2b896"/>
-            <circle cx="0" cy="-77.5" r="8" fill="#2a2018"/>
-          </g>
-        </g>
-        <g id="pk-ball" style="transform-origin:180px 212px"><ellipse cx="180" cy="222" rx="8" ry="2.4" fill="rgba(0,0,0,.35)" id="pk-ball-shadow"/><g transform="translate(180 212) scale(.46) translate(-20 -20)"><circle cx="20" cy="20" r="18.5" fill="#f7f8fa" stroke="#1b1f24" stroke-width="1.5"/><polygon points="20,12 27.6,17.5 24.7,26.5 15.3,26.5 12.4,17.5" fill="#1b1f24"/><path d="M20 12V3.5M27.6 17.5l8-2.6M24.7 26.5l5 6.8M15.3 26.5l-5 6.8M12.4 17.5l-8-2.6" stroke="#1b1f24" stroke-width="1.5"/></g></g>
-      </svg>
+      <canvas class="pk-3d" id="pk-3d" role="img" aria-label="Elfmeter in 3D: Schütze, Ball und Tor mit Torwart"></canvas>
       <div class="pk-zones" id="pk-zones" hidden></div>
       <div class="pk-flash" id="pk-flash" aria-live="assertive"></div>
       <div class="pk-confetti" id="pk-confetti" aria-hidden="true"></div>
@@ -1815,7 +1735,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-12</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-15</footer>
 </div>
 
 <script>
@@ -3006,7 +2926,7 @@
     $("home").hidden = true; $("vpick").hidden = true;
     setMasthead(GAME_TXT[activeGame]);
     for (const g in PANELS) { $(PANELS[g][0]).hidden = g !== activeGame; $(PANELS[g][1]).hidden = true; }
-    renderAllMenuHelp();
+    renderAllMenuHelp(); pkRenderContinue();
     window.scrollTo({ top: 0 });
   }
   // Menü- und Spiel-Panel je Game
@@ -3751,7 +3671,6 @@
   // Treffer in der grünen Mitte = Schuss geht genau in die Zone, gelb = unsauber (Pfosten oder schwacher Schuss in die Mitte), rot = vorbei.
   const PK_ZONES = [[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1]];                // [Spalte, Höhe]; Höhe 0 = oben
   const PK_ZNAME = [["links oben", "Mitte oben", "rechts oben"], ["links unten", "Mitte unten", "rechts unten"]];
-  const pkZX = c => 108 + c * 72, pkZY = r => 84.5 + r * 45;                           // Mittelpunkt der Zone in der Szene (viewBox 360×240)
   const PK_ADAPT = { easy: 0, okay: 0.15, advanced: 0.3, pro: 0.45, ball: 0.6 };       // Wie stark der Computer das Muster des Menschen nutzt
   const PK_ONTARGET = { easy: 0.62, okay: 0.72, advanced: 0.8, pro: 0.87, ball: 0.93 };// Wie oft der Computer als Schütze das Tor trifft (ohne Parade)
   // Karriere: fünf Runden gegen immer stärkere Gegner; die Quizfragen werden mit jeder Runde schwerer
@@ -3765,24 +3684,29 @@
   const PK_CLUBS = ["FC Flutlicht", "Sporting Abseits", "Real Nachspielzeit", "Inter Eckfahne", "Dynamo Doppelpass", "Athletic Grätsche", "Olympique Lattenkreuz",
     "AC Konter", "Borussia Bananenflanke", "Union Fallrückzieher", "Racing Rabona", "Juventus Joker", "Spartak Steilpass", "Ajax Außenrist", "Vitória Viererkette"];
   // Eigenheiten der Gegner: Gewichte je Zone [lo, mo, ro, lu, mu, ru] (aus Sicht des Bildschirms)
+  // Eigenheiten der Gegner: Gewichte je Zone [lo, mo, ro, lu, mu, ru] (Seiten aus Sicht des Schützen bzw. Bildschirms).
+  // „{f}“ wird je nach Runde ersetzt: früh sehr klare Tendenzen, später nur noch Neigungen.
   const PK_KEEPERS = [
-    { t: "springt fast immer nach links", w: [3, .3, .6, 3, .3, .6] },
-    { t: "springt fast immer nach rechts", w: [.6, .3, 3, .6, .3, 3] },
-    { t: "bleibt gern lange stehen", w: [.5, 3, .5, .5, 3, .5] },
-    { t: "fliegt am liebsten hoch in die Ecken", w: [2.5, .6, 2.5, .4, .3, .4] },
-    { t: "geht tief und flach in die Ecken", w: [.4, .3, .4, 2.5, .8, 2.5] },
+    { t: "springt {f} in die linke Ecke", w: [3, .3, .5, 3, .3, .5] },
+    { t: "springt {f} in die rechte Ecke", w: [.5, .3, 3, .5, .3, 3] },
+    { t: "bleibt {f} in der Mitte stehen", w: [.4, 3, .4, .4, 3, .4] },
+    { t: "fliegt {f} hoch in die Ecken", w: [3, .5, 3, .3, .3, .3] },
+    { t: "geht {f} flach in die Ecken", w: [.3, .3, .3, 3, .6, 3] },
   ];
   const PK_KITS = [["#d7263d", "#ffffff"], ["#1e88e5", "#ffffff"], ["#fdd835", "#1a1a1a"], ["#2e7d32", "#ffffff"], ["#8e24aa", "#ffd54f"], ["#fb8c00", "#1a1a1a"],
     ["#00897b", "#ffffff"], ["#c62828", "#1e3a8a"], ["#eceff1", "#c62828"], ["#6d4c41", "#ffcc80"], ["#3949ab", "#ffeb3b"], ["#00acc1", "#0d1b2a"]];
   const PK_KEEPER_KITS = ["#cddc39", "#ff7043", "#26c6da", "#ab47bc", "#9ccc65", "#ffca28"];
   const PK_ARENA = ["Arena", "Park", "Stadion", "Kessel", "Arena", "Stadion"];
   const PK_SHOOTERS = [
-    { t: "schießt am liebsten flach links", w: [.5, .2, .5, 3, .5, .6], on: 0 },
-    { t: "liebt die Ecke rechts oben", w: [.5, .3, 3, .5, .3, 1], on: 0 },
-    { t: "schiebt gern frech in die Mitte", w: [.3, 2.5, .3, .4, 2.5, .4], on: 0 },
-    { t: "ist eiskalt – verschießt so gut wie nie", w: null, on: 0.08 },
-    { t: "wird nervös, wenn es eng wird", w: null, on: -0.14 },
+    { t: "schießen {f} flach links", w: [.4, .2, .4, 3, .4, .5] },
+    { t: "schießen {f} flach rechts", w: [.4, .2, .4, .5, .4, 3] },
+    { t: "zielen {f} oben links", w: [3, .3, .5, .5, .2, .4] },
+    { t: "zielen {f} oben rechts", w: [.5, .3, 3, .4, .2, .5] },
+    { t: "schieben {f} frech in die Mitte", w: [.3, 2.5, .3, .3, 2.5, .3] },
   ];
+  // Wie deutlich sich die Gegner an ihre Tendenz halten, je Runde (1. Runde … Finale)
+  const PK_FOLLOW = [0.8, 0.72, 0.64, 0.55, 0.48];
+  const PK_FOLLOW_TXT = ["fast immer", "fast immer", "meistens", "oft", "gern"];
   const pk = {
     mode: "cpu", level: "okay", shots: 5, quiz: true, career: null, opp: null, band: 1, hintCol: null, cpuPlan: null, score: { X: 0, O: 0 }, kicks: { X: [], O: [] }, kicker: "X", keeper: "O", shooterName: "",
     phase: "idle", over: true, dive: null, zone: null, token: 0, humanShots: Array(6).fill(0), humanDives: Array(6).fill(0), pool: [], metStart: 0, metRaf: 0, sudden: false,
@@ -3790,8 +3714,6 @@
   const pkVsCpu = () => pk.mode !== "pvp";
   const pkWho = s => pkVsCpu() ? (s === "X" ? (state.names.X || "Du") : (pk.opp ? pk.opp.club : "Computer")) : (s === "X" ? (state.names.X || "Spieler 1") : (state.names.O || "Spieler 2"));
   const pkHuman = s => pk.mode === "pvp" || s === "X";
-  const pkAnimate = (el, frames, opts) => (el && el.animate ? el.animate(frames, Object.assign({ fill: "forwards" }, opts)) : null);
-  const pkReset = el => { if (el && el.getAnimations) el.getAnimations().forEach(a => a.cancel()); };
   const pkZoneIdx = z => z[1] * 3 + z[0];
   const pkTimers = [];
   function pkLater(fn, ms) { const t = pk.token; pkTimers.push(setTimeout(() => { if (t === pk.token) fn(); }, ms)); }
@@ -3811,10 +3733,7 @@
     $("pk-mid").textContent = pk.sudden ? "VERLÄNGERUNG" : `SCHUSS ${Math.min(pk.kicks[pk.kicker].length + 1, pk.shots)} / ${pk.shots}`;
     syncBig(); pkRenderTracks();
     $("pk-turn-chip").style.background = pk.kicker === "X" ? "var(--accent)" : "var(--accent-2)";
-    const st = $("pk-stage").style;
-    const oKit = pk.opp ? pk.opp.color : "var(--o-mark)", oKeeper = pk.opp ? pk.opp.keeperColor : "var(--o-mark)";
-    st.setProperty("--pk-kicker", pk.kicker === "X" ? "var(--x-mark)" : oKit);
-    st.setProperty("--pk-keeper", pk.keeper === "X" ? "var(--x-mark)" : oKeeper);
+    pkApplyKits();
     const tt = $("pk-turn-text"), tag = $("pk-tag"), nm = esc(pk.shooterName);
     if (pk.over) { tt.textContent = "Elfmeterschießen beendet"; tag.textContent = ""; return; }
     if (pk.phase === "scout") { tt.innerHTML = `<span class="who">${esc(PK_STAGES[pk.career.stage].name)}</span> · Gegner: ${esc(pk.opp.club)}`; tag.textContent = "Lies den Scouting-Bericht – dann Anpfiff."; return; }
@@ -3836,10 +3755,18 @@
     if (on) z.innerHTML = PK_ZONES.map((zz, i) => `<button type="button" class="pk-zone${zz[0] === hint ? " hint" : ""}" data-z="${i}" aria-label="${PK_ZNAME[zz[1]][zz[0]]}">${PK_ZNAME[zz[1]][zz[0]]}</button>`).join("");
   }
   function pkResetScene() {
-    for (const id of ["pk-ball", "pk-net", "pk-ball-shadow", "pk-keep-body", "pk-k-arm-l", "pk-k-arm-r", "pk-kick-body", "pk-leg-l", "pk-leg-r", "pk-arm-l2", "pk-arm-r2"]) { const el = $(id); pkReset(el); if (el.style && id !== "pk-kick-body") { el.style.transform = ""; el.style.opacity = ""; } }
-    $("pk-keeper-idle").classList.add("on");
+    PK3.idle();
     const f = $("pk-flash"); f.classList.remove("show", "goal", "bad"); f.textContent = "";
-    $("pk-crowd").classList.remove("cheer");
+  }
+  // Trikotfarben für die 3D-Szene: Schütze in seinen Vereins-/Spielerfarben, Torwart in seiner Farbe
+  const pkCss = (v, fb) => { try { const x = getComputedStyle($("pen")).getPropertyValue(v).trim(); return /^#[0-9a-f]{6}$/i.test(x) ? x : fb; } catch (e) { return fb; } };
+  const pkLum = h => { const n = parseInt(h.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+  function pkApplyKits() {
+    const xc = pkCss("--x-mark", "#4fd987"), oc = pkCss("--o-mark", "#ffb454"), o = pk.opp;
+    const sh = pk.kicker === "X" ? xc : (o ? o.color : oc);
+    const shorts = pk.kicker === "X" ? "#f4f6f8" : (o && o.color2 !== sh ? o.color2 : "#1d2328");
+    const keep = pk.keeper === "X" ? xc : (o ? o.keeperColor : oc);
+    PK3.setKits({ shooter: { shirt: sh, shorts, socks: sh, name: pk.shirt ? pk.shirt.name : "", num: pk.shirt ? pk.shirt.num : "", ink: pkLum(sh) > .6 ? "#0b0f14" : "#ffffff" }, keeper: { shirt: keep, socks: keep } });
   }
   // ----- Ablauf eines Schusses -----
   function pkNewMatch() {
@@ -3868,61 +3795,31 @@
     SFX.play("kickoff");
     pkNextKick();
   }
-  // Stadion des Gegners: Fanfarben und Bande
+  // Stadion des Gegners: Fans, Banden und Dach in Vereinsfarben
   function pkStadium(o) {
-    const hexA = (h, a) => { const n = parseInt(h.slice(1), 16); return `rgba(${n >> 16},${(n >> 8) & 255},${n & 255},${a})`; };
-    const fans = o ? [hexA(o.color, .55), hexA(o.color2, .42), hexA(o.color, .4), "rgba(238,245,255,.25)", hexA(o.color2, .3)]
-      : ["rgba(255,180,84,.38)", "rgba(79,217,135,.3)", "rgba(238,245,255,.3)", "rgba(92,200,255,.25)", "rgba(255,122,107,.3)"];
-    fans.forEach((c, k) => { const el = $("pk-fan" + (k + 1)); if (el.setAttribute) el.setAttribute("fill", c); });
-    const ad = o ? `${o.arena.toUpperCase()} · ${o.club.toUpperCase()} · BALL KNOWLEDGE · PLAY · ` : "BALL KNOWLEDGE · PLAY · FLUTLICHT-ARENA · ELFMETER · ";
-    $("pk-ads-text").textContent = ad.repeat(4);
-    const at = $("pk-ads-text"); if (at.setAttribute) at.setAttribute("fill", o ? (o.color === "#eceff1" ? "#ffb454" : o.color) : "#ffb454");
+    PK3.setStadium(o ? { color: o.color, color2: o.color2 } : { color: pkCss("--x-mark", "#4fd987"), color2: pkCss("--o-mark", "#ffb454") });
   }
   // Flug von Stadion zu Stadion (Karriere): Klick überspringt
   function pkTravel(done) {
     const c = pk.career, st = PK_STAGES[c.stage], o = pk.opp;
     const from = c.stage === 0 ? "Heimat" : c.opps[c.stage - 1].arena;
-    const tv = $("pk-travel"), tok = pk.token;
+    const tv = $("pk-travel"), tok = pk.token, P = "tv_";
     let finished = false;
-    const end = () => { if (finished || tok !== pk.token) return; finished = true; tv.hidden = true; tv.classList.remove("zoom"); tv.innerHTML = ""; const sv = $("pk-svg"); sv.classList.remove("arrive"); void sv.offsetWidth; sv.classList.add("arrive"); done(); };
-    const stad = (x, y, col, id) => `<g transform="translate(${x} ${y})"><g ${id ? `id="${id}" class="tv-pulse"` : ""}><ellipse cx="0" cy="6" rx="26" ry="7" fill="rgba(0,0,0,.4)"/><path d="M-24 0 Q-24 -12 0 -12 Q24 -12 24 0 L22 6 Q0 12 -22 6 Z" fill="#1b2430" stroke="${col}" stroke-width="1.6"/><ellipse cx="0" cy="-2" rx="15" ry="5" fill="#2f9d62"/><path d="M-20 -12 V-24 M20 -12 V-24" stroke="#4b5866" stroke-width="1.4"/><rect x="-23" y="-27" width="6" height="3" fill="#eef5ff"/><rect x="17" y="-27" width="6" height="3" fill="#eef5ff"/></g></g>`;
-    const path = "M70 172 Q180 40 290 172";
-    tv.innerHTML = `<svg viewBox="0 0 360 240" aria-label="Flug zum nächsten Stadion">
-      <defs><linearGradient id="tvSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060b16"/><stop offset="1" stop-color="#14304a"/></linearGradient></defs>
-      <rect width="360" height="240" fill="url(#tvSky)"/>
-      ${Array.from({ length: 26 }, () => `<circle cx="${(Math.random() * 360).toFixed(0)}" cy="${(Math.random() * 130).toFixed(0)}" r="${(Math.random() * 0.9 + 0.3).toFixed(2)}" fill="rgba(255,255,255,.6)"/>`).join("")}
-      <path d="M0 200 Q90 180 180 196 T360 190 V240 H0 Z" fill="#0b1a12"/>
-      <g class="tv-cloud" opacity=".5"><ellipse cx="120" cy="70" rx="34" ry="8" fill="#9fb3c8"/><ellipse cx="300" cy="110" rx="40" ry="9" fill="#9fb3c8"/><ellipse cx="220" cy="40" rx="26" ry="6" fill="#9fb3c8"/></g>
-      <path id="tv-path" d="${path}" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.4" stroke-dasharray="3 5"/>
-      ${stad(70, 180, "rgba(255,255,255,.5)")}
-      ${stad(290, 180, o.color, "tv-dest")}
-      <g id="tv-ball" transform="translate(70 172)"><circle r="6.5" fill="#f7f8fa" stroke="#1b1f24" stroke-width="1"/><polygon points="0,-3 2.9,-.9 1.8,2.4 -1.8,2.4 -2.9,-.9" fill="#1b1f24"/></g>
-      <text x="70" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="rgba(255,255,255,.7)">${esc(from)}</text>
-      <text class="tv-fade" x="180" y="30" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="20" fill="#ffb454" letter-spacing="1">${esc(st.name)}</text>
-      <text class="tv-late" x="290" y="206" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#fff">${esc(o.arena)}</text>
-      <text class="tv-late" x="290" y="218" text-anchor="middle" font-family="Bebas Neue, Work Sans, sans-serif" font-size="13" fill="${o.color === "#eceff1" ? "#fff" : o.color}">${esc(o.club)}</text>
-    </svg>`;
-    tv.style.setProperty("--zx", "80.5%"); tv.style.setProperty("--zy", "73%");
+    const end = () => { if (finished || tok !== pk.token) return; finished = true; tv.hidden = true; tv.innerHTML = ""; const cv = $("pk-3d"); cv.classList.remove("arrive"); void cv.offsetWidth; cv.classList.add("arrive"); done(); };
+    tv.innerHTML = PKFLY.build({ stage: st.name, from, arena: o.arena, club: o.club, color: o.color, color2: o.color2 }, P);
     tv.hidden = false;
-    // Ball fliegt entlang der Flugbahn (sanft beschleunigen und abbremsen, dreht sich dabei)
+    // Helikopter-Kamera: Ball fliegt mit Schatten über die Landkarte, dann Zoom bis auf den Platz
     try {
-      const pth = tv.querySelector("#tv-path"), bl = tv.querySelector("#tv-ball");
-      if (pth && pth.getTotalLength && bl) {
-        const L = pth.getTotalLength(), t0 = performance.now(), dur = 1800;
-        const step = now => {
-          if (finished || tok !== pk.token) return;
-          const u = Math.min(1, (now - t0 - 250) / dur), e = u <= 0 ? 0 : u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
-          const pt = pth.getPointAtLength(L * e);
-          bl.setAttribute("transform", `translate(${pt.x.toFixed(1)} ${pt.y.toFixed(1)}) rotate(${(e * 720).toFixed(0)})`);
-          if (u < 1) requestAnimationFrame(step);
-        };
+      const root = tv.querySelector && tv.querySelector("svg");
+      if (root && window.requestAnimationFrame) {
+        PKFLY.frame(root, 0, P);
+        const t0 = performance.now(), step = now => { if (finished || tok !== pk.token) return; const t = now - t0; PKFLY.frame(root, Math.min(t, PKFLY.DUR), P); if (t < PKFLY.DUR) requestAnimationFrame(step); };
         requestAnimationFrame(step);
       }
     } catch (e) {}
     SFX.play("pick");
     tv.onclick = end;
-    pkLater(() => { tv.classList.add("zoom"); }, 2700);
-    pkLater(end, 3300);
+    pkLater(end, PKFLY.DUR + 150);
   }
   function pkPathHTML() {
     return `<div class="pk-path">${PK_STAGES.map((s, k) => `<span class="${k < pk.career.stage ? "done" : k === pk.career.stage ? "now" : ""}">${esc(s.name)}</span>`).join("")}</div>`;
@@ -3959,11 +3856,9 @@
   // Name und Nummer auf dem Rücken des Schützen
   function pkSetShirt() {
     const human = pkHuman(pk.kicker);
-    let name = human ? pkWho(pk.kicker) : pk.shooterName.split(/\s+/).pop();
-    name = (name || "").toUpperCase().slice(0, 14);
-    const t = $("pk-back-name"); t.textContent = name;
-    if (t.setAttribute) { if (name.length > 8) { t.setAttribute("textLength", "25"); t.setAttribute("lengthAdjust", "spacingAndGlyphs"); } else { t.removeAttribute("textLength"); t.removeAttribute("lengthAdjust"); } }
-    $("pk-back-num").textContent = human ? (pk.kicker === "X" ? "10" : "9") : String(2 + Math.floor(Math.random() * 30));
+    const name = human ? pkWho(pk.kicker) : pk.shooterName.split(/\s+/).pop();
+    pk.shirt = { name: (name || "").toUpperCase().slice(0, 14), num: human ? (pk.kicker === "X" ? "10" : "9") : String(2 + Math.floor(Math.random() * 30)) };
+    pkApplyKits();
   }
   function pkShooterPhase() {
     if (pkHuman(pk.keeper) && pkHuman(pk.kicker)) {                         // 2 Spieler an einem Gerät: Gerät weitergeben
@@ -4027,7 +3922,7 @@
   }
   function pkFromWeights(w) { const sum = w.reduce((a, b) => a + b, 0); let r = Math.random() * sum; for (let i = 0; i < w.length; i++) { r -= w[i]; if (r <= 0) return i; } return 0; }
   function pkCpuDive() {                                                       // Torwart: höhere Stufen erkennen das Lieblingsmuster des Menschen
-    if (pk.opp && Math.random() < 0.6) return PK_ZONES[pkFromWeights(pk.opp.keeper.w)];
+    if (pk.opp && Math.random() < pk.opp.follow) return PK_ZONES[pkFromWeights(pk.opp.keeper.w)];
     const total = pk.humanShots.reduce((a, b) => a + b, 0);
     const i = total >= 2 && Math.random() < PK_ADAPT[pk.level] ? pkPickFrom(pk.humanShots, true) : pkWeightedZone();
     return PK_ZONES[i];
@@ -4035,7 +3930,7 @@
   function pkCpuShot() {                                                       // Schütze: zielt dorthin, wohin der Mensch selten springt
     const total = pk.humanDives.reduce((a, b) => a + b, 0);
     const sw = pk.opp && pk.opp.shooter.w;
-    const i = sw && Math.random() < 0.6 ? pkFromWeights(sw) : total >= 2 && Math.random() < PK_ADAPT[pk.level] ? pkPickFrom(pk.humanDives, false) : pkWeightedZone();
+    const i = sw && Math.random() < pk.opp.follow ? pkFromWeights(sw) : total >= 2 && Math.random() < PK_ADAPT[pk.level] ? pkPickFrom(pk.humanDives, false) : pkWeightedZone();
     const late = pk.kicks.O.length >= 3 || pk.sudden;                          // Nervosität wirkt erst, wenn es eng wird
     const r = Math.random(), on = Math.max(0.4, Math.min(0.98, PK_ONTARGET[pk.level] + (pk.opp ? (pk.opp.shooter.on < 0 && !late ? 0 : pk.opp.shooter.on) : 0)));
     const q = r < on ? 0.6 + Math.random() * 0.4 : (r < on + (1 - on) * 0.55 ? 0.3 + Math.random() * 0.22 : Math.random() * 0.2);
@@ -4064,100 +3959,471 @@
     const o = pkOutcome(zone, q, pk.dive, roll);
     pkRender();
     pkPlay(o);
-    pkLater(() => pkEndKick(o), PK_RUN + PK_HIT + PK_T + 750);
+    // Entscheidender Schuss: danach Wiederholung mit Kino-Kamera, erst dann das Ergebnis
+    if (pkDecisive(o)) pkLater(() => {
+      const tok = pk.token, f = $("pk-flash"); f.classList.remove("show", "goal", "bad"); f.textContent = "";
+      PK3.replay(() => { if (tok === pk.token) pkEndKick(o); });
+    }, PK_RUN + PK_HIT + PK_T + 650);
+    else pkLater(() => pkEndKick(o), PK_RUN + PK_HIT + PK_T + 750);
+  }
+  function pkDecisive(o) {
+    const s = pk.kicker, g = o.kind === "goal";
+    pk.kicks[s].push(g); if (g) pk.score[s]++;
+    const w = pkDecided();
+    pk.kicks[s].pop(); if (g) pk.score[s]--;
+    return !!w;
   }
   // ----- Animation -----
   // Ablauf: Anlauf (RUN ms) → Schuss → Ball fliegt (T ms), Torwart springt beim Abschuss
   const PK_RUN = 780, PK_HIT = 210, PK_T = 1250;
+  // ---------- Elfmeter in 3D: eigene kleine 3D-Engine auf Canvas 2D (keine Bibliothek) ----------
+  // Welt: x nach rechts (aus Sicht des Schützen), y nach oben, z Richtung Schütze. Torlinie z = 0, Elfmeterpunkt z = 11.
+  const PK3 = (() => {
+    const mul = (a, b) => { const r = new Array(16); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { let s = 0; for (let k = 0; k < 4; k++) s += a[i * 4 + k] * b[k * 4 + j]; r[i * 4 + j] = s; } return r; };
+    const I4 = () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+    const T = (x, y, z) => [1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1];
+    const Rx = a => { const c = Math.cos(a), s = Math.sin(a); return [1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1]; };
+    const Ry = a => { const c = Math.cos(a), s = Math.sin(a); return [c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1]; };
+    const Rz = a => { const c = Math.cos(a), s = Math.sin(a); return [c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]; };
+    const ap = (m, p) => [m[0] * p[0] + m[1] * p[1] + m[2] * p[2] + m[3], m[4] * p[0] + m[5] * p[1] + m[6] * p[2] + m[7], m[8] * p[0] + m[9] * p[1] + m[10] * p[2] + m[11]];
+    const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    const norm = a => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+    const lerp = (a, b, u) => a + (b - a) * u;
+    const L3 = (a, b, u) => [lerp(a[0], b[0], u), lerp(a[1], b[1], u), lerp(a[2], b[2], u)];
+    const cl = (u, a, b) => Math.max(0, Math.min(1, (u - a) / (b - a)));
+    const ease = u => u <= 0 ? 0 : u >= 1 ? 1 : u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+    const easeOut = u => 1 - Math.pow(1 - Math.max(0, Math.min(1, u)), 2);
+    const rnd = seed0 => { let s = (Math.imul(seed0 + 1, 2654435761) >>> 0) % 2147483646 + 1; return () => { s = (s * 16807) % 2147483647; return (s - 1) / 2147483646; }; };
+    const hex = h => { const m = /^#?([0-9a-f]{6})$/i.exec(String(h).trim()); const n = m ? parseInt(m[1], 16) : 0x4fd987; return [n >> 16, (n >> 8) & 255, n & 255]; };
+
+    // ----- Geometrie -----
+    function Box(out, M, cx, cy, cz, sx, sy, sz, col) {
+      const x0 = cx - sx / 2, x1 = cx + sx / 2, y0 = cy - sy / 2, y1 = cy + sy / 2, z0 = cz - sz / 2, z1 = cz + sz / 2;
+      const v = [[x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0], [x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]].map(p => ap(M, p));
+      const c = hex(col);
+      for (const f of [[4, 5, 6, 7], [1, 0, 3, 2], [5, 1, 2, 6], [0, 4, 7, 3], [7, 6, 2, 3], [0, 1, 5, 4]]) out.push({ p: f.map(i => v[i]), c, L: 2, cull: true });
+    }
+    const Quad = (out, p, col, L = 2, e = false) => out.push({ p, c: typeof col === "string" ? hex(col) : col, L, e });
+    function buildStadium(o) {
+      const F = [], G = [], r = rnd(4);
+      Quad(F, [[-60, -0.01, -12], [60, -0.01, -12], [60, -0.01, 72], [-60, -0.01, 72]], "#1f4a2d", 0);
+      for (let k = -2; k < 12; k++) { const z0 = k * 5.5 - 8, z1 = z0 + 5.5; Quad(F, [[-34, 0, z0], [34, 0, z0], [34, 0, z1], [-34, 0, z1]], k % 2 ? "#2f8c4c" : "#36985a", .5); }
+      const W = .12, line = (x0, z0, x1, z1) => { const d = norm([x1 - x0, 0, z1 - z0]), n = [-d[2] * W / 2, 0, d[0] * W / 2]; Quad(F, [[x0 + n[0], .005, z0 + n[2]], [x1 + n[0], .005, z1 + n[2]], [x1 - n[0], .005, z1 - n[2]], [x0 - n[0], .005, z0 - n[2]]], "#eef3ee", 1); };
+      line(-34, 0, 34, 0); line(-20.16, 0, -20.16, 16.5); line(20.16, 0, 20.16, 16.5); line(-20.16, 16.5, 20.16, 16.5);
+      line(-9.16, 0, -9.16, 5.5); line(9.16, 0, 9.16, 5.5); line(-9.16, 5.5, 9.16, 5.5); line(-34, 0, -34, 60); line(34, 0, 34, 60);
+      for (let k = 0; k < 10; k++) { const a0 = 0.93 + k * 0.128, a1 = a0 + 0.128; line(Math.cos(a0) * 9.15, 11 + Math.sin(a0) * 9.15, Math.cos(a1) * 9.15, 11 + Math.sin(a1) * 9.15); }
+      Quad(F, Array.from({ length: 8 }, (_, k) => [Math.cos(k / 8 * 6.283) * .12, .006, 11 + Math.sin(k / 8 * 6.283) * .12]), "#ffffff", 1);
+      const adCols = [o.color, "#e9eef3", o.color2, "#e9eef3"];
+      const board = (P, n) => { for (let k = 0; k < n; k++) { const a = k / n, b = (k + 1) / n; Quad(F, [P(a, 0), P(b, 0), P(b, .9), P(a, .9)], "#141a22", 2, true); Quad(F, [P(a + .004, .3), P(b - .004, .3), P(b - .004, .62), P(a + .004, .62)], adCols[k % 4], 2, true); } };
+      board((u, h) => [-36 + u * 72, h, -4.5], 16);
+      for (const sx of [-1, 1]) board((u, h) => [sx * 33, h, -4 + u * 50], 10);
+      const mix = (h, f) => hex(h).map(v => Math.round(v * f + 24 * (1 - f)));
+      const fans = [mix(o.color, .9), mix(o.color, .7), mix(o.color, .55), mix(o.color2, .75), mix("#e8e2d4", .7), [38, 43, 51], [50, 56, 67], [29, 34, 41], [74, 80, 90], mix(o.color, .8)];
+      const stand = (P, len, seg, steps, base, run, rise) => {
+        for (let s = 0; s < steps; s++) {
+          const d0 = s * run, d1 = d0 + run, h0 = base + s * rise, h1 = h0 + rise;
+          for (let u = -len / 2; u < len / 2 - .01; u += seg) {
+            const fc = fans[Math.floor(r() * fans.length)], sh = .55 + r() * .4;
+            F.push({ p: [P(u, d0, h0), P(u + seg, d0, h0), P(u + seg, d0, h1), P(u, d0, h1)], c: fc.map(v => Math.min(255, v * sh)), L: 2, cr: true });
+          }
+          F.push({ p: [P(-len / 2, d0, h1), P(len / 2, d0, h1), P(len / 2, d1, h1), P(-len / 2, d1, h1)], c: [40, 46, 54], L: 2 });
+        }
+        const dE = steps * run, hE = base + steps * rise;
+        F.push({ p: [P(-len / 2, dE, 0), P(len / 2, dE, 0), P(len / 2, dE, hE + 4), P(-len / 2, dE, hE + 4)], c: [26, 32, 40], L: 2 });
+        F.push({ p: [P(-len / 2, dE * .25, hE + 5), P(len / 2, dE * .25, hE + 5), P(len / 2, dE + .5, hE + 4), P(-len / 2, dE + .5, hE + 4)], c: [196, 205, 216], L: 2 });
+        F.push({ p: [P(-len / 2, dE * .25, hE + 5), P(len / 2, dE * .25, hE + 5), P(len / 2, dE * .25, hE + 4.6), P(-len / 2, dE * .25, hE + 4.6)], c: hex(o.color), L: 2, e: true });
+        F.push({ p: [P(-len / 2, -.01, 0), P(len / 2, -.01, 0), P(len / 2, -.01, base), P(-len / 2, -.01, base)], c: [32, 38, 46], L: 2 });
+      };
+      stand((u, d, h) => [u, h, -10 - d], 80, .7, 20, 1.3, .75, .55);
+      stand((u, d, h) => [-u, h, 60 + d], 80, 1.6, 15, 1.3, 1, .72);
+      stand((u, d, h) => [-40 - d, h, 25 + u], 70, 1.6, 15, 1.3, 1, .72);
+      stand((u, d, h) => [40 + d, h, 25 - u], 70, 1.6, 15, 1.3, 1, .72);
+      for (const [x, z] of [[-46, -26], [46, -26], [-46, 66], [46, 66]]) {
+        Box(F, T(x, 0, z), 0, 20, 0, .8, 40, .8, "#59636e");
+        const head = [x, 41, z], toC = norm([-x, -8, 18 - z]), side = norm(cross(toC, [0, 1, 0])), up = cross(side, toC);
+        const pp = (a, b) => [head[0] + side[0] * a + up[0] * b, head[1] + side[1] * a + up[1] * b, head[2] + side[2] * a + up[2] * b];
+        F.push({ p: [pp(-3, -1.6), pp(3, -1.6), pp(3, 1.6), pp(-3, 1.6)], c: [255, 251, 226], L: 2, e: true });
+        G.push({ p: head, r: 14 });
+      }
+      Box(F, I4(), -3.72, 1.22, 0, .12, 2.44, .12, "#f4f6f8"); Box(F, I4(), 3.72, 1.22, 0, .12, 2.44, .12, "#f4f6f8"); Box(F, I4(), 0, 2.5, 0, 7.56, .12, .12, "#f4f6f8");
+      Box(F, I4(), -3.72, .02, -1, .05, .05, 2, "#c9d1d9"); Box(F, I4(), 3.72, .02, -1, .05, .05, 2, "#c9d1d9");
+      return { F, G };
+    }
+    function netLines(bulge, hit) {
+      const Ls = [], N = (x, y, z) => { if (!bulge) return [x, y, z]; const k = bulge * Math.exp(-((x - hit[0]) ** 2 + (y - hit[1]) ** 2) / .7); return [x, y, z - k]; };
+      const zb = -2, yt = 2.44, yb = 1.8;
+      for (let x = -3.66; x <= 3.67; x += .366) { Ls.push([N(x, yt, 0), N(x, yb, zb)]); Ls.push([N(x, yb, zb), N(x, 0, zb)]); }
+      for (let y = 0; y <= yb + .01; y += .3) Ls.push([N(-3.66, y, zb), N(3.66, y, zb)]);
+      for (let u = .2; u < 1; u += .2) { const y = lerp(yt, yb, u), z = lerp(0, zb, u); Ls.push([N(-3.66, y, z), N(3.66, y, z)]); }
+      for (const sx of [-3.66, 3.66]) { for (let u = 0; u <= 1.01; u += .2) { const z = lerp(0, zb, u); Ls.push([[sx, 0, z], [sx, lerp(yt, yb, u), z]]); } for (let y = .3; y < 2.4; y += .3) Ls.push([[sx, y, 0], [sx, Math.min(y, yb), zb]]); }
+      return Ls;
+    }
+    // pose: {pos (Hüfte), yaw, roll, lean, armL/armR: {sw, ab, el}, legL/legR: {sw, kn}}; Figur schaut lokal Richtung -z
+    function figure(out, P, kit) {
+      const M = mul(T(...P.pos), mul(Rz(P.roll || 0), mul(Ry(P.yaw || 0), Rx(P.lean || 0)))), skin = kit.skin || "#c98d63";
+      Box(out, M, 0, -.07, 0, .38, .26, .25, kit.shorts);
+      Box(out, M, 0, .3, 0, .42, .56, .24, kit.shirt);
+      Box(out, M, 0, .6, 0, .1, .08, .1, skin);
+      Box(out, M, 0, .73, 0, .2, .23, .22, skin);
+      Box(out, M, 0, .86, .02, .21, .07, .23, kit.hair || "#2a1d14");
+      if (kit.name || kit.num) out.push({ decal: true, p: ap(M, [0, .34, .125]), n: norm(sub(ap(M, [0, .34, 1]), ap(M, [0, .34, 0]))), text: kit.name || "", num: kit.num || "", col: kit.ink || "#fff" });
+      const arm = (sx, a) => {
+        const S = mul(M, mul(T(sx * .26, .52, 0), mul(Rz(sx * (a.ab || 0)), Rx(a.sw || 0))));
+        Box(out, S, 0, -.15, 0, .11, .3, .11, kit.shirt);
+        const E = mul(S, mul(T(0, -.3, 0), Rx(a.el || 0)));
+        Box(out, E, 0, -.13, 0, .09, .26, .09, kit.gloves ? kit.shirt : skin);
+        if (kit.gloves) Box(out, E, 0, -.3, 0, .14, .13, .08, kit.gloves);
+      };
+      const leg = (sx, l) => {
+        const H = mul(M, mul(T(sx * .1, -.12, 0), Rx(l.sw || 0)));
+        Box(out, H, 0, -.2, 0, .15, .4, .15, skin);
+        const K = mul(H, mul(T(0, -.4, 0), Rx(-(l.kn || 0))));
+        Box(out, K, 0, -.2, 0, .12, .4, .12, kit.socks);
+        Box(out, K, 0, -.43, -.05, .11, .07, .25, "#15181c");
+      };
+      arm(-1, P.armL); arm(1, P.armR); leg(-1, P.legL); leg(1, P.legR);
+      const c = P.pos, R = .45;
+      out.push({ p: Array.from({ length: 10 }, (_, k) => [c[0] + Math.cos(k / 10 * 6.283) * R, .012, c[2] + Math.sin(k / 10 * 6.283) * R * .8]), c: [0, 0, 0], a: .3, L: 1.2, e: true });
+    }
+    function ballFaces(out, p, spin, show) {
+      if (!show) return;
+      const M = mul(T(...p), mul(Ry(spin), Rx(spin * .7))), R = .11;
+      for (let i = 0; i < 5; i++) for (let j = 0; j < 8; j++) {
+        const a0 = -Math.PI / 2 + i / 5 * Math.PI, a1 = a0 + Math.PI / 5, b0 = j / 8 * 6.283, b1 = b0 + 6.283 / 8;
+        const Pt = (a, b) => ap(M, [Math.cos(a) * Math.cos(b) * R, Math.sin(a) * R, Math.cos(a) * Math.sin(b) * R]);
+        out.push({ p: [Pt(a0, b0), Pt(a0, b1), Pt(a1, b1), Pt(a1, b0)], c: (i + j) % 3 === 0 ? [30, 33, 38] : [246, 247, 249], L: 2, cull: true });
+      }
+      out.push({ p: Array.from({ length: 8 }, (_, k) => [p[0] + Math.cos(k / 8 * 6.283) * .12, .011, p[2] + Math.sin(k / 8 * 6.283) * .12]), c: [0, 0, 0], a: .35 * Math.max(0, 1 - p[1] / 3), L: 1.2, e: true });
+    }
+
+    // ----- Ablauf eines Schusses (t in ms ab Anlaufbeginn) -----
+    const SPOT = [0, .11, 11], S0 = [-1.5, .95, 13.5], PL = [-.42, .95, 11.4];
+    const tm = () => { const RUN = PK_RUN, HIT = PK_RUN + PK_HIT; return { RUN, HIT, ARR: HIT + Math.round(0.46 * PK_T) }; };
+    // Weg des Balls für ein Ergebnis o = {kind, shot, miss, dive, zone}
+    function prepare(o) {
+      const col = o.shot[0], row = o.shot[1], zx = (col - 1) * 2.35, zy = row === 0 ? 1.8 : .45, rs = Math.random() < .5 ? -1 : 1;
+      let P1, P2, P3, d2, d3, b2 = 0, b3 = .15, hide = false;
+      if (o.kind === "goal") { P1 = [zx, zy, 0]; P2 = [zx * .92, zy * .75 + .1, -1.75]; P3 = [zx * .85, .11, -1.55]; d2 = 230; d3 = 420; b2 = 0; b3 = .25; }
+      else if (o.kind === "save") { const out = col === 0 ? -1 : col === 2 ? 1 : rs; P1 = [zx * .92, zy, .35]; P2 = [zx + out * 2.2, .11, 3.8]; P3 = [zx + out * 3.1, .11, 6.4]; d2 = 480; d3 = 700; b2 = .7; }
+      else if (o.kind === "post") { const s = o.zone[0] === 0 ? -1 : 1, py = o.zone[1] === 0 ? 1.7 : .6; P1 = [s * 3.52, py, .04]; P2 = [s * 2.2, .11, 5.4]; P3 = [s * 1.5, .11, 8]; d2 = 620; d3 = 700; b2 = .5; }
+      else if (o.miss === "wide") { const s = o.zone[0] === 0 ? -1 : o.zone[0] === 2 ? 1 : rs; P1 = [s * 4.5, zy + .25, 0]; P2 = [s * 6.2, zy + .6, -4.4]; P3 = [s * 6.4, .11, -4.0]; d2 = 380; d3 = 320; }
+      else { P1 = [(o.zone[0] - 1) * 1.5, 3.25, 0]; P2 = [(o.zone[0] - 1) * 2.4, 6.6, -10]; P3 = P2; d2 = 460; d3 = 10; hide = true; }
+      return { o, P1, P2, P3, d2, d3, b2, b3, hide, lift: row === 0 ? .3 : .16, scorer: o.kind === "goal" };
+    }
+    function ballAt(sh, t) {
+      const { HIT, ARR } = tm();
+      if (!sh || t < HIT) return { p: SPOT, spin: 0, show: true };
+      if (t < ARR) { const u = cl(t, HIT, ARR), p = L3(SPOT, sh.P1, u); p[1] += Math.sin(Math.PI * u) * sh.lift; return { p, spin: u * 12, show: true }; }
+      const t2 = ARR + sh.d2;
+      if (t < t2) { const v = sh.o.kind === "goal" ? easeOut(cl(t, ARR, t2)) : cl(t, ARR, t2), p = L3(sh.P1, sh.P2, v); if (sh.b2) p[1] = Math.max(.11, p[1] + Math.sin(Math.PI * v) * sh.b2); return { p, spin: 12 + v * 4, show: true }; }
+      const v = cl(t, t2, t2 + sh.d3), p = L3(sh.P2, sh.P3, sh.o.kind === "goal" ? Math.min(1, v * 1.4) : easeOut(v));
+      if (sh.o.kind === "goal") p[1] = Math.max(.11, lerp(sh.P2[1], .11, Math.min(1, v * 1.7)) + (v > .6 ? Math.sin((v - .6) / .4 * Math.PI) * .22 : 0));
+      else p[1] = Math.max(.11, p[1] + Math.sin(Math.PI * v) * sh.b3);
+      return { p, spin: 16 + v * 3, show: !(sh.hide && v > .2) };
+    }
+    const STAND = { legL: { sw: 0, kn: .05 }, legR: { sw: 0, kn: .05 }, armL: { sw: .05, ab: .12, el: .15 }, armR: { sw: .05, ab: .12, el: .15 } };
+    function shooterAt(sh, t, now) {
+      const { RUN, HIT, ARR } = tm();
+      if (!sh) return Object.assign({ pos: [S0[0], S0[1] + Math.sin(now / 520) * .006, S0[2]], yaw: -.38, lean: .04 }, STAND);
+      const runU = cl(t, 0, RUN), ph = runU * 4.2 * Math.PI, amp = .62 * Math.min(1, runU * 6);
+      const sp = L3(S0, PL, runU < 1 ? runU * runU * (3 - 2 * runU) * .35 + runU * .65 : 1);
+      let P = { pos: [sp[0], sp[1] + Math.abs(Math.sin(ph)) * .05 * (runU < 1 ? 1 : 0), sp[2]], yaw: -.38 * (1 - ease(cl(t, RUN - 260, RUN + 80))), lean: .14,
+        legL: { sw: Math.sin(ph) * amp, kn: .25 + Math.max(0, -Math.sin(ph)) * .9 * amp }, legR: { sw: -Math.sin(ph) * amp, kn: .25 + Math.max(0, Math.sin(ph)) * .9 * amp },
+        armL: { sw: -Math.sin(ph) * amp * .9, ab: .15, el: .9 }, armR: { sw: Math.sin(ph) * amp * .9, ab: .15, el: .9 } };
+      if (t >= RUN) {
+        const back = ease(cl(t, RUN, RUN + 110)), fwd = ease(cl(t, RUN + 110, HIT + 40));
+        P.legL = { sw: .15, kn: .25 }; P.legR = { sw: lerp(-.95 * back, 1.25, fwd), kn: lerp(1.4 * back, .1, fwd) };
+        P.armL = { sw: .2, ab: 1.1, el: .3 }; P.armR = { sw: -.3, ab: .6, el: .4 }; P.lean = lerp(.14, -.12, fwd);
+        P.pos = [PL[0] + fwd * .25, .95, PL[2] - fwd * .4];
+      }
+      if (t >= HIT + 420) { const u = ease(cl(t, HIT + 420, HIT + 720)); P.legR = { sw: lerp(1.25, 0, u), kn: lerp(.1, .2, u) }; P.lean = lerp(-.12, .05, u); }
+      if (t >= ARR + 150) {
+        const u = ease(cl(t, ARR + 150, ARR + 600));
+        if (sh.scorer) { P.armL = { sw: 0, ab: lerp(1.1, 2.8, u), el: .2 }; P.armR = { sw: 0, ab: lerp(.6, 2.8, u), el: .2 }; P.yaw = lerp(0, 2.6, u); P.pos = [P.pos[0] + u * .6, .95 + Math.abs(Math.sin(u * 9)) * .12 * u, P.pos[2] + u * .5]; }
+        else { P.armL = { sw: lerp(.2, .75, u), ab: lerp(1.1, .25, u), el: lerp(.3, .5, u) }; P.armR = { sw: lerp(-.3, .75, u), ab: lerp(.6, .25, u), el: lerp(.4, .5, u) }; P.lean = lerp(.05, .6, u); P.pos = [P.pos[0], .95 - .12 * u, P.pos[2]]; P.legL = { sw: .35 * u, kn: .55 * u }; P.legR = { sw: .35 * u, kn: .55 * u }; }
+      }
+      return P;
+    }
+    function keeperAt(sh, t, now) {
+      const { HIT } = tm(), st = HIT - 60;
+      const sway = Math.sin(now / 260) * .1;
+      const idle = { pos: [sway, .88 + Math.abs(Math.cos(now / 260)) * .015, .15], yaw: Math.PI, roll: 0, lean: .15, legL: { sw: .35, kn: .6 }, legR: { sw: .35, kn: .6 }, armL: { sw: .4, ab: .7, el: .6 }, armR: { sw: .4, ab: .7, el: .6 } };
+      if (!sh || t < st) return sh ? Object.assign(idle, { pos: [Math.sin(t / 260) * .1 * (1 - cl(t, st - 150, st)), .88, .15] }) : idle;
+      const dv = sh.o.dive, dir = dv[0] - 1, up = dv[1] === 0;
+      const d = ease(cl(t, st, st + 520)), fall = ease(cl(t, st + 560, st + 900));
+      if (dir) {
+        const peak = up ? .75 : .22;
+        return { pos: [dir * 2.1 * d, .88 + Math.sin(Math.PI * Math.min(1, d * 1.1)) * peak + (up ? d * .2 : -d * .2) - fall * (up ? .95 : .38), .15], yaw: Math.PI, roll: -dir * ((up ? 1.15 : 1.4) * d + .25 * fall), lean: .15 * (1 - d),
+          legL: { sw: .35 * (1 - d), kn: .6 * (1 - d) + .15 }, legR: { sw: .35 * (1 - d) - .3 * d, kn: .6 * (1 - d) + .35 * d },
+          armL: { sw: .4 * (1 - d), ab: lerp(.7, 2.9, d), el: lerp(.6, .05, d) }, armR: { sw: .4 * (1 - d), ab: lerp(.7, 2.75, d), el: lerp(.6, .1, d) } };
+      }
+      if (up) { const j = Math.sin(Math.PI * cl(t, st, st + 760)); return { pos: [0, .88 + j * .55, .15], yaw: Math.PI, lean: .05, legL: { sw: .1, kn: .3 * (1 - j) }, legR: { sw: .1, kn: .3 * (1 - j) }, armL: { sw: .2, ab: lerp(.7, 2.95, Math.min(1, d * 1.4)), el: .1 }, armR: { sw: .2, ab: lerp(.7, 2.95, Math.min(1, d * 1.4)), el: .1 } }; }
+      return { pos: [0, lerp(.88, .64, d), .15], yaw: Math.PI, lean: lerp(.15, .35, d), legL: { sw: lerp(.35, .7, d), kn: lerp(.6, 1.3, d) }, legR: { sw: lerp(.35, .7, d), kn: lerp(.6, 1.3, d) }, armL: { sw: lerp(.4, .7, d), ab: lerp(.7, 1.05, d), el: .3 }, armR: { sw: lerp(.4, .7, d), ab: lerp(.7, 1.05, d), el: .3 } };
+    }
+    function bulgeAt(sh, t) {
+      if (!sh || sh.o.kind !== "goal") return 0;
+      const { ARR } = tm(); if (t < ARR) return 0;
+      return t < ARR + 230 ? easeOut(cl(t, ARR, ARR + 230)) * .45 : .45 * Math.exp(-(t - ARR - 230) / 260) * Math.cos((t - ARR - 230) / 90);
+    }
+
+    // ----- Kameras -----
+    const AIM = { eye: [0, 3.55, 19.6], target: [0, .1, 0], fov: 25.5 };
+    // TV-Kamera: feste Position hinter dem Schützen, zoomt beim Anlauf heran und schwenkt mit dem Ball (Teleobjektiv → 2D-Zoom genügt)
+    function tvZoom(sh, t, W, H, P) {
+      if (!sh) return null;
+      const { HIT, ARR } = tm(), u = ease(cl(t, 0, HIT + 300)), b = ease(cl(t, HIT, ARR + 300));
+      const tg = P.scr(P.view([sh.P1[0] * .8, Math.min(2.4, sh.P1[1]), 0]));
+      return { k: 1 + .16 * u, cx: lerp(W / 2, Math.max(W * .2, Math.min(W * .8, tg[0])), b), cy: lerp(H * .62, H * .45, b) };
+    }
+    const RP = { s1: 1300, s2: 3100, end: 4500 };
+    function replayCam(sh, tau) {
+      const sg = sh.P1[0] < -.2 ? -1 : 1;
+      if (tau < RP.s1) return { cam: { eye: [6.5, 1.1, 13.2], target: [-.6, .8, 11.6], fov: 46 }, t: 200 + tau * .6 };
+      const { HIT } = tm();
+      if (tau < RP.s2) return { cam: { eye: [-sg * 2.4, 1.1, -2.7], target: [sg * 1.2, 1.1, 10], fov: 50 }, t: HIT - 140 + (tau - RP.s1) * .45 };
+      const u = cl(tau, RP.s2, RP.end), a = lerp(.45, 1.2, ease(u));
+      return { cam: { eye: [.8 * sg + sg * Math.sin(a) * 9.5, 2.1 + u * .5, .6 + Math.cos(a) * 9.5], target: [0, 1, 1.6], fov: 44 }, t: tm().ARR - 120 + (tau - RP.s2) * .5 };
+    }
+
+    // ----- Zeichnen -----
+    const S = { cv: null, ctx: null, stad: null, stadKey: "", stadO: { color: "#4fd987", color2: "#ffb454" }, kits: null, sh: null, mode: "idle", t0: 0, onDone: null, bg: null, bgKey: "", last: 0, run: false };
+    function project(cam, W, H) {
+      const eye = cam.eye, fz = norm(sub(eye, cam.target)), fx = norm(cross(cam.up || [0, 1, 0], fz)), fy = cross(fz, fx);
+      const f = (H / 2) / Math.tan((cam.fov || 50) * Math.PI / 360);
+      return { eye, f, view: p => { const d = sub(p, eye); return [dot(d, fx), dot(d, fy), dot(d, fz)]; }, scr: v => [W / 2 + f * v[0] / -v[2], H / 2 - f * v[1] / -v[2]] };
+    }
+    const LIGHT = norm([.35, .9, .55]), NEAR = .15;
+    function collect(items, faces, P, W, H) {
+      for (const face of faces) {
+        if (face.decal) { const v = P.view(face.p); if (v[2] < -NEAR && dot(face.n, sub(P.eye, face.p)) > 0) items.push({ decal: face, sp: P.scr(v), depth: -v[2] - .05 }); continue; }
+        let vs = face.p.map(P.view);
+        if (vs.some(v => v[2] > -NEAR)) {
+          const o = [];
+          for (let i = 0; i < vs.length; i++) { const a = vs[i], b = vs[(i + 1) % vs.length], ia = a[2] <= -NEAR, ib = b[2] <= -NEAR; if (ia) o.push(a); if (ia !== ib) { const u = (-NEAR - a[2]) / (b[2] - a[2]); o.push([lerp(a[0], b[0], u), lerp(a[1], b[1], u), -NEAR]); } }
+          if (o.length < 3) continue; vs = o;
+        }
+        const sp = vs.map(P.scr);
+        let area = 0, x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+        for (let i = 0; i < sp.length; i++) { const a = sp[i], b = sp[(i + 1) % sp.length]; area += a[0] * b[1] - b[0] * a[1]; if (a[0] < x0) x0 = a[0]; if (a[0] > x1) x1 = a[0]; if (a[1] < y0) y0 = a[1]; if (a[1] > y1) y1 = a[1]; }
+        if (face.cull && area > 0) continue;
+        if (x1 < 0 || x0 > W || y1 < 0 || y0 > H) continue;
+        let sh = 1;
+        if (!face.e) { if (face.cr) sh = .8; else { const n = norm(cross(sub(face.p[1], face.p[0]), sub(face.p[2], face.p[0]))); sh = .42 + .62 * Math.abs(dot(n, LIGHT)); } }
+        const depth = vs.reduce((s, v) => s - v[2], 0) / vs.length, fog = Math.min(.45, Math.max(0, (depth - 40) / 140));
+        const c = face.c.map(v => Math.round(Math.min(255, v * sh) * (1 - fog) + 18 * fog));
+        items.push({ sp, depth: face.L < 2 ? 1e6 - face.L : depth, L: face.cr ? 3 : face.L, col: `rgba(${c[0]},${c[1]},${c[2]},${face.a !== undefined ? face.a : 1})` });
+      }
+    }
+    function paint(ctx, items, P) {
+      items.sort((a, b) => b.depth - a.depth);
+      for (const it of items) {
+        if (it.line) { ctx.strokeStyle = "rgba(235,240,245,.55)"; ctx.lineWidth = Math.max(.5, Math.min(1.6, P.f * .02 / it.depth)); ctx.beginPath(); ctx.moveTo(it.line[0][0], it.line[0][1]); ctx.lineTo(it.line[1][0], it.line[1][1]); ctx.stroke(); continue; }
+        if (it.decal) { const s = P.f * .1 / it.depth; if (s < 3) continue; ctx.fillStyle = it.decal.col; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic"; const nm = it.decal.text.toUpperCase(); ctx.font = `700 ${(s * (nm.length > 8 ? .62 : .85)).toFixed(1)}px "Bebas Neue", "Arial Narrow", sans-serif`; ctx.fillText(nm, it.sp[0], it.sp[1] - s * .55); ctx.font = `700 ${(s * 2).toFixed(1)}px "Bebas Neue", "Arial Narrow", sans-serif`; ctx.fillText(it.decal.num, it.sp[0], it.sp[1] + s * 1.3); continue; }
+        ctx.fillStyle = it.col; ctx.beginPath(); ctx.moveTo(it.sp[0][0], it.sp[0][1]); for (let i = 1; i < it.sp.length; i++) ctx.lineTo(it.sp[i][0], it.sp[i][1]); ctx.closePath(); ctx.fill();
+        if (it.L === 2) { ctx.strokeStyle = it.col; ctx.lineWidth = .6; ctx.stroke(); }
+      }
+    }
+    function sky(ctx, W, H) { const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, "#03070f"); g.addColorStop(.6, "#0c1b30"); g.addColorStop(1, "#14304a"); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
+    function glows(ctx, P) {
+      ctx.globalCompositeOperation = "lighter";
+      for (const g of S.stad.G) { const v = P.view(g.p); if (v[2] > -NEAR) continue; const s = P.scr(v), R = P.f * g.r / -v[2]; const gr = ctx.createRadialGradient(s[0], s[1], 0, s[0], s[1], R); gr.addColorStop(0, "rgba(255,250,225,.85)"); gr.addColorStop(.25, "rgba(255,245,200,.25)"); gr.addColorStop(1, "rgba(255,245,200,0)"); ctx.fillStyle = gr; ctx.fillRect(s[0] - R, s[1] - R, R * 2, R * 2); }
+      ctx.globalCompositeOperation = "source-over";
+    }
+    function draw(now) {
+      const cv = S.cv, ctx = S.ctx; if (!ctx) return;
+      const dpr = Math.min(S.mode === "replay" ? 1.5 : 2, window.devicePixelRatio || 1), W = Math.max(2, Math.round(cv.clientWidth * dpr)), H = Math.max(2, Math.round(cv.clientHeight * dpr));
+      if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; S.bgKey = ""; }
+      const key = S.stadO.color + S.stadO.color2;
+      if (S.stadKey !== key) { S.stad = buildStadium(S.stadO); S.stadKey = key; S.bgKey = ""; }
+      let t = now - S.t0, cam, sh = S.sh, tAct = t, replay = null;
+      if (S.mode === "replay") { const tau = Math.min(t, RP.end); replay = replayCam(sh, tau); cam = replay.cam; tAct = replay.t; if (t >= RP.end + 250) { finishReplay(); return; } }
+      else if (S.mode === "kick") cam = AIM;
+      else { cam = AIM; sh = null; }
+      const P = project(cam, W, H), k = S.kits || {};
+      const dyn = [];
+      figure(dyn, keeperAt(sh, tAct, now), Object.assign({ shorts: "#1d2328", gloves: "#f2f2f2" }, k.keeper));
+      figure(dyn, shooterAt(sh, tAct, now), k.shooter || { shirt: "#4fd987", shorts: "#f4f6f8", socks: "#4fd987" });
+      const b = ballAt(sh, tAct); ballFaces(dyn, b.p, b.spin, b.show);
+      const items = [];
+      collect(items, dyn, P, W, H);
+      for (const l of netLines(bulgeAt(sh, tAct), sh ? [sh.P1[0] - .1, sh.P1[1] - .3] : [0, 0])) { const a = P.view(l[0]), c = P.view(l[1]); if (a[2] > -NEAR || c[2] > -NEAR) continue; items.push({ line: [P.scr(a), P.scr(c)], depth: -(a[2] + c[2]) / 2 }); }
+      if (S.mode !== "replay") {
+        const bk = `${W}x${H}|${key}`;
+        if (S.bgKey !== bk) {
+          S.bg = S.bg || document.createElement("canvas"); S.bg.width = W; S.bg.height = H;
+          const bc = S.bg.getContext("2d"), st = []; sky(bc, W, H); collect(st, S.stad.F, P, W, H); paint(bc, st, P); glows(bc, P); S.bgKey = bk;
+        }
+        const z = S.mode === "kick" ? tvZoom(sh, t, W, H, P) : null;
+        if (z) ctx.setTransform(z.k, 0, 0, z.k, z.cx * (1 - z.k), z.cy * (1 - z.k));
+        ctx.drawImage(S.bg, 0, 0); paint(ctx, items, P);
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      } else {
+        sky(ctx, W, H); collect(items, S.stad.F, P, W, H); paint(ctx, items, P); glows(ctx, P);
+      }
+      if (replay) {
+        const bar = H * .085, s = W / 360;
+        ctx.fillStyle = "rgba(0,0,0,.92)"; ctx.fillRect(0, 0, W, bar); ctx.fillRect(0, H - bar, W, bar);
+        ctx.font = `600 ${(9 * s).toFixed(1)}px "IBM Plex Mono", monospace`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
+        ctx.fillStyle = (Math.floor(now / 450) % 2) ? "#ffb454" : "rgba(255,180,84,.35)"; ctx.beginPath(); ctx.arc(14 * s, bar / 2, 3 * s, 0, 6.283); ctx.fill();
+        ctx.fillStyle = "#fff"; ctx.fillText(t < RP.s1 ? "WIEDERHOLUNG · ANLAUF" : t < RP.s2 ? "WIEDERHOLUNG · NETZKAMERA" : "WIEDERHOLUNG · ZEITLUPE", 22 * s, bar / 2);
+        ctx.textAlign = "right"; ctx.fillStyle = "rgba(255,255,255,.6)"; ctx.fillText("Tippen = überspringen", W - 10 * s, H - bar / 2);
+      }
+    }
+    function finishReplay() { if (S.mode !== "replay") return; const cb = S.onDone; S.mode = "kick"; S.t0 = performance.now() - 99999; S.onDone = null; if (cb) cb(); }
+    function loop(now) {
+      if (!S.run) return;
+      const vis = S.cv && S.cv.offsetParent !== null && document.visibilityState !== "hidden";
+      const gap = S.mode === "idle" ? 45 : S.mode === "kick" && now - S.t0 > 4200 ? 250 : 0;
+      if (vis && now - S.last >= gap) { S.last = now; try { draw(now); } catch (e) { S.run = false; if (window.console) console.error(e); return; } }
+      requestAnimationFrame(loop);
+    }
+    function ensureLoop() { if (!S.ctx || S.run || !window.requestAnimationFrame) return; S.run = true; requestAnimationFrame(loop); }
+    const now = () => (window.performance && performance.now ? performance.now() : Date.now());
+    return {
+      init(cv) {
+        S.cv = cv; try { S.ctx = cv && cv.getContext ? cv.getContext("2d") : null; } catch (e) { S.ctx = null; }
+        if (S.ctx) cv.addEventListener("click", () => { if (S.mode === "replay") finishReplay(); });
+        ensureLoop();
+      },
+      setStadium(o) { S.stadO = { color: o.color, color2: o.color2 }; },
+      setKits(k) { S.kits = k; },
+      idle() { if (S.mode === "replay") { S.onDone = null; } S.mode = "idle"; S.sh = null; ensureLoop(); },
+      kick(o) { S.sh = prepare(o); S.mode = "kick"; S.t0 = now(); ensureLoop(); },
+      replay(done) { if (!S.ctx || !S.sh || !window.requestAnimationFrame) { done(); return false; } S.mode = "replay"; S.onDone = done; S.t0 = now(); ensureLoop(); return true; },
+      replaying: () => S.mode === "replay",
+      // Lage des Tores im Bild (in %, viewBox 3:2) für die Zonen-Knöpfe
+      goalRect() {
+        const P = project(AIM, 360, 240), a = P.scr(P.view([-3.66, 2.44, 0])), b = P.scr(P.view([3.66, 0, 0])), c = P.scr(P.view([-3.66, 0, 0])), d = P.scr(P.view([3.66, 2.44, 0]));
+        const x0 = (a[0] + c[0]) / 2, x1 = (b[0] + d[0]) / 2, y0 = (a[1] + d[1]) / 2, y1 = (b[1] + c[1]) / 2;
+        return { left: x0 / 3.6, top: y0 / 2.4, width: (x1 - x0) / 3.6, height: (y1 - y0) / 2.4 };
+      },
+      _draw: t => draw(t), _S: S,
+    };
+  })();
+
+  // ---------- Flug ins nächste Stadion (Helikopter-Draufsicht) ----------
+  const PKFLY = (() => {
+    const DUR = 3500;
+    const ease = u => u <= 0 ? 0 : u >= 1 ? 1 : u < 0.5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+    const easeOut = u => u <= 0 ? 0 : u >= 1 ? 1 : 1 - Math.pow(1 - u, 3);
+    const easeIn = u => u <= 0 ? 0 : u >= 1 ? 1 : u * u * u;
+    const cl = (u, a, b) => Math.max(0, Math.min(1, (u - a) / (b - a)));
+    const lerp = (a, b, u) => a + (b - a) * u;
+    const f1 = n => n.toFixed(1);
+    const rnd = seed0 => { let seed = (Math.imul(seed0 + 1, 2654435761) >>> 0) % 2147483646 + 1; const f = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; f(); f(); f(); return f; };
+    const lum = hex => { const n = parseInt(hex.slice(1), 16); return (0.299 * (n >> 16) + 0.587 * ((n >> 8) & 255) + 0.114 * (n & 255)) / 255; };
+    const ink = hex => lum(hex) > 0.6 ? "#0b0f14" : "#ffffff";
+    const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    const BALL = (id, r) => `<g id="${id}"><circle r="${r}" fill="#f7f8fa" stroke="#1b1f24" stroke-width="${r / 6.5}"/><polygon points="${[0, 1, 2, 3, 4].map(k => { const a = -Math.PI / 2 + k * 2 * Math.PI / 5; return f1(Math.cos(a) * r * .46) + "," + f1(Math.sin(a) * r * .46); }).join(" ")}" fill="#1b1f24"/></g>`;
+    const ellPts = (cx, cy, rx, ry, a0, a1, n) => { const p = []; for (let k = 0; k <= n; k++) { const a = a0 + (a1 - a0) * k / n; p.push([cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]); } return p; };
+    const pts = a => a.map(p => f1(p[0]) + "," + f1(p[1])).join(" ");
+    const caption = (o, P, y1 = 18) => `
+      <g class="tv-cap" id="${P}cap">
+        <rect x="112" y="${y1 - 13}" width="136" height="20" rx="4" fill="rgba(5,8,12,.78)" stroke="rgba(255,180,84,.55)"/>
+        <text x="180" y="${y1 + 2}" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="16" letter-spacing="1.5" fill="#ffb454">${esc(o.stage)}</text>
+      </g>
+      <g id="${P}dst" opacity="0">
+        <rect x="70" y="203" width="220" height="30" rx="5" fill="rgba(5,8,12,.8)" stroke="${o.color}" stroke-opacity=".8"/>
+        <text x="180" y="215" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="rgba(255,255,255,.75)">NÄCHSTES ZIEL · ${esc(o.arena.toUpperCase())}</text>
+        <text x="180" y="228.5" text-anchor="middle" font-family="Bebas Neue, sans-serif" font-size="14" letter-spacing=".8" fill="${lum(o.color) < 0.25 ? "#fff" : o.color}">${esc(o.club)}</text>
+      </g>`;
+    const glowDefs = P => `
+      <radialGradient id="${P}glow"><stop offset="0" stop-color="#fffbe6" stop-opacity=".95"/><stop offset=".35" stop-color="#fff3c4" stop-opacity=".35"/><stop offset="1" stop-color="#fff3c4" stop-opacity="0"/></radialGradient>
+      <radialGradient id="${P}haze"><stop offset="0" stop-color="#f4f9ff" stop-opacity=".55"/><stop offset=".5" stop-color="#d7e9ff" stop-opacity=".18"/><stop offset="1" stop-color="#d7e9ff" stop-opacity="0"/></radialGradient>
+      <linearGradient id="${P}beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe6" stop-opacity=".55"/><stop offset="1" stop-color="#fffbe6" stop-opacity="0"/></linearGradient>`;
+    // Kamera: Zoom auf Punkt (fx, fy) mit Faktor k
+    const cam = (k, fx, fy) => `translate(180 120) scale(${k.toFixed(3)}) translate(${f1(-fx)} ${f1(-fy)})`;
+    // Platz von oben (Hilfsfunktion für A und D)
+    function pitchTop(w, h, stripes, lw) {
+      let s = `<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" fill="#2c8a4b"/>`;
+      for (let k = 0; k < stripes; k += 2) s += `<rect x="${f1(-w / 2 + k * w / stripes)}" y="${-h / 2}" width="${f1(w / stripes)}" height="${h}" fill="#33985a"/>`;
+      const m = w * 0.03, iw = w - 2 * m, ih = h - 2 * m, bx = iw * 0.15, by = ih * 0.5, gx = iw * 0.055, gy = ih * 0.24;
+      s += `<g fill="none" stroke="#f4f7f2" stroke-width="${lw}" opacity=".92">
+        <rect x="${f1(-iw / 2)}" y="${f1(-ih / 2)}" width="${f1(iw)}" height="${f1(ih)}"/>
+        <line x1="0" y1="${f1(-ih / 2)}" x2="0" y2="${f1(ih / 2)}"/>
+        <circle r="${f1(ih * 0.17)}"/>
+        <rect x="${f1(-iw / 2)}" y="${f1(-by / 2)}" width="${f1(bx)}" height="${f1(by)}"/><rect x="${f1(iw / 2 - bx)}" y="${f1(-by / 2)}" width="${f1(bx)}" height="${f1(by)}"/>
+        <rect x="${f1(-iw / 2)}" y="${f1(-gy / 2)}" width="${f1(gx)}" height="${f1(gy)}"/><rect x="${f1(iw / 2 - gx)}" y="${f1(-gy / 2)}" width="${f1(gx)}" height="${f1(gy)}"/>
+      </g><circle r="${f1(lw * 1.2)}" fill="#f4f7f2"/>
+      <rect x="${f1(-iw / 2 - lw * 2.5)}" y="${f1(-ih * 0.06)}" width="${f1(lw * 2.5)}" height="${f1(ih * 0.12)}" fill="#fff"/><rect x="${f1(iw / 2)}" y="${f1(-ih * 0.06)}" width="${f1(lw * 2.5)}" height="${f1(ih * 0.12)}" fill="#fff"/>`;
+      return s;
+    }
+
+    // ===================== A · Helikopter-Draufsicht =====================
+    const A = {
+      name: "Helikopter-Draufsicht",
+      desc: "Wie aus dem TV-Helikopter: Man sieht den Platz mit allen Linien, die Tribünen in Vereinsfarben, das Dach und vier leuchtende Flutlichtmasten. Der Ball fliegt mit Schatten über eine Landkarte, dann geht die Kamera runter bis auf den Mittelkreis.",
+      build(o, P) {
+        const r = rnd(7); let g = "";
+        const fields = ["#122419", "#15291d", "#102017", "#183020", "#13231a"];
+        for (let k = 0; k < 46; k++) { const x = r() * 400 - 20, y = r() * 280 - 20; g += `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(30 + r() * 50)}" height="${f1(20 + r() * 34)}" fill="${fields[k % 5]}" transform="rotate(${f1(-25 + r() * 10)} ${f1(x)} ${f1(y)})"/>`; }
+        g += `<path d="M-10 60 C80 40 120 120 200 110 S320 150 380 120" fill="none" stroke="#173a57" stroke-width="7"/><path d="M-10 60 C80 40 120 120 200 110 S320 150 380 120" fill="none" stroke="#25577f" stroke-width="2" opacity=".6"/>`;
+        g += `<path d="M0 214 L120 170 L230 160 L380 30 M150 250 L170 165 L140 0" fill="none" stroke="#2b3530" stroke-width="2.2"/><path d="M0 214 L120 170 L230 160 L380 30" fill="none" stroke="#f2c96b" stroke-width=".5" stroke-dasharray="2 3" opacity=".5"/>`;
+        for (let k = 0; k < 60; k++) { const cx = k < 30 ? 30 + r() * 70 : 200 + r() * 90, cy = k < 30 ? 140 + r() * 40 : 140 + r() * 60; g += `<rect x="${f1(cx)}" y="${f1(cy)}" width="${f1(3 + r() * 4)}" height="${f1(3 + r() * 4)}" fill="${r() < .5 ? "#2a333d" : "#323d48"}"/>${r() < .4 ? `<circle cx="${f1(cx + 2)}" cy="${f1(cy + 2)}" r=".7" fill="#ffd27a" opacity=".8"/>` : ""}`; }
+        const stad = (x, y, s, col, col2, id, dim) => {
+          const r2 = rnd(id ? 3 : 5); let crowd = "";
+          for (let k = 0; k < 220; k++) { const px = -52 + r2() * 104, py = -36 + r2() * 72; if (Math.abs(px) < 39 && Math.abs(py) < 26) continue; crowd += `<rect x="${f1(px)}" y="${f1(py)}" width=".9" height=".9" fill="${r2() < .5 ? col2 : "#f1ece0"}" opacity=".75"/>`; }
+          let rows = ""; for (let k = 1; k <= 4; k++) rows += `<rect x="${-52 + k * 3}" y="${-36 + k * 2.4}" width="${104 - k * 6}" height="${72 - k * 4.8}" rx="${20 - k * 2}" fill="none" stroke="${col2}" stroke-opacity=".35" stroke-width=".6"/>`;
+          let masts = ""; for (const [mx, my] of [[-60, -44], [60, -44], [-60, 44], [60, 44]]) masts += `<circle cx="${mx}" cy="${my}" r="22" fill="url(#${P}glow)" opacity="${dim ? .35 : .8}"/><rect x="${mx - 3}" y="${my - 2}" width="6" height="4" rx="1" fill="#fffbe0" stroke="#59626c" stroke-width=".6" transform="rotate(${mx * my > 0 ? 35 : -35} ${mx} ${my})"/>`;
+          return `<g transform="translate(${x} ${y}) scale(${s})" ${dim ? 'opacity=".8"' : ""}>
+            <rect x="-66" y="-48" width="132" height="96" rx="34" fill="#000" opacity=".35" transform="translate(5 6)"/>
+            <rect x="-62" y="-45" width="124" height="90" rx="32" fill="#232b34"/>
+            <rect x="-54" y="-38" width="108" height="76" rx="24" fill="${col}"/>${rows}${crowd}
+            <g transform="translate(0 0)">${pitchTop(80, 54, 10, .7)}</g>
+            <rect x="-58.5" y="-41.5" width="117" height="83" rx="29" fill="none" stroke="#d4dbe3" stroke-width="7" opacity=".93"/>
+            <rect x="-58.5" y="-41.5" width="117" height="83" rx="29" fill="none" stroke="#9aa5b1" stroke-width=".5" stroke-dasharray="1 3"/>
+            <rect x="-62" y="-45" width="124" height="90" rx="32" fill="none" stroke="${col}" stroke-width="1.4"/>
+            ${masts}
+          </g>`;
+        };
+        return `<svg viewBox="0 0 360 240" xmlns="http://www.w3.org/2000/svg"><defs>${glowDefs(P)}</defs>
+          <rect width="360" height="240" fill="#0e1d14"/>
+          <g id="${P}world">${g}
+            <line x1="70" y1="178" x2="268" y2="78" stroke="rgba(255,255,255,.55)" stroke-width="1.2" stroke-dasharray="3 4"/>
+            ${stad(70, 178, .42, "#56606b", "#9aa5b1", null, true)}
+            <g id="${P}dstStad">${stad(268, 78, .78, o.color, o.color2, "d")}</g>
+            <ellipse id="${P}shadow" cx="70" cy="178" rx="5" ry="3" fill="#000" opacity=".45"/>
+            <g id="${P}ballwrap">${BALL(P + "ball", 6)}</g>
+            <text x="70" y="207" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="rgba(255,255,255,.75)">${esc(o.from)}</text>
+          </g>
+          <rect id="${P}flash" width="360" height="240" fill="#0b0f14" opacity="0"/>
+          ${caption(o, P)}
+        </svg>`;
+      },
+      frame(root, t, P) {
+        const q = id => root.querySelector("#" + P + id);
+        const u = ease(cl(t, 300, 2200)), x = lerp(70, 268, u), y = lerp(178, 78, u), h = Math.sin(Math.PI * u) * 46;
+        q("shadow").setAttribute("cx", f1(x)); q("shadow").setAttribute("cy", f1(y));
+        q("shadow").setAttribute("rx", f1(5 - h * .05)); q("shadow").setAttribute("opacity", t > 2250 ? "0" : (0.45 - h * .005).toFixed(2));
+        const s = 1 + h / 40;
+        q("ballwrap").setAttribute("transform", `translate(${f1(x)} ${f1(y - h)}) scale(${s.toFixed(2)}) rotate(${(u * 900).toFixed(0)})`);
+        q("ballwrap").setAttribute("opacity", t > 2250 ? "0" : "1");
+        const z = easeIn(cl(t, 2400, DUR));
+        const k = 1 + z * 4.4;
+        q("world").setAttribute("transform", cam(k, lerp(180, 268, ease(cl(t, 2300, 3000))), lerp(120, 78, ease(cl(t, 2300, 3000)))));
+        q("dst").setAttribute("opacity", cl(t, 1500, 1900).toFixed(2));
+        q("cap").setAttribute("opacity", (1 - cl(t, 2900, 3300)).toFixed(2));
+        q("flash").setAttribute("opacity", (cl(t, 3200, DUR) * .8).toFixed(2));
+      }
+    };
+
+    return { DUR, build: (o, P) => A.build(o, P), frame: (root, t, P) => A.frame(root, t, P) };
+  })();
   function pkPlay(o) {
-    const ball = $("pk-ball"), net = $("pk-net"), flash = $("pk-flash"), shadow = $("pk-ball-shadow");
-    const body = $("pk-kick-body"), legL = $("pk-leg-l"), legR = $("pk-leg-r"), armL = $("pk-arm-l2"), armR = $("pk-arm-r2");
-    const bx = pkZX(o.shot[0]) - 180, by = pkZY(o.shot[1]) - 212;
-    const T = PK_T, HIT = PK_RUN + PK_HIT, tf = (x, y, s, r) => `translate(${x}px,${y}px) scale(${s}) rotate(${r}deg)`;
-    // --- Anlauf: vier Schritte mit leichtem Wippen, Arme und Beine im Wechsel
-    const runFrames = [];
-    for (let k = 0; k <= 8; k++) {
-      const p = k / 8, x = -36 * (1 - p), y = 4 * (1 - p) - (k % 2 ? 2.4 : 0), sc = 1.12 - 0.12 * p;
-      runFrames.push({ transform: `translate(${x.toFixed(1)}px,${y.toFixed(1)}px) scale(${sc.toFixed(3)})`, offset: p });
-    }
-    pkAnimate(body, runFrames, { duration: PK_RUN, easing: "linear" });
-    const step = (on, off) => [0, 1, 2, 3, 4].map(k => ({ transform: k % 2 ? on : off, offset: k / 4 }));
-    pkAnimate(legL, step("translateY(-3px) scaleY(.74)", "none"), { duration: PK_RUN, easing: "ease-in-out" });
-    pkAnimate(legR, step("none", "translateY(-3px) scaleY(.74)"), { duration: PK_RUN * 0.75, easing: "ease-in-out" });
-    pkAnimate(armL, step("rotate(-24deg)", "rotate(18deg)"), { duration: PK_RUN, easing: "ease-in-out" });
-    pkAnimate(armR, step("rotate(24deg)", "rotate(-18deg)"), { duration: PK_RUN, easing: "ease-in-out" });
-    // --- Schuss: Standbein, Oberkörper lehnt sich zurück/zur Seite, Schussbein holt aus und zieht durch
-    pkLater(() => {
-      SFX.play("kick"); vibrate(30);
-      pkAnimate(body, [{ transform: "none" }, { transform: "rotate(-7deg)", offset: 0.45 }, { transform: "rotate(-4deg) translateY(-1px)" }], { duration: 560, easing: "ease-out" });
-      pkAnimate(legR, [{ transform: "none" }, { transform: "translateY(-3px) rotate(12deg) scaleY(.55)", offset: 0.38 }, { transform: "rotate(-30deg) scaleY(.82)", offset: 0.62 }, { transform: "translateY(-6px) rotate(-22deg) scaleY(.45)" }], { duration: 520, easing: "ease-out" });
-      pkAnimate(legL, [{ transform: "none" }, { transform: "scaleY(.96)" }], { duration: 300 });
-      pkAnimate(armL, [{ transform: "none" }, { transform: "rotate(62deg)", offset: 0.5 }, { transform: "rotate(54deg)" }], { duration: 520, easing: "ease-out" });
-      pkAnimate(armR, [{ transform: "none" }, { transform: "rotate(-34deg)", offset: 0.5 }, { transform: "rotate(-20deg)" }], { duration: 520, easing: "ease-out" });
-    }, PK_RUN);
-    // --- Torwart: kurzes Absenken, dann Hechtsprung mit gestreckten Armen
-    pkLater(() => { $("pk-keeper-idle").classList.remove("on"); pkKeeperDive(o.dive); }, HIT - 60);
-    // --- Ball
-    const f0 = { transform: tf(0, 0, 1, 0) };
-    const mid = { transform: tf(bx * 0.5, by * 0.5 - (o.shot[1] === 0 ? 10 : 2), 0.8, 240), offset: 0.26 };
-    let frames, text, cls, snd;
-    if (o.kind === "goal") {
-      frames = [f0, mid, { transform: tf(bx, by, 0.52, 480), offset: 0.46 }, { transform: tf(bx, by + 18, 0.5, 520), offset: 0.7 }, { transform: tf(bx, by + 26, 0.5, 520) }];
-      text = "TOOOR!"; cls = "goal"; snd = "goal";
-      pkLater(() => {
-        $("pk-crowd").classList.add("cheer");
-        pkAnimate(net, [{ transform: "scale(1)" }, { transform: "scale(1.06,1.14)", offset: 0.4 }, { transform: "scale(1)" }], { duration: 600, easing: "ease-out" });
-      }, HIT + 0.46 * T);
-      pkLater(() => {                                                          // Jubel: Arme hoch
-        pkAnimate(armL, [{ transform: "rotate(54deg)" }, { transform: "rotate(150deg)" }], { duration: 300, easing: "ease-out" });
-        pkAnimate(armR, [{ transform: "rotate(-20deg)" }, { transform: "rotate(-150deg)" }], { duration: 300, easing: "ease-out" });
-        pkAnimate(body, [{ transform: "rotate(-4deg)" }, { transform: "translateY(-5px)", offset: 0.5 }, { transform: "none" }], { duration: 420, iterations: 2, easing: "ease-in-out" });
-      }, HIT + 0.55 * T);
-    } else if (o.kind === "save") {
-      const out = o.shot[0] === 0 ? -1 : o.shot[0] === 2 ? 1 : (Math.random() < 0.5 ? -1 : 1);
-      frames = [f0, mid, { transform: tf(bx, by, 0.56, 480), offset: 0.46 }, { transform: tf(bx + out * 46, by + 34, 0.6, 620), offset: 0.75 }, { transform: tf(bx + out * 70, by + 62, 0.66, 720) }];
-      text = "GEHALTEN!"; cls = "bad"; snd = "save";
-    } else if (o.kind === "post") {
-      const px = o.zone[0] === 0 ? -108 : 108, py = pkZY(o.zone[1]) - 212, out = px < 0 ? -1 : 1;
-      frames = [f0, { transform: tf(px * 0.5, py * 0.5 - 8, 0.78, 240), offset: 0.26 }, { transform: tf(px, py, 0.54, 420), offset: 0.46 }, { transform: tf(px + out * 44, py + 70, 0.66, 560), offset: 0.78 }, { transform: tf(px + out * 70, py + 120, 0.8, 700) }];
-      text = "PFOSTEN!"; cls = "bad"; snd = "post";
-    } else {
-      const wide = o.miss === "wide", side = o.zone[0] === 0 ? -1 : o.zone[0] === 2 ? 1 : (Math.random() < 0.5 ? -1 : 1);
-      const ex = wide ? side * 150 : (o.zone[0] - 1) * 60, ey = wide ? pkZY(o.zone[1]) - 212 - 10 : -212 + 20;
-      frames = [f0, { transform: tf(ex * 0.45, ey * 0.5, 0.7, 240), offset: 0.3 }, { transform: tf(ex, ey, wide ? 0.5 : 0.42, 560), offset: 0.6 }, { transform: tf(ex * 1.15, ey - (wide ? 0 : 50), 0.3, 700), opacity: 0 }];
-      text = wide ? "DANEBEN!" : "DRÜBER!"; cls = "bad"; snd = "wrong";
-    }
-    pkAnimate(shadow, [{ opacity: 1 }, { opacity: 0 }], { duration: 160, delay: HIT });
-    pkAnimate(ball, frames, { duration: T, delay: HIT, easing: "cubic-bezier(.2,.7,.35,1)" });
+    const flash = $("pk-flash"), HIT = PK_RUN + PK_HIT;
+    PK3.kick(o);
+    pkLater(() => { SFX.play("kick"); vibrate(30); }, HIT - 30);
+    let text, cls = "bad", snd;
+    if (o.kind === "goal") { text = "TOOOR!"; cls = "goal"; snd = "goal"; }
+    else if (o.kind === "save") { text = "GEHALTEN!"; snd = "save"; }
+    else if (o.kind === "post") { text = "PFOSTEN!"; snd = "post"; }
+    else { text = o.miss === "wide" ? "DANEBEN!" : "DRÜBER!"; snd = "wrong"; }
     pkLater(() => {
       SFX.play(snd); if (snd === "goal") vibrate([60, 40, 60, 40, 120]);
       flash.textContent = text; flash.classList.remove("show", "goal", "bad"); void flash.offsetWidth; flash.classList.add("show", cls);
-    }, HIT + 0.46 * T);
-  }
-  // Torwart-Animation: dive = [Spalte, Höhe]
-  function pkKeeperDive(dive) {
-    const kb = $("pk-keep-body"), aL = $("pk-k-arm-l"), aR = $("pk-k-arm-r");
-    const col = dive[0], up = dive[1] === 0, dir = col === 0 ? -1 : col === 2 ? 1 : 0, dx = pkZX(col) - 180;
-    const D = 1050;
-    const crouch = { transform: "translate(0px,3px) scale(1.05,.88)", offset: 0.1 };
-    if (dir) {
-      const ang = dir * (up ? 66 : 82), ty = up ? -30 : 0;
-      pkAnimate(kb, [{ transform: "none" }, crouch,
-        { transform: `translate(${(dx * 0.42).toFixed(1)}px,${ty - 8}px) rotate(${(ang * 0.65).toFixed(1)}deg)`, offset: 0.3 },
-        { transform: `translate(${(dx * 0.76).toFixed(1)}px,${ty}px) rotate(${ang}deg)`, offset: 0.48 },
-        { transform: `translate(${(dx * 0.8).toFixed(1)}px,${up ? -10 : 4}px) rotate(${ang + dir * 4}deg)`, offset: 0.72 },
-        { transform: `translate(${(dx * 0.8).toFixed(1)}px,${up ? 8 : 9}px) rotate(${dir * 90}deg)` }], { duration: D, easing: "ease-out" });
-      pkAnimate(aL, [{ transform: "none" }, { transform: "rotate(-10deg)", offset: 0.1 }, { transform: "rotate(128deg)", offset: 0.38 }, { transform: "rotate(136deg)" }], { duration: D, easing: "ease-out" });
-      pkAnimate(aR, [{ transform: "none" }, { transform: "rotate(10deg)", offset: 0.1 }, { transform: "rotate(-128deg)", offset: 0.38 }, { transform: "rotate(-136deg)" }], { duration: D, easing: "ease-out" });
-    } else if (up) {
-      pkAnimate(kb, [{ transform: "none" }, crouch, { transform: "translate(0px,-24px) scale(1,1.04)", offset: 0.42 }, { transform: "translate(0px,-26px)", offset: 0.55 }, { transform: "none" }], { duration: D, easing: "ease-out" });
-      pkAnimate(aL, [{ transform: "none" }, { transform: "rotate(140deg)", offset: 0.35 }, { transform: "rotate(135deg)" }], { duration: D, easing: "ease-out" });
-      pkAnimate(aR, [{ transform: "none" }, { transform: "rotate(-140deg)", offset: 0.35 }, { transform: "rotate(-135deg)" }], { duration: D, easing: "ease-out" });
-    } else {
-      pkAnimate(kb, [{ transform: "none" }, crouch, { transform: "translate(0px,6px) scale(1.12,.78)", offset: 0.4 }, { transform: "translate(0px,5px) scale(1.1,.8)" }], { duration: D, easing: "ease-out" });
-      pkAnimate(aL, [{ transform: "none" }, { transform: "rotate(-48deg)", offset: 0.4 }, { transform: "rotate(-44deg)" }], { duration: D, easing: "ease-out" });
-      pkAnimate(aR, [{ transform: "none" }, { transform: "rotate(48deg)", offset: 0.4 }, { transform: "rotate(44deg)" }], { duration: D, easing: "ease-out" });
-    }
+    }, HIT + 0.46 * PK_T);
   }
   function pkEndKick(o) {
     const s = pk.kicker, scored = o.kind === "goal";
@@ -4183,7 +4449,7 @@
     pkShowZones(false); $("pk-meter-wrap").hidden = true;
     const extra = pk.kicks.X.length > pk.shots ? " nach Verlängerung" : "";
     let txt = `${pkWho(w)} ${pkVsCpu() && w === "X" && !state.names.X ? "gewinnst" : "gewinnt"} das Elfmeterschießen ${pk.score.X}:${pk.score.O}${extra}!`;
-    let again = "Neues Elfmeterschießen", happy = !(pkVsCpu() && w === "O");
+    let again = "Neues Elfmeterschießen", menu = "Hauptmenü", happy = !(pkVsCpu() && w === "O");
     if (pk.mode === "career") {
       const c = pk.career, st = PK_STAGES[c.stage];
       if (w === "X") {
@@ -4192,10 +4458,15 @@
         if (c.stage >= PK_STAGES.length) {
           const n = pkTrophies() + 1; store("kaderraster-p-trophies", String(n));
           txt = `🏆 Pokalsieger! Finale gegen ${pk.opp.club} ${pk.score.X}:${pk.score.O}${extra} gewonnen. Das ist dein ${n}. Pokal!`;
-          again = "Neue Karriere"; c.done = true; pkConfetti();
-        } else { txt = `${st.name} überstanden: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}! Weiter geht's im ${PK_STAGES[c.stage].name}.`; again = `Weiter: ${PK_STAGES[c.stage].name}`; }
-      } else { txt = `Aus ${c.stage === 0 ? "in der" : "im"} ${st.name}: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}. Beim nächsten Mal!`; again = "Neue Karriere"; c.done = true; }
+          again = "Neue Karriere"; c.done = true; pkConfetti(); pkClearCareer();
+        } else {
+          const nx = PK_STAGES[c.stage];
+          txt = `${st.name} überstanden: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}! Als Nächstes: ${nx.name} gegen ${c.opps[c.stage].club}. Spielstand gespeichert.`;
+          again = `✈ Weiter ins ${nx.name}`; menu = "Speichern & später weiterspielen"; pkSaveCareer();
+        }
+      } else { txt = `Aus ${c.stage === 0 ? "in der" : "im"} ${st.name}: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}. Beim nächsten Mal!`; again = "Neue Karriere"; c.done = true; pkClearCareer(); }
     }
+    $("pk-menu-btn-2").textContent = menu;
     $("pk-result-text").textContent = txt;
     $("pk-play-again").textContent = again;
     $("pk-result-banner").classList.add("show");
@@ -4218,8 +4489,49 @@
     const kits = g3Shuffle(PK_KITS.slice());
     pk.career = { stage: 0, done: false, opps: PK_STAGES.map((s, k) => {
       const kit = kits[k % kits.length], last = clubs[k].split(" ").pop();
-      return { club: clubs[k], keeper: g3Rand(PK_KEEPERS), shooter: g3Rand(PK_SHOOTERS), color: kit[0], color2: kit[1], keeperColor: g3Rand(PK_KEEPER_KITS), arena: `${last}-${g3Rand(PK_ARENA)}` };
+      const f = PK_FOLLOW_TXT[k], kp = g3Rand(PK_KEEPERS), sh = g3Rand(PK_SHOOTERS);
+      // Nerven erst ab dem Halbfinale ein Thema: dort manchmal, im Finale immer eiskalte Schützen
+      const nerve = k === 4 ? 0.08 : k === 3 ? g3Rand([0, 0.08, -0.14]) : 0;
+      const shooterT = sh.t.replace("{f}", f) + (nerve > 0 ? " – und sind eiskalt, verschießen kaum" : nerve < 0 ? " – werden aber nervös, wenn es eng wird" : "");
+      return { club: clubs[k], keeper: { t: kp.t.replace("{f}", f), w: kp.w }, shooter: { t: shooterT, w: sh.w, on: nerve }, follow: PK_FOLLOW[k],
+        color: kit[0], color2: kit[1], keeperColor: g3Rand(PK_KEEPER_KITS), arena: `${last}-${g3Rand(PK_ARENA)}` };
     }) };
+    pkSaveCareer();
+  }
+  // ----- Karriere speichern: je Variante ein Spielstand -----
+  const pkCareerKey = () => "kaderraster-p-career-" + state.variant;
+  function pkSaveCareer() {
+    if (!pk.career || pk.career.done) return;
+    store(pkCareerKey(), JSON.stringify({ v: 1, stage: pk.career.stage, opps: pk.career.opps, quiz: !!pk.quiz, saved: Date.now() }));
+  }
+  function pkLoadCareer() {
+    try {
+      const d = JSON.parse(localStorage.getItem(pkCareerKey()) || "null");
+      if (!d || d.v !== 1 || !Array.isArray(d.opps) || d.opps.length !== PK_STAGES.length) return null;
+      if (!(d.stage >= 0 && d.stage < PK_STAGES.length)) return null;
+      return d;
+    } catch (e) { return null; }
+  }
+  function pkClearCareer() { try { localStorage.removeItem(pkCareerKey()); } catch (e) {} }
+  function pkRenderContinue() {
+    const box = $("pk-continue"), d = pk.mode === "career" ? pkLoadCareer() : null;
+    box.hidden = !d;
+    $("pstart-btn").textContent = pk.mode === "career" ? (d ? "Neue Karriere" : "Karriere starten") : "Anpfiff";
+    if (!d) return;
+    const st = PK_STAGES[d.stage];
+    $("pk-continue-txt").textContent = `${st.name} gegen ${d.opps[d.stage].club} · ${d.quiz ? "mit Quiz" : "ohne Quiz"} · ${d.stage} von ${PK_STAGES.length} Runden geschafft`;
+  }
+  function pkContinueCareer() {
+    const d = pkLoadCareer(); if (!d) { pkRenderContinue(); return; }
+    state.names = { X: cleanName($("pname-input-x").value), O: cleanName($("pname-input-o").value) };
+    store("kaderraster-names", JSON.stringify(state.names)); syncNames();
+    pkSetQuiz(!!d.quiz);
+    $("pmenu").hidden = true; $("pen").hidden = false;
+    pk.levelMenu = pk.level; pk.shotsMenu = pk.shots;
+    pk.career = { stage: d.stage, done: false, opps: d.opps };
+    $("pk-summary").textContent = pkSummary();
+    pkNewMatch();
+    window.scrollTo({ top: 0 });
   }
   function pkPlayAgain() {
     if (pk.mode === "career" && (!pk.career || pk.career.done)) pkNewCareer();
@@ -4239,8 +4551,11 @@
     return pool;
   }
   function pkPickN(arr, n, ok) { const out = [], a = g3Shuffle(arr.slice()); for (const x of a) { if (out.length >= n) break; if (ok(x) && !out.includes(x)) out.push(x); } return out; }
+  let pkNameCnt = null, pkNameDB = null;
   function pkMakeQuestion(tier) {
-    const pool = pkQuizPool(tier), nm = i => DB.players[i][0];
+    // gleichnamige Spieler (z. B. zwei „Gerd Müller“) auslassen, sonst wäre die Frage mehrdeutig
+    if (pkNameDB !== DB) { pkNameDB = DB; pkNameCnt = new Map(); for (const q of DB.players) pkNameCnt.set(q[0], (pkNameCnt.get(q[0]) || 0) + 1); }
+    const pool = pkQuizPool(tier).filter(i => pkNameCnt.get(DB.players[i][0]) === 1), nm = i => DB.players[i][0];
     const bigClubs = []; DB.clubs.forEach((c, k) => { if (c[4] === 1) bigClubs.push(k); });
     const bigNations = DB.nations.map((n, k) => k).sort((a, b) => DB.nations[b][1] - DB.nations[a][1]).slice(0, 45);   // bekannte Fußballnationen als falsche Antworten
     const mk = (q, right, wrong) => { if (wrong.length < 3) return null; const opts = g3Shuffle([right, ...wrong.slice(0, 3)]); return { q, opts, ok: opts.indexOf(right) }; };
@@ -4312,6 +4627,7 @@
     $("pname-input-x").placeholder = solo ? "optional" : "Spieler 1";
     const tr = $("pk-trophies"); tr.hidden = m !== "career";
     if (m === "career") { const n = pkTrophies(), b = pkBest(); tr.textContent = `🏆 Deine Pokale: ${n}${b > 0 && b < PK_STAGES.length ? ` · weitestes Ziel ohne Pokal: ${PK_STAGES[b].name}` : ""}`; }
+    pkRenderContinue();
   }
   function pkSetQuiz(on) { pk.quiz = on; pressed("[data-pquiz]", "pquiz", on ? "1" : "0"); store("kaderraster-p-quiz", on ? "1" : "0"); }
   function pkSetLevel(l) { pk.level = l; pressed("[data-plvl]", "plvl", l); store("kaderraster-p-level", l); }
@@ -4346,7 +4662,7 @@
     window.scrollTo({ top: 0 });
   }
   function pkToMenu() {
-    pk.token++; pkClearTimers(); pk.over = true; pk.phase = "idle"; pkHideQuiz(); $("pk-scout").hidden = true;
+    pk.token++; pkClearTimers(); pk.over = true; pk.phase = "idle"; pkHideQuiz(); $("pk-scout").hidden = true; PK3.idle();
     const tv = $("pk-travel"); tv.hidden = true; tv.innerHTML = "";
     if (pk.levelMenu) { pk.level = pk.levelMenu; pk.shots = pk.shotsMenu; pk.levelMenu = null; }
     pkSetMode(pk.mode);
@@ -4365,6 +4681,9 @@
   $("pk-meter").addEventListener("click", () => pkStopMeter());
   $("pk-handoff-btn").addEventListener("click", pkAfterHandoff);
   $("pstart-btn").addEventListener("click", pkStart);
+  $("pk-continue-btn").addEventListener("click", pkContinueCareer);
+  PK3.init($("pk-3d"));
+  try { const r = PK3.goalRect(), z = $("pk-zones").style; z.left = r.left.toFixed(2) + "%"; z.top = r.top.toFixed(2) + "%"; z.width = r.width.toFixed(2) + "%"; z.height = r.height.toFixed(2) + "%"; } catch (e) {}
   $("pback-home").addEventListener("click", toVariants);
   $("pk-menu-btn").addEventListener("click", pkAskLeave);
   $("pk-menu-btn-2").addEventListener("click", pkAskLeave);
