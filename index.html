@@ -1851,7 +1851,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 02.10.2026-3</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 02.10.2026-4</footer>
 </div>
 
 <script>
@@ -5647,6 +5647,9 @@
       try {
         if (gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS) >= 90) PR.skin = program(VSK, FSK, ["aP", "aN", "aQ", "aBI", "aBW"], ["uB", "uSkin", "uHairC", "uSh1", "uSh2", "uTrim", "uPa1", "uPa2", "uSo1", "uSo2", "uBo1", "uBo2", "uGl1", "uHead", "uK1", "uK2", "uK3", "uBack", "uFace"]);
       } catch (e) { if (window.console) console.warn("Körper-Shader nicht verfügbar", e); PR.skin = null; }
+      try {
+        if (gl.getParameter(gl.MAX_VERTEX_UNIFORM_VECTORS) >= 100) PR.mix = program(VSM, FSM, ["aP", "aN", "aBI", "aBW", "aM"], ["uB", "uSkin", "uHairC", "uSh1", "uSh2", "uTrim", "uPa1", "uPa2", "uSo1", "uSo2", "uBo1", "uBo2", "uGl1", "uK1", "uK2", "uK3", "uBack"]);
+      } catch (e) { if (window.console) console.warn("Figuren-Shader nicht verfügbar", e); PR.mix = null; }
       try { PR.crowd = program(VSC, FSC, ["aP", "aT", "aC", "aN"], ["uRight", "uTime", "uCheer", "uCards", "uS", "uMask", "uSec", "uC1", "uC2", "uLight"]); } catch (e) { PR.crowd = null; }
       use(PR.base);
       aniso = gl.getExtension("EXT_texture_filter_anisotropic") || gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic");
@@ -6175,6 +6178,244 @@
         for (const pt of a.parts) { const key = id + pt.col; const mm = (fig._accMat || (fig._accMat = {}))[key] || (fig._accMat[key] = {}); mm.c = c(cols[pt.col] || cols[0]); mm.sp = a.metal ? 1.6 : .3; draw(pt.m, a.bone === 4 ? headM : mats[a.bone], mm); }
       }
       return true;
+    }
+
+    // ===== Schütze und Torwart: Figur aus Blender mit Mixamo-Bewegungen (spieler.bin) =====
+    // Datei: Körper (Ruheposition, Knochengewichte, Materialnummer je Punkt), 22 Knochen, Bewegungen als Drehungen je Bild.
+    // Materialnummern: 0 Haut, 1 Trikot, 2 Hose, 3 Stutzen, 4 Schuhe, 5 Haare, 6 Arm (Haut), 7 Hand, 8 Bein (Haut)
+    const VSM = `attribute vec3 aP; attribute vec3 aN; attribute vec4 aBI; attribute vec4 aBW; attribute float aM;
+      uniform mat4 uVP; uniform mat4 uB[22];
+      varying vec3 vN; varying vec3 vW; varying vec3 vR; varying float vM;
+      void main(){
+        mat4 m = uB[int(aBI.x + 0.5)] * aBW.x + uB[int(aBI.y + 0.5)] * aBW.y + uB[int(aBI.z + 0.5)] * aBW.z + uB[int(aBI.w + 0.5)] * aBW.w;
+        vec4 w = m * vec4(aP, 1.0); vW = w.xyz; vN = (m * vec4(aN, 0.0)).xyz; vR = aP; vM = aM; gl_Position = uVP * w;
+      }`;
+    const FSM = `precision mediump float;
+      ${LIGHT}
+      uniform vec3 uSkin, uHairC, uSh1, uSh2, uTrim, uPa1, uPa2, uSo1, uSo2, uBo1, uBo2, uGl1;
+      uniform vec4 uK1, uK2, uK3; uniform sampler2D uBack;
+      varying vec3 vN; varying vec3 vW; varying vec3 vR; varying float vM;
+      vec3 shirtCol(vec3 r) {
+        float p = uK1.x, m = 0.0;
+        if (p < 0.5) m = 0.0;
+        else if (p < 1.5) m = step(0.5, fract(r.x * 9.0 + 0.25));
+        else if (p < 2.5) m = step(0.5, fract(r.y * 7.0 + 0.1));
+        else if (p < 3.5) m = step(0.0, r.x);
+        else if (p < 4.5) m = step(abs(r.x * 0.85 + r.y - 0.27), 0.055);
+        else if (p < 5.5) m = step(0.5, fract((abs(r.x) * 0.9 - r.y) * 4.5));
+        else if (p < 6.5) m = step(0.88, fract(r.x * 24.0));
+        else if (p < 7.5) return mix(uSh2, uSh1, smoothstep(-0.05, 0.5, r.y));
+        else if (p < 8.5) m = abs(step(0.0, r.x) - step(0.24, r.y));
+        else m = step(0.5, fract(r.y * 8.0 + abs(fract(r.x * 6.0) - 0.5) * 1.6));
+        return mix(uSh1, uSh2, m);
+      }
+      void main(){
+        float mt = floor(vM + 0.5);
+        // Koordinaten wie beim alten Körper: Ursprung an der Taille, vorne = -z
+        vec3 r = vec3(-vR.x, vR.y - uK2.z, -vR.z);
+        vec3 col = uSkin; float cloth = 0.0, spk = 0.2, shin = 16.0, wrap = 0.35;
+        if (mt < 0.5) { }
+        else if (mt < 1.5 || (mt > 5.5 && mt < 6.5 && uK1.y > 0.5)) {
+          col = shirtCol(r); cloth = 1.0;
+          if (mt < 1.5 && r.z > 0.02 && r.y > 0.1 && r.y < 0.5) { vec4 t = texture2D(uBack, vec2(0.5 + r.x / 0.3, (0.5 - r.y) / 0.38)); col = mix(col, t.rgb, t.a); }
+        }
+        else if (mt < 2.5 || (mt > 7.5 && uK2.x > 0.5)) { col = uPa1; cloth = 1.0; spk = 0.12; }
+        else if (mt < 3.5) { col = uSo1; cloth = 0.6; spk = 0.08; float s = uK3.x - vR.y; if (s < 0.045 && fract(s * 55.0) > 0.55) col = uSo2; }
+        else if (mt < 4.5) { col = uBo1; spk = 0.9; shin = 40.0; wrap = 0.0; if (vR.y < uK3.y) col = uBo2; }
+        else if (mt < 5.5) { col = uK2.y > 0.5 ? uHairC : uSkin; spk = 0.3; shin = 12.0; }
+        else if (mt > 6.5 && mt < 7.5 && uK1.z > 0.5) { col = uGl1; spk = 0.35; }
+        vec3 n = normalize(vN); if (!gl_FrontFacing) n = -n;
+        if (cloth > 0.0) { vec3 pr = vec3(sin(r.y * 62.0 + sin(r.x * 21.0) * 2.2), sin(r.x * 37.0 + r.z * 25.0) * 0.5, cos(r.x * 44.0 + r.y * 28.0)); n = normalize(n + cloth * 0.06 * pr); wrap = 0.25; }
+        float met = uK1.w * step(0.5, cloth);
+        gl_FragColor = vec4(shade(col, n, vW, spk + met * 1.4, shin + met * 24.0, wrap, 1.0, 0.0), 1.0);
+      }`;
+    const MIX_VER = "2026-10-02";
+    const MX = { D: null, vb: null, ib: null, cnt: 0, state: "none", buf: new Float32Array(22 * 16) };
+    const qm = (x, y, z, w, tx, ty, tz, s) => { const m = new Float32Array(16);
+      m[0] = (1 - 2 * (y * y + z * z)) * s; m[1] = 2 * (x * y + z * w) * s; m[2] = 2 * (x * z - y * w) * s;
+      m[4] = 2 * (x * y - z * w) * s; m[5] = (1 - 2 * (x * x + z * z)) * s; m[6] = 2 * (y * z + x * w) * s;
+      m[8] = 2 * (x * z + y * w) * s; m[9] = 2 * (y * z - x * w) * s; m[10] = (1 - 2 * (x * x + y * y)) * s;
+      m[12] = tx; m[13] = ty; m[14] = tz; m[15] = 1; return m; };
+    const qmul = (a, b) => [a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1], a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0], a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3], a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]];
+    const qyaw = y => [0, Math.sin(y / 2), 0, Math.cos(y / 2)];
+    const rotY = (y, p) => { const c = Math.cos(y), s = Math.sin(y); return [c * p[0] + s * p[2], p[1], -s * p[0] + c * p[2]]; };
+    function nlerpQ(a, ai, b, bi, u, out, oi) {
+      let d = 0; for (let k = 0; k < 4; k++) d += a[ai + k] * b[bi + k];
+      const sg = d < 0 ? -1 : 1; let l = 0;
+      for (let k = 0; k < 4; k++) { const v = a[ai + k] * (1 - u) + sg * b[bi + k] * u; out[oi + k] = v; l += v * v; }
+      l = Math.sqrt(l) || 1; for (let k = 0; k < 4; k++) out[oi + k] /= l;
+    }
+    function mixLoad() {
+      if (MX.state !== "none" || !PR.mix) return;
+      MX.state = "loading";
+      const done = buf => {
+        try {
+          const dv = new DataView(buf), hl = dv.getUint32(0, true), H = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, hl)));
+          const B = (i, T) => { const [o, n] = H.blobs[i]; return new T(buf.slice(4 + hl + o, 4 + hl + o + n)); };
+          const D = { H, nb: H.bones.length, IB: B(H.ib, Float32Array), clips: {}, lead: B(H.dive.lead, Float32Array), mid: B(H.catch.mid, Float32Array) };
+          for (const [n, c] of Object.entries(H.clips)) D.clips[n] = { nF: c.nF, q: B(c.q, Int16Array), hp: B(c.hp, Float32Array) };
+          const pos = B(H.pos, Int16Array), nr = B(H.nrm, Int8Array), bi = B(H.bi, Uint8Array), bw = B(H.bw, Uint8Array), mat = B(H.mat, Uint8Array), idx = B(H.idx, Uint16Array);
+          const nV = H.nV, d = new Float32Array(nV * 15); let sockTop = 0;
+          for (let i = 0; i < nV; i++) {
+            const o = i * 15;
+            for (let k = 0; k < 3; k++) { d[o + k] = pos[i * 3 + k] / 10000; d[o + 3 + k] = nr[i * 4 + k] / 127; }
+            for (let k = 0; k < 4; k++) { d[o + 6 + k] = bi[i * 4 + k]; d[o + 10 + k] = bw[i * 4 + k] / 255; }
+            d[o + 14] = mat[i]; if (mat[i] === 3) sockTop = Math.max(sockTop, d[o + 1]);
+          }
+          D.sockTop = sockTop || .5; D.waist = H.neckY - .5;
+          // Analyse: Start des Hechtsprungs (Hüfte seitlich), Landung
+          const dc = D.clips.dive, h0 = dc.hp[0]; let fA = 0;
+          for (let f = 0; f < dc.nF; f++) if (Math.abs(dc.hp[f * 3] - h0) > .15) { fA = f; break; }
+          D.diveA = fA;
+          MX.vb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, MX.vb); gl.bufferData(gl.ARRAY_BUFFER, d, gl.STATIC_DRAW);
+          MX.ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, MX.ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, idx, gl.STATIC_DRAW);
+          MX.cnt = idx.length; MX.D = D; MX.state = "ok";
+        } catch (e) { MX.state = "fail"; if (window.console) console.warn("Spielerfigur nicht lesbar", e); }
+      };
+      try {
+        fetch("spieler.bin?v=" + MIX_VER).then(r => r.ok ? r : fetch("spieler.bin")).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.arrayBuffer(); })
+          .then(done, e => { MX.state = "fail"; if (window.console) console.warn("spieler.bin fehlt – alte Figuren", e); });
+      } catch (e) { MX.state = "fail"; }
+    }
+    const mixOk = () => MX.state === "ok" && !!PR.mix;
+    // Pose eines Clips (Sekunden), in die Welt gestellt: Hüfte bei pos + Drehung yaw
+    function mixSample(name, t, loop) {
+      const D = MX.D, c = D.clips[name], nb = D.nb, n = c.nF;
+      let f = t * D.H.fps; if (loop) { f %= (n - 1); if (f < 0) f += n - 1; } else f = Math.max(0, Math.min(n - 1, f));
+      const i0 = Math.min(n - 1, Math.floor(f)), i1 = Math.min(n - 1, i0 + 1), u = f - i0, q = new Float32Array(nb * 4), hp = [0, 0, 0];
+      for (let k = 0; k < 3; k++) hp[k] = c.hp[i0 * 3 + k] * (1 - u) + c.hp[i1 * 3 + k] * u;
+      nlerpQ(c.q, i0 * nb * 4, c.q, i1 * nb * 4, u, q, 0);   // Hüfte
+      for (let b = 1; b < nb; b++) nlerpQ(c.q, (i0 * nb + b) * 4, c.q, (i1 * nb + b) * 4, u, q, b * 4);
+      return { hp, q };
+    }
+    // Welt-Pose: Hüfte als Weltposition + Weltdrehung, übrige Knochen lokal
+    function mixLayer(name, t, loop, pos, yaw) {
+      const s = mixSample(name, t, loop), q0 = [s.q[0], s.q[1], s.q[2], s.q[3]];
+      const p = rotY(yaw, s.hp);
+      const hq = qmul(qyaw(yaw), q0), l = Math.hypot(...hq) || 1;
+      return { hp: [pos[0] + p[0], p[1] + pos[1], pos[2] + p[2]], hq: hq.map(v => v / l), q: s.q };
+    }
+    function mixBlend(a, b, u) {
+      if (u <= 0) return a; if (u >= 1) return b;
+      const q = new Float32Array(a.q.length); nlerpQ(a.q, 0, b.q, 0, u, q, 0);
+      for (let k = 4; k < a.q.length; k += 4) nlerpQ(a.q, k, b.q, k, u, q, k);
+      const hq = [0, 0, 0, 0]; nlerpQ(a.hq, 0, b.hq, 0, u, hq, 0);
+      return { hp: L3(a.hp, b.hp, u), hq, q };
+    }
+    // Knochen in Weltkoordinaten (Hüfte nie unter dem Rasen: notfalls anheben)
+    function mixBones(P, mirror) {
+      const D = MX.D, H = D.H, nb = D.nb;
+      const run = hp => {
+        const W = new Array(nb);
+        W[0] = qm(P.hq[0], P.hq[1], P.hq[2], P.hq[3], hp[0], hp[1], hp[2], H.hipScale);
+        for (let b = 1; b < nb; b++) { const t = H.restT[b], q = P.q; W[b] = M.mul(W[H.parent[b]], qm(q[b * 4], q[b * 4 + 1], q[b * 4 + 2], q[b * 4 + 3], t[0], t[1], t[2], 1)); }
+        return W;
+      };
+      let W = run(P.hp), lo = 1e9;
+      for (const b of [0, 5, 9, 13, 16, 17, 20, 21]) lo = Math.min(lo, W[b][13] - (b === 5 ? .12 : b === 0 ? .14 : .035));
+      if (lo < 0) W = run([P.hp[0], P.hp[1] - lo, P.hp[2]]);
+      if (mirror) { const Mi = M.S(-1, 1, 1); for (let b = 0; b < nb; b++) W[b] = M.mul(Mi, W[b]); }
+      return W;
+    }
+    // ----- Schütze: Anlauf + Schuss (Kontakt genau beim Abschuss), danach Jubel oder Enttäuschung -----
+    const MIX_YAW = Math.PI - .32;
+    function mixShooterBase() {
+      const K = MX.D.H.kick, dir = rotY(MIX_YAW, [0, 0, 1]), toeW = rotY(MIX_YAW, K.toe);
+      const tgt = [SPOT[0] - dir[0] * .1, 0, SPOT[2] - dir[2] * .1];
+      return [tgt[0] - toeW[0], 0, tgt[2] - toeW[2]];
+    }
+    function mixShooter(sh, t, now) {
+      const K = MX.D.H.kick, base = mixShooterBase();
+      if (!sh) { const P = mixLayer("kick", 0, false, base, MIX_YAW); P.hp[1] += Math.sin(now / 600) * .006; return P; }
+      const { HIT, ARR } = tm(), ck = K.t + (t - HIT) / 1000;
+      let P = mixLayer("kick", Math.max(0, ck), false, base, MIX_YAW);
+      const tr = ARR + 120;
+      if (t > tr) {
+        const at = mixLayer("kick", K.t + (tr - HIT) / 1000, false, base, MIX_YAW), rc = sh.scorer ? "win" : "lose";
+        const yaw = sh.scorer ? MIX_YAW + Math.PI * sh.celeb * .5 : MIX_YAW;   // Jubel: halb zur Kamera gedreht
+        const c0 = MX.D.clips[rc].hp, h0 = rotY(yaw, [c0[0], 0, c0[2]]);
+        const R = mixLayer(rc, (t - tr) / 1000, sh.scorer, [at.hp[0] - h0[0], 0, at.hp[2] - h0[2]], yaw);
+        P = mixBlend(P, R, sm(cl(t, tr, tr + 380)));
+      }
+      return P;
+    }
+    // ----- Torwart: Wippen auf der Linie, Hechtsprung (Hand trifft den Ball), Fangen in der Mitte -----
+    const MIX_KP = [0, 0, .15];
+    function mixKeeper(sh, t, now) {
+      const D = MX.D, H = D.H, idle0 = D.clips.idle.hp;
+      const idleAt = tt => mixLayer("idle", tt / 1000, true, [MIX_KP[0] - idle0[0], 0, MIX_KP[2] - idle0[2]], 0);
+      if (!sh) return { P: idleAt(now), mir: false };
+      if (sh._t0 === undefined) sh._t0 = S.t0;
+      const { HIT, ARR } = tm(), dv = sh.dive, dir = dv[0] - 1;
+      const mir = dir !== 0 && Math.sign(dir) !== H.dive.side;
+      const it = sh._t0 + t;
+      const fps = H.fps;
+      // Zielpunkt der Hände (gespiegelt rechnen)
+      const tg = [sh.hand[0] * (mir ? -1 : 1), sh.hand[1], sh.hand[2]];
+      let clip, fS, fR, ref;
+      if (dir !== 0) {
+        clip = "dive"; const L = D.lead, n = D.clips.dive.nF, x0 = D.clips.dive.hp[0];
+        const tLat = Math.abs(tg[0] - MIX_KP[0]); let best = 1e9; fR = D.diveA;
+        for (let f = D.diveA; f < Math.min(n, H.dive.fLand + 1); f++) { const c = Math.abs(L[f * 3 + 1] - tg[1]) + .35 * Math.abs(Math.abs(L[f * 3] - x0) - tLat); if (c < best) { best = c; fR = f; } }
+        fS = Math.max(0, D.diveA - 7); ref = f => [L[f * 3], L[f * 3 + 1], L[f * 3 + 2]];
+      } else { clip = "catch"; fR = H.catch.f; fS = Math.max(0, H.catch.fStart - 4); ref = f => [D.mid[f * 3], D.mid[f * 3 + 1], D.mid[f * 3 + 2]]; }
+      const c0 = D.clips[clip].hp, basePos = [MIX_KP[0] - c0[0], 0, MIX_KP[2] - c0[2]];
+      const span = (fR - fS) / fps, spd = Math.min(2.1, Math.max(.85, span / ((ARR - (HIT - 220)) / 1000)));
+      const cd = fR / fps + (t - ARR) / 1000 * spd;
+      // Versatz, damit die Hand im Ankunftsmoment genau am Ball ist
+      const hr = ref(fR), hw = [basePos[0] + hr[0], hr[1], basePos[2] + hr[2]];
+      const off = [tg[0] - hw[0], Math.max(-.45, Math.min(.85, tg[1] - hw[1])), tg[2] - hw[2]];
+      const wo = sm(cl(cd, fS / fps, fR / fps)), wy = wo * (1 - sm(cl(cd, fR / fps + .05, fR / fps + .45)));
+      const pos = [basePos[0] + off[0] * wo, off[1] * wy, basePos[2] + off[2] * wo];
+      let P = idleAt(it);
+      const wD = sm(cl(cd, fS / fps - .02, fS / fps + .16));
+      if (wD > 0) P = mixBlend(P, mixLayer(clip, Math.max(0, cd), false, pos, 0), wD);
+      // Danach: Jubel nach Parade, Enttäuschung nach Gegentor
+      const save = sh.o.kind === "save", goal = sh.o.kind === "goal";
+      if ((save && t > ARR + 1100) || (goal && t > ARR + 1300)) {
+        const t1 = save ? ARR + 1100 : ARR + 1300, rc = save ? "win" : "lose";
+        const cdT = fR / fps + (t1 - ARR) / 1000 * spd, at = mixLayer(clip, cdT, false, pos, 0);
+        const r0 = D.clips[rc].hp, R = mixLayer(rc, (t - t1) / 1000, save, [at.hp[0] - r0[0], 0, at.hp[2] - r0[2]], 0);
+        P = mixBlend(P, R, sm(cl(t, t1, t1 + 600)));
+      }
+      return { P, mir };
+    }
+    // Zeichnen mit Trikotfarben der Figur
+    function drawMix(W, fig, rootXZ) {
+      const D = MX.D, look = fig.look || {}, kit = fig.kit || {};
+      const h = (look.build && look.build.h) || 1, rx = rootXZ[0], rz = rootXZ[1];
+      const Mdl = h !== 1 ? M.ch(M.T(rx, 0, rz), M.S(h, h, h), M.T(-rx, 0, -rz)) : null;
+      for (let b = 0; b < D.nb; b++) { const m = M.mul(Mdl ? M.mul(Mdl, W[b]) : W[b], D.IB.subarray(b * 16, b * 16 + 16)); MX.buf.set(m, b * 16); }
+      use(PR.mix);
+      gl.bindBuffer(gl.ARRAY_BUFFER, MX.vb);
+      attr(A.aP, 3, 60, 0); attr(A.aN, 3, 60, 12); attr(A.aBI, 4, 60, 24); attr(A.aBW, 4, 60, 40); attr(A.aM, 1, 60, 56);
+      gl.uniformMatrix4fv(U.uB, false, MX.buf);
+      const c = v => hx(v);
+      gl.uniform3fv(U.uSkin, c(look.skin || "#c98d63")); gl.uniform3fv(U.uHairC, c(look.hairC || "#2a1d14"));
+      gl.uniform3fv(U.uSh1, c(kit.shirt)); gl.uniform3fv(U.uSh2, c(kit.shirt2 || kit.shirt)); gl.uniform3fv(U.uTrim, c(kit.trim || kit.shirt2 || "#ffffff"));
+      gl.uniform3fv(U.uPa1, c(kit.shorts)); gl.uniform3fv(U.uPa2, c(kit.shorts2 || kit.shorts));
+      gl.uniform3fv(U.uSo1, c(kit.socks)); gl.uniform3fv(U.uSo2, c(kit.socks2 || kit.socks));
+      gl.uniform3fv(U.uBo1, c(kit.boots || "#15181c")); gl.uniform3fv(U.uBo2, c(kit.boots2 || "#f2f2f2")); gl.uniform3fv(U.uGl1, c(kit.glove || "#f2f2f2"));
+      gl.uniform4f(U.uK1, PKCHAR.PATTERNS[kit.pattern] || 0, kit.sleeve === "long" ? 1 : 0, kit.gloves ? 1 : 0, kit.metal || 0);
+      gl.uniform4f(U.uK2, kit.pants ? 1 : 0, look.hair === "glatze" ? 0 : 1, D.waist, 0);
+      gl.uniform4f(U.uK3, D.sockTop, .018, 0, 0);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, fig.name || fig.num ? texBackCached(fig.name || "", fig.num || "", fig.ink || "#ffffff") : EMPTY); gl.uniform1i(U.uBack, 0);
+      blendMode(null, true, 0);
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, MX.ib); gl.drawElements(gl.TRIANGLES, MX.cnt, gl.UNSIGNED_SHORT, 0);
+    }
+    // Finale: Held jubelt dauerhaft an der Stelle der alten Pose
+    function mixHero(P0, tf, fin) {
+      const D = MX.D, yaw = P0.yaw + Math.PI, h0 = rotY(yaw, D.clips.win.hp.slice(0, 3));
+      const win = () => mixLayer("win", Math.max(0, tf - fin.heroDur) / 1000, true, [P0.root[0] - h0[0], 0, P0.root[2] - h0[2]], yaw);
+      if (tf >= fin.heroDur + 300) return win();
+      // Lauf zur Mannschaft: Laufschritte aus dem Anlauf, auf der Stelle (Position kommt von der alten Pose)
+      if (D.runLoop === undefined) {
+        const c = D.clips.kick, nb = D.nb; let best = 1e9; D.runLoop = 16;
+        for (let L = 10; L <= 22 && L < c.nF; L++) { let e = 0; for (let k = 4; k < nb * 4; k += 4) { let d = 0; for (let j = 0; j < 4; j++) d += c.q[k + j] * c.q[L * nb * 4 + k + j]; e += 1 - Math.abs(d) / (32767 * 32767); } if (e < best) { best = e; D.runLoop = L; } }
+      }
+      const run = mixLayer("kick", ((tf / 1000) % (D.runLoop / D.H.fps)), false, [0, 0, 0], yaw);
+      run.hp[0] = P0.root[0]; run.hp[2] = P0.root[2];
+      return tf < fin.heroDur ? run : mixBlend(run, win(), sm(cl(tf, fin.heroDur, fin.heroDur + 300)));
     }
 
     // ===== Stadion: wächst mit der Karriere (0 Sportplatz · 1 kleines Stadion · 2 Stadion · 3 großes Stadion · 4 Finalarena) =====
@@ -6831,6 +7072,16 @@
       let shP = shooterAt(sh, tA, now), kpP = keeperAt(sh, tA, now);
       if (fin) { if (fin.hero === "shooter") shP = heroFinal(fin, tf, shP); else kpP = heroFinal(fin, tf, kpP); }
       shP = onGround(shP, F.shooter); kpP = onGround(kpP, F.keeper);
+      // Neue Figur (Blender/Mixamo) für Schütze und Torwart, sobald spieler.bin geladen ist
+      let mxS = null, mxK = null;
+      if (mixOk()) {
+        try {
+          mxS = { P: mixShooter(sh, tA, now), mir: false }; mxK = mixKeeper(sh, tA, now);
+          if (fin) { if (fin.hero === "shooter") mxS = { P: mixHero(shP, tf, fin), mir: false }; else mxK = { P: mixHero(kpP, tf, fin), mir: false }; }
+          mxS.W = mixBones(mxS.P, false); mxK.W = mixBones(mxK.P, mxK.mir);
+          shP.root = [mxS.W[0][12], mxS.W[0][13], mxS.W[0][14]]; kpP.root = [mxK.W[0][12], mxK.W[0][13], mxK.W[0][14]];
+        } catch (e) { MX.state = "fail"; mxS = mxK = null; if (window.console) console.warn("Spielerfigur: Fehler", e); }
+      }
       if (!cam) cam = fin ? finalCam(fin, tf, (fin.hero === "shooter" ? shP : kpP).root) : S.mode === "kick" ? tvCam(sh, t, shP.root) : AIM;
       if (S.camOverride) cam = S.camOverride;
       gl.viewport(0, 0, W, H);
@@ -6852,7 +7103,8 @@
       drawFans(now, cheer, cards);
       drawFlags(now, cheer);
       // Spieler
-      drawFig(kpP, F.keeper); drawFig(shP, F.shooter);
+      if (mxS) { drawMix(mxK.W, F.keeper, [kpP.root[0], kpP.root[2]]); drawMix(mxS.W, F.shooter, [shP.root[0], shP.root[2]]); }
+      else { drawFig(kpP, F.keeper); drawFig(shP, F.shooter); }
       // Mitspieler am Mittelkreis
       const react = (team) => {
         if (fin) return null;
@@ -7142,7 +7394,7 @@
         try { if (!cv || !cv.getContext || !setupGL(cv)) return false; ID = M.id(); buildShared(); S.ok = true; }
         catch (e) { if (window.console) console.warn("WebGL nicht verfügbar", e); S.ok = false; return false; }
         const e1 = cnv(4, 4); EMPTY = texture(e1, { clamp: true });
-        startWorker(); if (PR.skin) prewarm();
+        startWorker(); if (PR.skin) prewarm(); mixLoad();
         cv.addEventListener("click", () => { if (S.mode === "replay") finishReplay(); });
         cv.addEventListener("webglcontextlost", e => { e.preventDefault(); S.run = false; });
         // Schriften fertig geladen → Banden und Rückennummer neu zeichnen
