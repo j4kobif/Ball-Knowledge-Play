@@ -4,7 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#070a0e">
-<title>Ball Knowledge-Play</title>
+<title>Ball Knowledge-Play – Fußball-Quiz &amp; Fußball-Games</title>
+<meta name="description" content="Kostenlose Fußball-Quiz-Games im Browser: Fußball-Tic-Tac-Toe, Fußball-Wordle, Letterkick, Elfmeterschießen in 3D, Vereinskette, Wer bin ich? und Zeitstrahl – mit über 44.000 Spielern aus den Top-5-Ligen.">
+<link rel="canonical" href="https://j4kobif.github.io/Ball-Knowledge-Play/">
+<link rel="alternate" hreflang="de" href="https://j4kobif.github.io/Ball-Knowledge-Play/?lang=de">
+<link rel="alternate" hreflang="en" href="https://j4kobif.github.io/Ball-Knowledge-Play/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://j4kobif.github.io/Ball-Knowledge-Play/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ball Knowledge-Play">
+<meta property="og:title" content="Ball Knowledge-Play – Fußball-Quiz &amp; Fußball-Games">
+<meta property="og:description" content="Kostenlose Fußball-Quiz-Games im Browser: Fußball-Tic-Tac-Toe, Fußball-Wordle, Letterkick, Elfmeterschießen in 3D, Vereinskette, Wer bin ich? und Zeitstrahl – mit über 44.000 Spielern aus den Top-5-Ligen.">
+<meta property="og:url" content="https://j4kobif.github.io/Ball-Knowledge-Play/">
+<meta property="og:locale" content="de_DE">
+<meta property="og:locale:alternate" content="en_GB">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -135,7 +147,10 @@
   }
   .wrap { width: 100%; max-width: 560px; display: flex; flex-direction: column; gap: 18px; }
 
-  .masthead { display: flex; flex-direction: column; gap: 4px; }
+  .masthead { display: flex; flex-direction: column; gap: 4px; position: relative; }
+  .lang-switch { position: absolute; top: -2px; right: 0; display: inline-flex; gap: 2px; padding: 2px; border-radius: 9px; border: 1px solid var(--line); background: var(--surface-2); z-index: 3; }
+  .lang-switch button { font: 600 11.5px "IBM Plex Mono", monospace; letter-spacing: .06em; padding: 4px 8px; border: none; border-radius: 7px; background: transparent; color: var(--text-dim); cursor: pointer; }
+  .lang-switch button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
   .eyebrow {
     font-family: "IBM Plex Mono", monospace;
     font-size: 11px;
@@ -851,6 +866,10 @@
 <div class="bigscore right" id="big-o" hidden aria-hidden="true"><span id="big-o-name">Gast</span><b id="big-o-num">0</b></div>
 <div class="wrap" lang="de">
   <div class="masthead">
+    <div class="lang-switch" role="group" aria-label="Sprache · Language">
+      <button type="button" data-lang="de" aria-pressed="true" title="Deutsch">DE</button>
+      <button type="button" data-lang="en" aria-pressed="false" title="English">EN</button>
+    </div>
     <span class="eyebrow" id="eyebrow">Fußball-Quiz · Games</span>
     <h1>Ball Knowledge-Play</h1>
     <p class="sub" id="sub">Sieben Fußball-Games, eine Spielerdatenbank. Wähle zuerst ein Game, danach den Spielmodus.</p>
@@ -1832,12 +1851,525 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 01.10.2026-19</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 02.10.2026-2</footer>
 </div>
 
 <script>
 (function () {
   "use strict";
+
+  // ---------- Sprache: Deutsch / Englisch (britisch) ----------
+  // Texte der Seite sind deutsch geschrieben. Für Englisch gibt es ein Wörterbuch (deutscher Text → englischer Text):
+  // Feste Texte und alles, was später als exakt bekannter Text in die Seite kommt, wird automatisch übersetzt.
+  // Texte mit Zahlen oder Namen laufen über tr("… {n} …", { n }).
+  const LANG_KEY = "kaderraster-lang";
+  let LANG = (() => {
+    try { const q = new URLSearchParams(location.search).get("lang"); if (q === "de" || q === "en") return q; } catch (e) {}
+    try { const s = localStorage.getItem(LANG_KEY); if (s === "de" || s === "en") return s; } catch (e) {}
+    const nav = (navigator.languages && navigator.languages[0]) || navigator.language || "de";
+    return /^de\b/i.test(nav) ? "de" : "en";
+  })();
+  const LOC = () => LANG === "en" ? "en-GB" : "de-DE";
+  const EN = {
+    // Kopf, Startseite
+    "Fußball-Quiz · Games": "Football Quiz · Games",
+    "Sieben Fußball-Games, eine Spielerdatenbank. Wähle zuerst ein Game, danach den Spielmodus.": "Seven football games, one player database. Pick a game first, then the mode.",
+    "Startmenü": "Main menu", "⚙ Einstellungen": "⚙ Settings", "Game wählen": "Choose a game", "Game": "Game",
+    "Zwei Spieler oder Computer": "Two players or vs computer", "Solo oder Duell": "Solo or duel", "Karriere, Computer oder Duell": "Career, computer or duel",
+    "Fußball-Tic-Tac-Toe": "Football Tic-Tac-Toe", "Fußball-Wordle": "Football Wordle", "Elfmeter­schießen": "Penalty Shoot-out", "Elfmeterschießen": "Penalty Shoot-out",
+    "Vereinskette": "Club Chain", "Wer bin ich?": "Who Am I?", "Zeitstrahl": "Timeline",
+    "Jedes Feld kreuzt zwei Kategorien. Finde Spieler, die passen, und hole dir drei Felder in einer Reihe.": "Every square crosses two categories. Find players who fit both and get three in a row.",
+    "Errate den Geheimspieler. Jeder Tipp verrät, was er mit dem Gesuchten gemeinsam hat.": "Guess the mystery player. Every guess reveals what it has in common with the one you're looking for.",
+    "Errate den Nachnamen eines Fußballers Buchstabe für Buchstabe: grün, gelb oder grau.": "Guess a footballer's surname letter by letter: green, yellow or grey.",
+    "Bis zum Pokal: Quizfrage, Ecke, Timing – und als Torwart den Schützen lesen.": "All the way to the cup: quiz question, corner, timing – and read the taker when you're in goal.",
+    "Nenne abwechselnd Spieler, die mit dem letzten beim selben Verein waren. Wer zuerst nichts mehr weiß, verliert.": "Take turns naming players who were at the same club as the last one. Whoever runs out of names first loses.",
+    "Sechs Hinweise, vom Groben zum Genauen. Je früher du den Spieler erkennst, desto mehr Punkte.": "Six clues, from vague to precise. The sooner you recognise the player, the more points you score.",
+    "Sortiere 10 Spieler nach Geburtsjahr, Vereinen oder Titeln. Drei Leben, jeder Fehler kostet eins.": "Sort 10 players by year of birth, clubs or trophies. Three lives – every mistake costs one.",
+    // Überschriften der Games
+    "Fußball-Quiz · Tic-Tac-Toe": "Football Quiz · Tic-Tac-Toe", "Fußball-Quiz · Wordle": "Football Quiz · Wordle", "Fußball-Quiz · Letterkick": "Football Quiz · Letterkick",
+    "Fußball-Quiz · Vereinskette": "Football Quiz · Club Chain", "Fußball-Quiz · Wer bin ich?": "Football Quiz · Who Am I?", "Fußball-Quiz · Zeitstrahl": "Football Quiz · Timeline",
+    "Fußball-Spiel · Elfmeterschießen": "Football Game · Penalty Shoot-out",
+    "Jedes Feld kreuzt zwei Kategorien: eine Nation, einen Verein oder einen Titel wie WM- oder CL-Sieger. Tippe einen Spieler, der zu beiden passt. Wer zuerst drei Felder in einer Reihe hat, gewinnt.": "Every square crosses two categories: a nation, a club or a trophy such as World Cup or Champions League winner. Name a player who fits both. The first to get three in a row wins.",
+    "Ein Geheimspieler wartet. Jeder Tipp zeigt dir, was er mit dem Gesuchten gemeinsam hat: Nation, Jahrgang, Vereine, Ligen und Titel. Wer ihn findet, schießt das Tor.": "A mystery player is waiting. Every guess shows what it has in common with him: nation, year of birth, clubs, leagues and trophies. Find him and you score.",
+    "Ein Nachname wartet auf dich. Tippe Namen mit gleicher Länge – kürzere gehen nach Rückfrage auch: Grün steht richtig, Gelb kommt woanders vor, Grau gibt es nicht. Wer den Spieler findet, schießt das Tor.": "A surname is waiting for you. Type names of the same length – shorter ones work too after a check: green is in the right place, yellow is elsewhere, grey isn't in it. Find the player and you score.",
+    "Ein Startspieler, dann seid ihr dran: Nennt abwechselnd Spieler, die mit dem letzten Spieler der Kette beim selben Verein waren. Wer nichts mehr weiß, verliert die Runde.": "One starting player, then it's your turn: take turns naming players who were at the same club as the last player in the chain. Whoever runs out of names loses the round.",
+    "Sechs Hinweise, vom Groben zum Genauen: Generation, Nation, Titel, Ligen, Vereine, Initialen. Je früher du den Spieler erkennst, desto mehr Punkte gibt es.": "Six clues, from vague to precise: generation, nation, trophies, leagues, clubs, initials. The sooner you recognise the player, the more points you get.",
+    "Zehn Spieler, eine Reihenfolge: nach Geburtsjahr, nach Vereinen in den Top-5-Ligen oder nach großen Titeln. Drei Leben – jeder Fehler kostet eins.": "Ten players, one order: by year of birth, by clubs in the top five leagues or by major trophies. Three lives – every mistake costs one.",
+    "Karriere vom Pokal bis ins Finale: Vor jedem Schuss eine Quizfrage – wer Ball Knowledge hat, trifft leichter und liest den Schützen. Dann Ecke wählen und die Leiste im grünen Bereich stoppen.": "A cup run all the way to the final: a quiz question before every kick – with ball knowledge you score more easily and read the taker. Then pick a corner and stop the bar in the green zone.",
+    // Töne
+    "Töne": "Sounds", "Alle Töne": "All sounds", "Gesamtlautstärke": "Master volume", "Alle Töne an oder aus": "All sounds on or off",
+    "Einstellungen werden in diesem Browser gespeichert. ▶ spielt den Ton zur Probe.": "Settings are saved in this browser. ▶ plays a preview.", "Zurücksetzen": "Reset",
+    "Anpfiff": "Kick-off", "Zu Beginn jeder Runde": "At the start of every round", "Tor & Jubel": "Goal & cheers", "Wenn jemand eine Runde gewinnt": "When someone wins a round",
+    "Abpfiff": "Full time", "Wenn ein Best-of-Spiel entschieden ist": "When a best-of match is decided", "Unentschieden": "Draw", "Raster voll ohne Dreierreihe": "Grid full without three in a row",
+    "Richtiger Spieler": "Correct player", "Dein Feld ist gesetzt": "Your square is claimed", "Computer setzt": "Computer's move", "Zug des Computers": "The computer's turn",
+    "Falsche Wahl": "Wrong pick", "Spieler passt nicht, Zug verloren": "Player doesn't fit, turn lost", "Zeit abgelaufen": "Time's up", "Zugzeit ist vorbei": "Turn time has run out",
+    "Countdown-Ticken": "Countdown ticking", "Letzte 5 Sekunden der Zugzeit": "Last 5 seconds of turn time", "Aussetzen": "Skip turn", "Zug wird übersprungen": "Turn is skipped",
+    "Rasteranfrage": "Grid request", "Neues Raster wird angefragt": "A new grid is requested", "Kategorie wählen": "Choose category",
+    "Beim Selbstwählen der Kategorien, bei jedem Wordle-Tipp und im Elfmeterschießen bei der Wahl der Ecke": "When picking categories yourself, on every Wordle guess and when choosing a corner in the shoot-out",
+    "Schuss": "Kick", "Elfmeter: Ball wird getreten": "Penalty: ball is struck", "Pfosten": "Post", "Elfmeter: Ball an Pfosten oder Latte": "Penalty: ball hits post or bar",
+    "Parade": "Save", "Elfmeter: Torwart hält den Ball": "Penalty: keeper saves the ball", "Münzen": "Coins", "Kabine: Kauf im Shop, Münzen nach dem Spiel": "Dressing room: shop purchases, coins after the match",
+    "{n} an oder aus": "{n} on or off", "Lautstärke {n}": "Volume {n}", "{n} anhören": "Play {n}",
+    // Spielmodus (Varianten)
+    "← Games": "← Games", "Spielmodus wählen": "Choose a mode", "Alle Epochen": "All eras", "Ab 2000": "From 2000", "Jahrgang 2000+": "Born 2000+", "Ab 40 Jahren": "Aged 40+",
+    "Alle Spieler mit mindestens einer Station in den Top-5-Ligen, von damals bis heute.": "Every player with at least one spell in the top five leagues, from back then to today.",
+    "Nur Spieler, deren erste Profistation in den 2000ern oder später liegt.": "Only players whose first professional club came in the 2000s or later.",
+    "Nur Spieler, die im Jahr 2000 oder später geboren sind.": "Only players born in 2000 or later.",
+    "Nur Spieler, die mindestens 40 Jahre alt sind.": "Only players who are at least 40 years old.",
+    "Nur Spieler, die mindestens 40 Jahre alt sind (Jahrgang {y} und früher).": "Only players who are at least 40 years old (born {y} or earlier).",
+    "lädt …": "loading …", "{n} Spieler": "{n} players", "{v} · {n} Spieler": "{v} · {n} players",
+    "{n} Spieler mit mindestens einer Station in Bundesliga, Premier League (inkl. alter First Division), La Liga, Serie A oder Ligue 1. Als Vereins-Kategorien kommen nur die {c} Vereine vor, die in den letzten 5 Saisons erstklassig waren. Die Schwierigkeitsstufen beruhen auf einer Schätzung der Bekanntheit (Vereine, Titel, Generation), nicht auf Aufrufzahlen. Quelle: {s}.":
+      "{n} players with at least one spell in the Bundesliga, Premier League (incl. the old First Division), La Liga, Serie A or Ligue 1. Only the {c} clubs that played top-flight football in the last 5 seasons appear as club categories. Difficulty levels are based on an estimate of how well known a player is (clubs, trophies, generation), not on page views. Source: {s}.",
+    "Die Spielerdatenbank (players.json) konnte nicht geladen werden. Liegt sie im selben Ordner wie diese Seite? ({e})": "The player database (players.json) could not be loaded. Is it in the same folder as this page? ({e})",
+    // Spiel verlassen, Anzeigetafel, Fußzeile
+    "Spiel verlassen?": "Leave game?", "Das laufende Spiel wird beendet, der Spielstand geht verloren.": "The current game will end and the score will be lost.",
+    "Weiterspielen": "Keep playing", "Spiel verlassen": "Leave game", "Heim": "Home", "Gast": "Away",
+    "Spielerdaten:": "Player data:", "(CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.": "(CC0). Club and country names are used for description only – no logos or crests.",
+    "Ligaspiele, Ligatore und Titelanzahl:": "League appearances, league goals and trophy counts:",
+    "Sprache": "Language",
+    // Kategorien
+    "Nation": "Nation", "Titel": "Trophy",
+  };
+  // Nationen, Titel und Vereine (die Datenbank bleibt deutsch, angezeigt wird die englische Form)
+  const NAT_EN = { "Italien": "Italy", "Vereinigtes Königreich": "United Kingdom", "Spanien": "Spain", "Frankreich": "France", "Deutschland": "Germany", "England": "England", "Brasilien": "Brazil", "Argentinien": "Argentina", "Schottland": "Scotland", "Irland": "Republic of Ireland", "Wales": "Wales", "Uruguay": "Uruguay", "Portugal": "Portugal", "Dänemark": "Denmark", "Niederlande": "Netherlands", "Schweden": "Sweden", "Polen": "Poland", "Senegal": "Senegal", "Belgien": "Belgium", "Kroatien": "Croatia", "Nordirland": "Northern Ireland", "Nigeria": "Nigeria", "Marokko": "Morocco", "Österreich": "Austria", "Schweiz": "Switzerland", "Ungarn": "Hungary", "Kamerun": "Cameroon", "Vereinigte Staaten": "United States", "Elfenbeinküste": "Ivory Coast", "Algerien": "Algeria", "Serbien": "Serbia", "Australien": "Australia", "Ghana": "Ghana", "Norwegen": "Norway", "Türkei": "Turkey", "Rumänien": "Romania", "Jugoslawien": "Yugoslavia", "Paraguay": "Paraguay", "Tschechien": "Czech Republic", "Kolumbien": "Colombia", "Deutsche Demokratische Republik": "East Germany", "Mali": "Mali", "Königreich der Niederlande": "Kingdom of the Netherlands", "Chile": "Chile", "Ecuador": "Ecuador", "Griechenland": "Greece", "Bosnien und Herzegowina": "Bosnia and Herzegovina", "Demokratische Republik Kongo": "DR Congo", "Slowenien": "Slovenia", "Japan": "Japan", "Tunesien": "Tunisia", "Slowakei": "Slovakia", "Guinea": "Guinea", "Albanien": "Albania", "Finnland": "Finland", "Bulgarien": "Bulgaria", "Südafrika": "South Africa", "Kanada": "Canada", "Mexiko": "Mexico", "Serbien und Montenegro": "Serbia and Montenegro", "Jamaika": "Jamaica", "Island": "Iceland", "Peru": "Peru", "Venezuela": "Venezuela", "Südkorea": "South Korea", "Tschechoslowakei": "Czechoslovakia", "Ukraine": "Ukraine", "Republik Kongo": "Congo", "Israel": "Israel", "Russland": "Russia", "Togo": "Togo", "Neuseeland": "New Zealand", "Nordmazedonien": "North Macedonia", "Montenegro": "Montenegro", "Burkina Faso": "Burkina Faso", "Äquatorialguinea": "Equatorial Guinea", "Sowjetunion": "Soviet Union", "Gabun": "Gabon", "Luxemburg": "Luxembourg", "Ägypten": "Egypt", "Georgien": "Georgia", "Gambia": "Gambia", "Benin": "Benin", "Königreich Dänemark": "Kingdom of Denmark", "Iran": "Iran", "Honduras": "Honduras", "Costa Rica": "Costa Rica", "Komoren": "Comoros", "Guinea-Bissau": "Guinea-Bissau", "Litauen": "Lithuania", "Volksrepublik China": "China", "Madagaskar": "Madagascar", "Haiti": "Haiti", "Kosovo": "Kosovo", "Mauretanien": "Mauritania", "Sierra Leone": "Sierra Leone", "Kap Verde": "Cape Verde", "Trinidad und Tobago": "Trinidad and Tobago", "Zypern": "Cyprus", "Sambia": "Zambia", "Lettland": "Latvia", "Simbabwe": "Zimbabwe", "San Marino": "San Marino", "Belarus": "Belarus", "Aserbaidschan": "Azerbaijan", "Angola": "Angola", "Bolivien": "Bolivia", "Zentralafrikanische Republik": "Central African Republic", "Philippinen": "Philippines", "Liberia": "Liberia", "St. Kitts und Nevis": "St Kitts and Nevis", "Guadeloupe": "Guadeloupe", "Malta": "Malta", "Dominikanische Republik": "Dominican Republic", "Indonesien": "Indonesia", "Antigua und Barbuda": "Antigua and Barbuda", "Panama": "Panama", "Martinique": "Martinique", "Curaçao": "Curaçao", "Katar": "Qatar", "Armenien": "Armenia", "Kenia": "Kenya", "Guyana": "Guyana", "Andorra": "Andorra", "Uganda": "Uganda", "Tschad": "Chad", "Suriname": "Suriname", "Barbados": "Barbados", "Thailand": "Thailand", "Mosambik": "Mozambique", "Estland": "Estonia", "Niger": "Niger", "Liechtenstein": "Liechtenstein", "Moldau": "Moldova", "Türkische Republik Nordzypern": "Northern Cyprus", "Ruanda": "Rwanda", "Sozialistische Föderative Republik Jugoslawien": "SFR Yugoslavia", "Mauritius": "Mauritius", "Kasachstan": "Kazakhstan", "Libyen": "Libya", "Libanon": "Lebanon", "Afghanistan": "Afghanistan", "Grenada": "Grenada", "Pakistan": "Pakistan", "Saudi-Arabien": "Saudi Arabia", "Malaysia": "Malaysia", "Kuba": "Cuba", "Namibia": "Namibia", "St. Lucia": "St Lucia", "Kirgisistan": "Kyrgyzstan", "Niederländische Antillen": "Netherlands Antilles", "Monaco": "Monaco", "Königreich Aragón": "Kingdom of Aragon", "Irak": "Iraq", "Guatemala": "Guatemala", "Usbekistan": "Uzbekistan", "Gibraltar": "Gibraltar", "Puerto Rico": "Puerto Rico", "Montserrat": "Montserrat", "Republik Venedig": "Republic of Venice", "Deutsches Reich": "German Reich", "Burundi": "Burundi", "Nordkorea": "North Korea", "Seychellen": "Seychelles", "Botswana": "Botswana", "Somalia": "Somalia", "Syrien": "Syria", "Jersey": "Jersey", "Singapur": "Singapore", "Fidschi": "Fiji", "Jordanien": "Jordan", "Osttimor": "East Timor", "Bermuda": "Bermuda", "Malawi": "Malawi", "Gemeinschaft Unabhängiger Staaten": "Commonwealth of Independent States", "Saarprotektorat": "Saar Protectorate", "Tansania": "Tanzania", "Sri Lanka": "Sri Lanka", "Tadschikistan": "Tajikistan", "Chinese Taipei": "Chinese Taipei", "Dominica": "Dominica", "El Salvador": "El Salvador", "Sudan": "Sudan", "Vereinigte Arabische Emirate": "United Arab Emirates", "Nicaragua": "Nicaragua", "Myanmar": "Myanmar", "Französisches Protektorat Tunesien": "French Protectorate of Tunisia", "Brunei": "Brunei", "Französisch-Guayana": "French Guiana", "Vietnam": "Vietnam", "Oman": "Oman", "Réunion": "Réunion", "Eritrea": "Eritrea", "Turks- und Caicosinseln": "Turks and Caicos Islands", "Dschibuti": "Djibouti", "Königreich Jugoslawien": "Kingdom of Yugoslavia", "Neukaledonien": "New Caledonia", "Indien": "India", "Taiwan": "Taiwan", "Sealand": "Sealand", "Laos": "Laos", "Kambodscha": "Cambodia", "Palästina": "Palestine" };
+  const TITLE_EN = { "WM-Sieger": "World Cup winner", "EM-Sieger": "Euro winner", "CL-Sieger": "Champions League winner", "Europa-League-Sieger": "Europa League winner", "Conference-League-Sieger": "Conference League winner" };
+  const CLUB_EN = { "Inter Mailand": "Inter Milan", "CFC Genua": "Genoa", "FC Turin": "Torino", "Juventus Turin": "Juventus", "AC Florenz": "Fiorentina", "AS Rom": "Roma", "Lazio Rom": "Lazio", "SSC Neapel": "Napoli", "Sampdoria Genua": "Sampdoria",
+    "Atalanta Bergamo": "Atalanta", "FC Bologna": "Bologna", "FC Venedig": "Venezia", "Espanyol Barcelona": "Espanyol", "AFC Sunderland": "Sunderland", "FC Bayern München": "Bayern Munich", "TSV 1860 München": "1860 Munich", "1. FC Köln": "1. FC Köln",
+    "Olympique Marseille": "Marseille", "Olympique Lyon": "Lyon", "OSC Lille": "Lille", "OGC Nizza": "Nice", "Racing Straßburg": "Strasbourg", "Stade Rennes": "Rennes", "Stade Reims": "Reims", "Stade Brest": "Brest", "FC Toulouse": "Toulouse", "FC Nantes": "Nantes", "FC Lorient": "Lorient", "HSC Montpellier": "Montpellier", "FC Metz": "Metz",
+    "Betis Sevilla": "Real Betis", "FC Sevilla": "Sevilla", "FC Valencia": "Valencia", "FC Villarreal": "Villarreal", "FC Granada": "Granada", "FC Málaga": "Málaga", "FC Cádiz": "Cádiz", "FC Getafe": "Getafe", "FC Girona": "Girona", "FC Elche": "Elche", "Real Saragossa": "Real Zaragoza", "CD Teneriffa": "Tenerife", "FC Córdoba": "Córdoba",
+    "FC Palermo": "Palermo", "FC Empoli": "Empoli", "FC Modena": "Modena", "FC Rom": "FC Roma", "Hellas Verona": "Hellas Verona", "Udinese Calcio": "Udinese", "Cagliari Calcio": "Cagliari", "U.S. Lecce": "Lecce", "US Sassuolo Calcio": "Sassuolo", "Girondins Bordeaux": "Bordeaux", "FC Sochaux": "Sochaux" };
+  const natName = s => LANG === "en" ? (NAT_EN[s] || s) : s;
+  const titleName = s => LANG === "en" ? (TITLE_EN[s] || s) : s;
+  // Englische Vereine heißen auf Deutsch oft „FC Liverpool“ – auf Englisch einfach „Liverpool“
+  const clubEn = (s, lg) => CLUB_EN[s] || (/^(Premier|First)/.test(lg || "") && /^FC /.test(s) ? s.slice(3) : s);
+  const clubName = (s, lg) => LANG === "en" ? clubEn(s, lg) : s;
+  // Vereine: deutsche Datenbank-Namen → englische Namen (wird nach dem Laden der Datenbank gefüllt)
+  let CLUB_FWD = null;
+  const dbNow = () => { try { return DB; } catch (e) { return null; } };
+  const clubFwd = () => { const DB = dbNow(); if (!CLUB_FWD && DB) { CLUB_FWD = {}; for (const c of DB.clubs) { const e = clubEn(c[0], c[1]); if (e !== c[0]) CLUB_FWD[c[0]] = e; } } return CLUB_FWD || {}; };
+  // Platzhalter: {0} Wert, {0:l} klein, {0?a:b} je nachdem, ob {0} „Du“ ist
+  function fillArr(tpl, args, orig) {
+    return tpl.replace(/\{(\d+)(?::(l))?(?:\?([^:{}]*):([^{}]*))?\}/g, (m, i, low, a, b) => {
+      i = +i; if (i >= args.length) return m;
+      if (a !== undefined) return orig[i] === "Du" ? a : b;
+      const v = args[i];
+      return low && orig[i] === "Du" ? "you" : v;
+    });
+  }
+  const fill = (s, v) => v ? s.replace(/\{(\w+)\}/g, (m, k) => v[k] !== undefined ? v[k] : m) : s;
+  function tr(s, v) {
+    if (Array.isArray(v)) {
+      if (LANG !== "en" || EN[s] === undefined) return s.replace(/\{(\d+)\}/g, (m, i) => +i < v.length ? v[+i] : m);
+      const orig = v.map(x => x === undefined || x === null ? "" : String(x));
+      return fillArr(EN[s], orig.map(argTr), orig);
+    }
+    return fill(LANG === "en" && EN[s] !== undefined ? EN[s] : s, v);
+  }
+  // Einzelne Werte in Sätzen: Namen, Wörter, Zahlen
+  function argTr(x) {
+    if (LANG !== "en" || !x || x.length > 240 || !/[A-Za-zÄÖÜäöüß]/.test(x)) return /^\d{1,3}(\.\d{3})+$/.test(x || "") && LANG === "en" ? x.replace(/\./g, ",") : x;
+    if (x === "Du") return "You";
+    if (CAP_EN[x] !== undefined) return CAP_EN[x];
+    const t = i18nCore(x, 1); return t === null ? x : t;
+  }
+  // Muster: Wörterbuch-Einträge mit Platzhaltern auch auf fertige Texte anwenden
+  let PATS = null;
+  function pats() {
+    if (PATS) return PATS;
+    PATS = [];
+    for (const k in EN) {
+      if (!/\{\w+\}/.test(k) || /</.test(k)) continue;
+      const parts = k.split(/(\{\w+\})/); let re = "^", names = [], lit = "", longest = "";
+      for (const p of parts) {
+        if (!p) continue;
+        const m = /^\{(\w+)\}$/.exec(p);
+        if (m) { names.push(m[1]); re += "(.+?)"; }
+        else { re += p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); lit += p; if (p.trim().length > longest.length) longest = p.trim(); }
+      }
+      if (lit.trim().length < 3) continue;
+      PATS.push({ re: new RegExp(re + "$"), names, en: EN[k], lit: lit.length, key: longest });
+    }
+    PATS.sort((a, b) => b.lit - a.lit);
+    return PATS;
+  }
+  function enExact(s) {
+    if (EN[s] !== undefined && !/\{\w+\}/.test(s)) return EN[s];
+    if (NAT_EN[s] !== undefined) return NAT_EN[s];
+    if (TITLE_EN[s] !== undefined) return TITLE_EN[s];
+    const c = clubFwd()[s]; return c;
+  }
+  function i18nCore(core, depth) {
+    const ex = enExact(core); if (ex !== undefined) return ex;
+    if ((depth || 0) > 3 || core.length > 400) return null;
+    for (const P of pats()) {
+      if (P.key && core.indexOf(P.key) < 0) continue;
+      const m = P.re.exec(core); if (!m) continue;
+      const orig = [], vals = {};
+      P.names.forEach((n, i) => { orig[n] = m[i + 1]; vals[n] = /^\d+$/.test(n) ? argTr(m[i + 1]) : (() => { const t = m[i + 1] === "Du" ? "You" : CAP_EN[m[i + 1]] !== undefined ? CAP_EN[m[i + 1]] : i18nCore(m[i + 1], (depth || 0) + 1); return t === null ? m[i + 1] : t; })(); });
+      return P.en.replace(/\{(\w+)(?::(l))?(?:\?([^:{}]*):([^{}]*))?\}/g, (mm, n, low, a, b) => vals[n] === undefined ? mm : a !== undefined ? (orig[n] === "Du" ? a : b) : low && orig[n] === "Du" ? "you" : vals[n]);
+    }
+    // Teile mit „ · “ (Zusammenfassungen, Überschriften) einzeln übersetzen
+    if (core.indexOf(" · ") > 0) { const parts = core.split(" · "), out = parts.map(p => { const q = p.trim(); const t = q ? i18nCore(q, (depth || 0) + 1) : null; return t === null ? p : p.replace(q, t); }); if (out.some((p, i) => p !== parts[i])) return out.join(" · "); }
+    // Aufzählungen „A, B, C“
+    if (core.indexOf(", ") > 0 && depth) { const parts = core.split(", "), out = parts.map(p => { const t = i18nCore(p, (depth || 0) + 1); return t === null ? p : t; }); if (out.some((p, i) => p !== parts[i])) return out.join(", "); }
+    return null;
+  }
+  // Texte für Bilder (Banden, Schilder), die nicht im Seitentext stehen
+  const trText = s => { if (LANG !== "en" || !s) return s; const t = i18nCore(s, 0); return t === null ? s : t; };
+  // Rückweg Englisch → Deutsch (beim Umschalten zurück auf Deutsch)
+  let DE_REV = null;
+  const deRev = () => {
+    if (!DE_REV) { DE_REV = {}; for (const k in EN) if (!/\{/.test(k)) DE_REV[EN[k]] = DE_REV[EN[k]] || k; for (const k in NAT_EN) DE_REV[NAT_EN[k]] = DE_REV[NAT_EN[k]] || k; for (const k in TITLE_EN) DE_REV[TITLE_EN[k]] = k; }
+    const DB = dbNow();
+    if (!DE_REV._clubs && DB) { DE_REV._clubs = 1; for (const c of DB.clubs) { const e = clubEn(c[0], c[1]); if (e !== c[0] && !DE_REV[e]) DE_REV[e] = c[0]; } }
+    return DE_REV;
+  };
+  // Rückweg auch für Sätze mit Platzhaltern (z. B. „29 solutions“ → „29 Lösungen“)
+  let RPATS = null;
+  function deCore(core, depth) {
+    const ex = deRev()[core]; if (ex !== undefined) return ex;
+    if ((depth || 0) > 2) return null;
+    if (!RPATS) {
+      RPATS = [];
+      for (const k in EN) {
+        const v = EN[k]; if (!/\{\w+\}/.test(v) || /[?:]/.test((v.match(/\{[^}]*\}/g) || []).join("")) || /</.test(v)) continue;
+        const parts = v.split(/(\{\w+\})/); let re = "^", names = [], lit = "";
+        for (const p of parts) { if (!p) continue; const m = /^\{(\w+)\}$/.exec(p); if (m) { names.push(m[1]); re += "(.+?)"; } else { re += p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); lit += p; } }
+        if (lit.trim().length < 3) continue;
+        RPATS.push({ re: new RegExp(re + "$"), names, de: k, lit: lit.length });
+      }
+      RPATS.sort((x, y) => y.lit - x.lit);
+    }
+    for (const P of RPATS) {
+      const m = P.re.exec(core); if (!m) continue;
+      const vals = {}; P.names.forEach((n, i) => { const t = m[i + 1] === "You" ? "Du" : deCore(m[i + 1], (depth || 0) + 1); vals[n] = t === null ? m[i + 1] : t; });
+      return P.de.replace(/\{(\w+)\}/g, (mm, n) => vals[n] !== undefined ? vals[n] : mm);
+    }
+    if (core.indexOf(" · ") > 0) { const parts = core.split(" · "), out = parts.map(p => { const t = deCore(p.trim(), (depth || 0) + 1); return t === null ? p : t; }); if (out.some((p, i) => p !== parts[i])) return out.join(" · "); }
+    return null;
+  }
+  function i18nText(raw) {
+    const core = raw.trim(); if (!core) return null;
+    let out;
+    if (!/[A-Za-zÄÖÜäöüß]/.test(core)) return null;
+    if (LANG === "en") out = i18nCore(core, 0); else out = deCore(core, 0);
+    if (out === undefined || out === null || out === core) return null;
+    return raw.replace(core, () => out);
+  }
+  const I18N_ATTRS = ["aria-label", "placeholder", "title"];
+  function i18nNode(n) {
+    if (!n) return;
+    if (n.nodeType === 3) { const p = n.parentNode; if (!p || p.nodeName === "SCRIPT" || p.nodeName === "STYLE") return; const t = i18nText(n.nodeValue); if (t !== null) n.nodeValue = t; return; }
+    if (n.nodeType !== 1 || n.nodeName === "SCRIPT" || n.nodeName === "STYLE") return;
+    for (const a of I18N_ATTRS) { const v = n.getAttribute && n.getAttribute(a); if (v) { const t = i18nText(v); if (t !== null) n.setAttribute(a, t); } }
+    for (let c = n.firstChild; c; c = c.nextSibling) i18nNode(c);
+  }
+  // Neue oder geänderte Texte (aus dem Spielablauf) gleich mit übersetzen
+  let i18nObs = null;
+  function i18nWatch() {
+    if (i18nObs || !window.MutationObserver || !document.body) return;
+    i18nObs = new MutationObserver(list => {
+      if (LANG !== "en") return;
+      for (const m of list) {
+        if (m.type === "characterData") i18nNode(m.target);
+        else if (m.type === "attributes") { const v = m.target.getAttribute(m.attributeName), t = v ? i18nText(v) : null; if (t !== null) m.target.setAttribute(m.attributeName, t); }
+        else for (const a of m.addedNodes) i18nNode(a);
+      }
+    });
+    i18nObs.observe(document.body, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: I18N_ATTRS });
+  }
+  const SEO = {
+    de: { title: "Ball Knowledge-Play – Fußball-Quiz & Fußball-Games", desc: "Kostenlose Fußball-Quiz-Games im Browser: Fußball-Tic-Tac-Toe, Fußball-Wordle, Letterkick, Elfmeterschießen in 3D, Vereinskette, Wer bin ich? und Zeitstrahl – mit über 44.000 Spielern aus den Top-5-Ligen." },
+    en: { title: "Ball Knowledge-Play – Football Quiz & Football Games", desc: "Free football quiz games in your browser: Football Tic-Tac-Toe, Football Wordle, Letterkick, a 3D penalty shoot-out, Club Chain, Who Am I? and Timeline – with more than 44,000 players from Europe's top five leagues." },
+  };
+  function i18nHead() {
+    document.documentElement.lang = LANG === "en" ? "en-GB" : "de";
+    const w = document.querySelector(".wrap"); if (w) w.lang = LANG === "en" ? "en-GB" : "de";
+    const S = SEO[LANG]; document.title = S.title;
+    const md = document.querySelector('meta[name="description"]'); if (md) md.content = S.desc;
+    const ot = document.querySelector('meta[property="og:title"]'); if (ot) ot.content = S.title;
+    const od = document.querySelector('meta[property="og:description"]'); if (od) od.content = S.desc;
+    const ol = document.querySelector('meta[property="og:locale"]'); if (ol) ol.content = LANG === "en" ? "en_GB" : "de_DE";
+    document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === LANG)));
+  }
+  function setLang(l) {
+    if (l !== "de" && l !== "en") return;
+    const changed = l !== LANG; LANG = l;
+    try { localStorage.setItem(LANG_KEY, l); } catch (e) {}
+    try { const u = new URL(location.href); u.searchParams.set("lang", l); history.replaceState(history.state, "", u.pathname + u.search + u.hash); } catch (e) {}
+    i18nHead();
+    if (!changed) return;
+    i18nNode(document.body);
+    try { i18nRefresh(); } catch (e) { if (window.console) console.warn(e); }
+  }
+  // ---------- Wörterbuch Englisch: Menüs und Games (Lieferung 2 und 3) ----------
+  // Platzhalter: {0} = Wert (aus „Du“ wird „You“), {0:l} = klein („you“), {0?a:b} = a, wenn {0} „Du“ ist, sonst b
+  Object.assign(EN, {
+    // Allgemein, Menüs
+    "Sprache · Language": "Language · Sprache", "Deutsch": "Deutsch", "English": "English",
+    "Spielmodus": "Mode", "Schwierigkeit": "Difficulty", "Kategorien": "Categories", "Anzahl Spiele": "Number of games", "Zeit pro Zug": "Time per turn",
+    "Spieler 1": "Player 1", "Spieler 2": "Player 2", "Soundeffekte an oder aus": "Sound effects on or off", "Spielraster": "Game grid",
+    "Spielername eingeben …": "Enter a player's name …", "Wordle-Modus": "Wordle mode", "Schwierigkeit des Geheimspielers": "Difficulty of the mystery player",
+    "Versuche pro Spieler": "Guesses per player", "Zeit pro Tipp": "Time per guess", "optional": "optional", "Bisherige Tipps": "Previous guesses",
+    "Letterkick-Modus": "Letterkick mode", "Schwierigkeit des gesuchten Spielers": "Difficulty of the hidden player", "Tastatur": "Keyboard",
+    "Elfmeter-Menü": "Shoot-out menu", "Elfmeter-Modus": "Shoot-out mode", "Quizfragen vor jedem Schuss": "Quiz questions before every kick", "Stärke des Computers": "Computer strength",
+    "Schüsse pro Team": "Kicks per team", "Deine Münzen": "Your coins", "Ansicht": "View", "Shop-Bereiche": "Shop sections", "Rückennummer": "Shirt number",
+    "Schussfolge": "Kick sequence", "Elfmeter in 3D: Schütze, Ball und Tor mit Torwart": "Penalty in 3D: taker, ball and goal with keeper",
+    "Vereinskette-Modus": "Club Chain mode", "Was zählt als Verbindung": "What counts as a link", "Zeit pro Antwort": "Time per answer", "Die Kette, neuester Spieler oben": "The chain, newest player at the top",
+    "Wer-bin-ich-Modus": "Who Am I? mode", "Anzahl Runden": "Number of rounds", "Zeit pro Hinweis": "Time per clue", "Hinweise": "Clues", "Zeitstrahl-Modus": "Timeline mode",
+    "Kriterium": "Criterion", "Zeit pro Spieler": "Time per player",
+    "← Spielmodus": "← Mode", "Neues Spiel": "New game", "Modus": "Mode", "2 Spieler": "2 players", "Gegen Computer": "Vs computer", "Stufe": "Level",
+    "Zufall": "Random", "Selbst wählen": "Pick yourselves", "Spiele": "Games", "Unbegrenzt": "Unlimited", "Zugzeit": "Turn time", "Aus": "Off", "An": "On", "1 min": "1 min",
+    "Name Spieler 1": "Name of player 1", "Name Spieler 2": "Name of player 2", "Spiel starten": "Start game", "⟳ Neues Raster": "⟳ New grid", "Ton an": "Sound on", "Ton aus": "Sound off",
+    "☰ Hauptmenü": "☰ Main menu", "Hauptmenü": "Main menu", "SPIELSTAND": "SCORE", "Am Zug:": "To play:", "Aussetzen ⏭": "Skip ⏭", "Annehmen": "Accept", "Tor!": "Goal!",
+    "Wähle ein freies Feld im Raster.": "Pick a free square in the grid.", "Setzen": "Play", "Neue Runde": "New round", "+++ Anpfiff": "+++ Kick-off",
+    "Solo": "Solo", "Versuche": "Guesses", "Dein Name": "Your name", "🏳 Aufgeben": "🏳 Give up", "Gelöst": "Solved", "RUNDE 1": "ROUND 1", "Verpasst": "Missed", "Versuch 1": "Guess 1",
+    "So funktioniert's": "How it works", "Grün": "Green", "Gelb": "Yellow", "Grau": "Grey", "Tippen": "Guess", "Nächste Runde": "Next round", "Bereit": "Ready", "Schuss!": "Shoot!",
+    "Neues Elfmeterschießen": "New shoot-out", "Verbindung": "Link", "Nur Verein": "Club only", "Verein oder Titel": "Club or trophy", "Du": "You", "du": "you", "Computer": "Computer",
+    "Nennen": "Name", "⏭ Passen (−1 Leben)": "⏭ Pass (−1 life)", "Runden": "Rounds", "Punkte": "Points", "Erkannt": "Recognised", "⏭ Nächster Hinweis (passen)": "⏭ Next clue (pass)",
+    "Sortieren nach": "Sort by", "Geburtsjahr": "Year of birth", "Vereine": "Clubs", "Ligaspiele": "League apps", "Ligatore": "League goals", "Gemischt": "Mixed", "Richtig": "Correct", "Leben": "Lives",
+    "Korrektur: Spieler nicht gefunden:": "Correction: player not found:", "Korrektur: Verein nicht gefunden:": "Correction: club not found:", "Korrektur: Titel nicht gefunden:": "Correction: trophy not found:",
+    "NEU": "NEW", "der Computer": "the computer", "Spielerdatenbank fehlt": "Player database missing", "1 Minute": "1 minute", "Minute": "minute",
+    // Tic-Tac-Toe
+    "So geht's": "How it works", "Lösung": "solution", "Lösungen": "solutions",
+    "Tippe einen Spieler aus der Liste. Jede Kachel zeigt, wie nah er am Geheimspieler ist. Es zählen nur Spieler der gewählten Variante.": "Pick a player from the list. Every tile shows how close he is to the mystery player. Only players from the chosen mode count.",
+    "passt genau. Bei Vereinen, Ligen und Titeln heißt das: alles vom Geheimspieler ist dabei.": "is an exact match. For clubs, leagues and trophies this means: everything of the mystery player is included.",
+    "(gestrichelt) passt teilweise: Jahrgang höchstens 2 Jahre daneben, oder ein Teil der Vereine, Ligen oder Titel.": "(dashed) is a partial match: year of birth at most 2 years off, or some of the clubs, leagues or trophies.",
+    "Grau passt nicht.": "Grey doesn't match.",
+    "Beim Jahrgang zeigt ↑, dass der Gesuchte später geboren ist, ↓ früher. „2/5“ bei den Vereinen heißt: 2 von 5 Vereinen des Geheimspielers hatte dein Tipp auch. Die neuesten Tipps stehen oben.": "For year of birth, ↑ means the mystery player was born later, ↓ earlier. “2/5” for clubs means: your guess also played for 2 of the mystery player's 5 clubs. The newest guesses are at the top.",
+    "Gesucht ist der Nachname (bei Künstlernamen wie „Ronaldinho“ das ganze Wort) eines Fußballers der gewählten Variante. Tippe ein Wort mit genau so vielen Buchstaben und bestätige mit Enter. Es muss ein Name sein, den es im Spielerpool gibt.": "You're looking for the surname (for mononyms like “Ronaldinho” the whole word) of a footballer from the chosen mode. Type a word with exactly that many letters and confirm with Enter. It has to be a name that exists in the player pool.",
+    "Buchstabe stimmt und steht an der richtigen Stelle.": "letter is correct and in the right place.", "(gestrichelt) Buchstabe kommt vor, steht aber woanders.": "(dashed) letter is in the word, but somewhere else.",
+    "Grau: Buchstabe kommt nicht vor (oder nicht noch einmal).": "Grey: letter is not in the word (or not again).", "Hinweise über dem Feld verraten je nach Stufe Nation, Jahrgang oder Verein.": "Clues above the board reveal the nation, year of birth or club, depending on the level.",
+    "Anpfiff – Kategorien wählen": "Kick-off – choose categories", "Anpfiff – neues Raster": "Kick-off – new grid",
+    "{0} {1} nach einem neuen Raster – {2} {3} dran": "{0} {0?ask:asks} for a new grid – {2} {2?are:is} up", "{0} {1} weitergespielt – Anfrage abgelehnt, das Raster bleibt.": "{0} played on – request declined, the grid stays.",
+    "Der Computer nimmt deine Anfrage an – gleich kommt ein neues Raster": "The computer accepts your request – a new grid is on its way", "Der Computer lehnt ab und spielt weiter – das Raster bleibt.": "The computer declines and plays on – the grid stays.",
+    "neu wählen": "pick again", "ein neues Raster": "a new grid", "die Kategorien neu wählen": "to pick the categories again",
+    "{0} {1} {2}. Der Computer entscheidet jetzt.": "{0} {0?want:wants} {2}. The computer will decide now.",
+    "{0} möchte {1}. {2}: annehmen – oder einfach normal weiterspielen, dann bleibt alles, wie es ist.": "{0} wants {1}. {2}: accept – or simply play on as normal and everything stays as it is.",
+    "{0}: Annehmen": "{0}: Accept", "Zeile": "Row", "Spalte": "Column", "schon gewählt": "already chosen", "nur Vereine, die in den letzten 5 Saisons erstklassig waren": "only clubs that were in the top flight in the last 5 seasons",
+    "zwei Nationen können sich nicht kreuzen": "two nations can't cross", "0 Spieler mit {0}": "0 players with {0}", "Zeit abgelaufen – du verlierst den Zug": "Time's up – you lose the turn",
+    "Zeit abgelaufen – {0} verliert den Zug": "Time's up – {0} loses the turn", "{0} {1} aus": "{0} {0?skip:skips} a turn", "{0} und {1}": "{0} and {1}", "Runde {0} · Best of {1}": "Round {0} · Best of {1}", "Runde {0}": "Round {0}",
+    "<span class=\"who\">Computer wählt …</span>": "<span class=\"who\">Computer is choosing …</span>", "<span class=\"who\">Computer überlegt …</span>": "<span class=\"who\">Computer is thinking …</span>",
+    "Computer wählt …": "Computer is choosing …", "Computer überlegt …": "Computer is thinking …", "Am Zug: <span class=\"who\">{0}</span>": "To play: <span class=\"who\">{0}</span>",
+    "Nation, Verein oder Titel suchen …": "Search a nation, club or trophy …", "Wählen": "Choose", "Wähle eine Nation, einen Verein oder einen Titel für": "Choose a nation, a club or a trophy for",
+    "Wähle eine Nation, einen Verein oder einen Titel für <b>{0}</b>. Jedes Feld braucht mindestens eine Lösung, und zwei Nationen dürfen sich nicht kreuzen.": "Choose a nation, a club or a trophy for <b>{0}</b>. Every square needs at least one solution, and two nations may not cross.",
+    "Der Computer wählt eine Kategorie.": "The computer is choosing a category.", "Der Computer ist am Zug.": "It's the computer's turn.", "Gesucht:": "Wanted:", "Jg.": "b.",
+    "{0} geht hier nicht: {1}.": "{0} doesn't work here: {1}.", "Bitte eine Nation, einen Verein oder einen Titel aus der Liste wählen.": "Please choose a nation, a club or a trophy from the list.",
+    "– Zug weg": "– turn lost", "Spieler nicht in der Datenbank – Zug verloren": "Player not in the database – turn lost", "{0} passt nicht zu {1} × {2} – Zug verloren": "{0} doesn't fit {1} × {2} – turn lost",
+    "ist zu jung für „Oldies but Goldies“{0}": "is too young for “Oldies but Goldies”{0}", "ist vor 2000 geboren{0} – nicht „Born in the 2000s“": "was born before 2000{0} – not “Born in the 2000s”",
+    "hat schon vor 2000 Profi gespielt{0} – nicht im Classic-Modus": "already played professionally before 2000{0} – not in Classic mode", "gehört nicht zu diesem Modus": "isn't part of this mode",
+    "{0} {1} – Zug verloren": "{0} {1} – turn lost", "{0} wurde schon gesetzt – Zug verloren": "{0} has already been played – turn lost",
+    "{0} {1} das Spiel {2}!": "{0} {0?win:wins} the match {2}!", "{0} {1} Runde {2} – Stand {3}": "{0} {0?win:wins} round {2} – score {3}", "Runde {0} unentschieden – das Raster ist voll.": "Round {0} drawn – the grid is full.",
+    "Tor für {0}!": "Goal for {0:l}!", "Mögliche Antworten für offene Felder:": "Possible answers for open squares:", "Dem Computer fällt niemand ein – Zug verloren": "The computer can't think of anyone – turn lost",
+    " (ca. {0} Spieler)": " (approx. {0} players)", "(ca. {0} Spieler)": "(approx. {0} players)",
+    "Easy: 46 Großvereine und große Nationen, in jedem Feld mindestens 2 Weltstars oder Legenden{0}": "Easy: 46 big clubs and major nations, at least 2 world stars or legends in every square{0}",
+    "Okay: Großvereine und große Nationen, in jedem Feld mindestens 2 bekannte Namen{0}": "Okay: big clubs and major nations, at least 2 well-known names in every square{0}",
+    "Advanced: mehr Vereine, in jedem Feld mindestens 2 Spieler, die Fußballfans meist kennen{0}": "Advanced: more clubs, at least 2 players in every square that football fans usually know{0}",
+    "Profi: breite Auswahl an Vereinen und Nationen, auch Ergänzungs- und Kaderspieler als Lösung": "Pro: a wide range of clubs and nations, squad and fringe players count as solutions too",
+    "Ball Knowledge: alles ist erlaubt – auch kleine Vereine, kleine Nationen und Randfiguren": "Ball Knowledge: anything goes – small clubs, small nations and fringe figures too",
+    "Zufall: das Raster wird ausgelost": "Random: the grid is drawn at random", "Selbst wählen: ihr wählt die Kategorien abwechselnd, Spieler 1 die Zeilen, Spieler 2 bzw. der Computer die Spalten": "Pick yourselves: you take turns choosing the categories – player 1 the rows, player 2 or the computer the columns",
+    "Best of {0}: wer zuerst {1} Runden gewinnt, gewinnt das Spiel. Übersprungene Raster zählen nicht": "Best of {0}: the first to win {1} rounds wins the match. Skipped grids don't count",
+    "Unbegrenzt: ihr spielt Runde um Runde, der Spielstand läuft einfach weiter": "Unlimited: you play round after round, the score just keeps going",
+    "Zugzeit: {0} pro Zug": "Turn time: {0} per turn", "Zugzeit: ohne Zeitlimit": "Turn time: no time limit", "Zufallsraster": "Random grid", "Best of": "Best of", "pro Zug": "per turn", "ohne Zeitlimit": "no time limit",
+    "⟳ Neu wählen anfragen": "⟳ Request new picks", "⟳ Neues Raster anfragen": "⟳ Request a new grid", " (Stand {0} : {1})": " (score {0} : {1})", "(Stand {0} : {1})": "(score {0} : {1})",
+    "Das laufende Spiel wird beendet, der Spielstand geht verloren{0}.": "The current game will end and the score will be lost{0}.",
+    "{0} Sekunden": "{0} seconds", "Sekunden": "seconds",
+    // Wordle
+    "<div class=\"wd-row skip\">{0}<div class=\"wd-who\">{1}<span>Zeit abgelaufen</span><span class=\"wd-no\">{2}Tipp {3}</span></div></div>": "<div class=\"wd-row skip\">{0}<div class=\"wd-who\">{1}<span>Time's up</span><span class=\"wd-no\">{2}Guess {3}</span></div></div>",
+    "passt nicht": "doesn't match", "Jahrgang": "Born", "Ligen": "Leagues", "Gemeinsame Vereine:": "Shared clubs:", "Ligen:": "Leagues:", "Titel:": "Trophies:",
+    "<b>Gemeinsame Vereine:</b> {0}": "<b>Shared clubs:</b> {0}", "<b>Titel:</b> {0}": "<b>Trophies:</b> {0}",
+    "<div class=\"wd-row{0}\"><div class=\"wd-who\">{1}<span>{2}</span><span class=\"wd-no\">{3}Tipp {4}</span></div>": "<div class=\"wd-row{0}\"><div class=\"wd-who\">{1}<span>{2}</span><span class=\"wd-no\">{3}Guess {4}</span></div>",
+    "Runde beendet": "Round over", "{0}Versuch <span class=\"who\">{1} von {2}</span>": "{0}Guess <span class=\"who\">{1} of {2}</span>",
+    "Wer ist der Geheimspieler? Tippe einen Namen und wähle ihn aus der Liste.": "Who is the mystery player? Type a name and pick it from the list.",
+    "{0}: noch {1} {2}. Gemeinsamer Tippverlauf, neueste Tipps oben.": "{0}: {1} {2} left. Shared guess history, newest at the top.", "Tipp": "Guess",
+    "<div class=\"datanote\">Noch kein Tipp – schon der erste verrät dir einiges.</div>": "<div class=\"datanote\">No guesses yet – even the first one tells you a lot.</div>", "Noch kein Tipp – schon der erste verrät dir einiges.": "No guesses yet – even the first one tells you a lot.",
+    "Zeit abgelaufen – {0} {1} den Versuch": "Time's up – {0} {0?lose:loses} the guess", "Zeit abgelaufen – der Versuch ist verbraucht.": "Time's up – the guess is used up.", "Anpfiff – der Geheimspieler ist ausgelost": "Kick-off – the mystery player has been drawn",
+    "<b>{0}</b> · Jg. {1}{2}<br>Vereine: {3}": "<b>{0}</b> · b. {1}{2}<br>Clubs: {3}", "<br>Titel: {0}": "<br>Trophies: {0}",
+    "{0} {1} {2} gefunden ({3}. Tipp)!": "{0} found {2} (guess {3})!", "<li class=\"empty\">Kein Spieler gefunden</li>": "<li class=\"empty\">No player found</li>", "Kein Spieler gefunden": "No player found",
+    "Den hast du schon getippt.": "You've already guessed him.", "Bitte einen Spieler aus der Liste wählen.": "Please choose a player from the list.",
+    "Easy: der Geheimspieler ist einer der bekanntesten{0} – Weltstars und Legenden": "Easy: the mystery player is one of the best known{0} – world stars and legends",
+    "Okay: der Geheimspieler ist ein bekannter Name{0}": "Okay: the mystery player is a well-known name{0}", "Advanced: auch Stammspieler und Nationalspieler, die Fans meist kennen{0}": "Advanced: regular starters and internationals that fans usually know, too{0}",
+    "Profi: auch Ergänzungs- und Kaderspieler{0}": "Pro: squad and fringe players too{0}", " ({0} Spieler)": " ({0} players)", "Ball Knowledge: alle Spieler des gewählten Modus, auch Randfiguren{0}": "Ball Knowledge: every player in the chosen mode, fringe figures included{0}",
+    "Zugzeit: {0} pro Tipp, danach ist der Versuch verbraucht": "Turn time: {0} per guess, after that the guess is used up", "Solo: du hast {0} Versuche für den Geheimspieler": "Solo: you have {0} guesses to find the mystery player",
+    "2 Spieler: ihr tippt abwechselnd, jeder hat {0} Versuche. Wer den Geheimspieler trifft, bekommt den Punkt": "2 players: you take turns guessing, each with {0} guesses. Whoever finds the mystery player gets the point",
+    "pro Tipp": "per guess", "{0}, der Spielstand geht verloren{1}.": "{0} and the score will be lost{1}.", "Das Spiel wird beendet": "The game will end", "Die laufende Runde wird beendet": "The current round will end",
+    "der Geheimspieler ist einer der": "the mystery player is one of the", "die Spieler sind die": "the players are the", "der Geheimspieler ist ein bekannter Name": "the mystery player is a well-known name",
+    "der Geheimspieler ist": "the mystery player is", "gesucht wird": "you're looking for", "der Geheimspieler": "the mystery player",
+    // Letterkick
+    "Buchstaben": "letters", "<b>{0}</b> Buchstaben": "<b>{0}</b> letters", "Nation:": "Nation:", "Verein:": "Club:", "Nation: <b>{0}</b>": "Nation: <b>{0}</b>", "Jahrgang <b>{0}</b>": "Born <b>{0}</b>",
+    "Verein: <b>{0}</b>": "Club: <b>{0}</b>", "beginnt mit": "starts with", "beginnt mit <b>{0}</b>": "starts with <b>{0}</b>", "Jahrzehnt": "Decade", "Jahrzehnt <b>{0}er</b>": "Decade <b>{0}s</b>",
+    "<span class=\"lk-ask\">„{0}“ hat nur {1} von {2} Buchstaben – trotzdem abschicken? Das kostet einen Versuch.</span>": "<span class=\"lk-ask\">“{0}” only has {1} of {2} letters – submit anyway? It costs a guess.</span>",
+    "Ja, abschicken": "Yes, submit", "Weiter tippen": "Keep typing", "Tippe den gesuchten Nachnamen und bestätige mit Enter.": "Type the hidden surname and confirm with Enter.",
+    "{0}: noch {1} {2}. Gemeinsames Feld, die Buchstaben gelten für beide.": "{0}: {1} {2} left. Shared board, the letters count for both.",
+    "<div class=\"lk-cap\">{0}<span>{1}</span><span class=\"wd-no\">Tipp {2}</span></div>": "<div class=\"lk-cap\">{0}<span>{1}</span><span class=\"wd-no\">Guess {2}</span></div>",
+    "{0}<div class=\"lk-row skip\">Zeit abgelaufen – Versuch verbraucht</div>": "{0}<div class=\"lk-row skip\">Time's up – guess used up</div>", "Zeit abgelaufen – Versuch verbraucht": "Time's up – guess used up",
+    "nicht enthalten": "not in the word", "Löschen": "Delete", "Anpfiff – der gesuchte Name ist ausgelost": "Kick-off – the hidden name has been drawn",
+    "Mindestens 3 Buchstaben (gesucht: {0}).": "At least 3 letters (wanted: {0}).", "„{0}“ ist kein Spielername aus dem Pool – probier ein anderes Wort.": "“{0}” isn't a player name from the pool – try another word.",
+    "Dieses Wort wurde schon getippt.": "That word has already been guessed.",
+    "Easy: einer der bekanntesten Spieler{0}. Hinweise: Nation, Jahrgang, Verein und erster Buchstabe": "Easy: one of the best-known players{0}. Clues: nation, year of birth, club and first letter",
+    "Okay: ein bekannter Name{0}. Hinweise: Nation und Jahrgang": "Okay: a well-known name{0}. Clues: nation and year of birth", "Advanced: auch Stammspieler und Nationalspieler{0}. Hinweis: Nation": "Advanced: regular starters and internationals too{0}. Clue: nation",
+    "Profi: auch Ergänzungs- und Kaderspieler{0}. Hinweis: Jahrzehnt": "Pro: squad and fringe players too{0}. Clue: decade", "Ball Knowledge: alle Spieler des Modus. Einziger Hinweis: die Länge des Namens": "Ball Knowledge: every player in the mode. Only clue: the length of the name",
+    "Solo: du hast {0} Versuche für den gesuchten Nachnamen": "Solo: you have {0} guesses to find the surname", "2 Spieler: ihr ratet abwechselnd im gleichen Feld, jeder hat {0} Versuche. Wer das Wort findet, bekommt den Punkt": "2 players: you take turns on the same board, each with {0} guesses. Whoever finds the word gets the point",
+    // Elfmeterschießen
+    "⚽ Spiel": "⚽ Game", "👕 Kabine & Shop": "👕 Dressing room & shop", "Karriere": "Career", "Quizfragen": "Quiz questions", "Schüsse": "Kicks", "▶ Karriere fortsetzen": "▶ Continue career",
+    "„Neue Karriere“ startet von vorn und ersetzt den gespeicherten Spielstand.": "“New career” starts again from scratch and replaces the saved progress.", "ELFMETER": "PENALTIES",
+    "1. Runde": "Round 1", "Achtelfinale": "Last 16", "Viertelfinale": "Quarter-final", "Halbfinale": "Semi-final", "Finale": "Final",
+    "links oben": "top left", "Mitte oben": "top centre", "rechts oben": "top right", "links unten": "bottom left", "Mitte unten": "bottom centre", "rechts unten": "bottom right",
+    "linke Seite": "left side", "Mitte": "centre", "rechte Seite": "right side",
+    "fast immer": "almost always", "meistens": "mostly", "oft": "often", "gern": "like to",
+    "springt {f} in die linke Ecke": "{f} dives to the left corner", "springt {f} in die rechte Ecke": "{f} dives to the right corner", "bleibt {f} in der Mitte stehen": "{f} stays in the middle",
+    "fliegt {f} hoch in die Ecken": "{f} flies high into the corners", "geht {f} flach in die Ecken": "{f} goes low into the corners",
+    "springt gern in die linke Ecke": "likes to dive to the left corner", "springt gern in die rechte Ecke": "likes to dive to the right corner", "bleibt gern in der Mitte stehen": "likes to stay in the middle", "fliegt gern hoch in die Ecken": "likes to fly high into the corners", "geht gern flach in die Ecken": "likes to go low into the corners",
+    "schießen {f} flach links": "{f} shoot low to the left", "schießen {f} flach rechts": "{f} shoot low to the right", "zielen {f} oben links": "{f} aim top left", "zielen {f} oben rechts": "{f} aim top right", "schieben {f} frech in die Mitte": "{f} cheekily roll it down the middle",
+    "schießen gern flach links": "like to shoot low to the left", "schießen gern flach rechts": "like to shoot low to the right", "zielen gern oben links": "like to aim top left", "zielen gern oben rechts": "like to aim top right", "schieben gern frech in die Mitte": "like to cheekily roll it down the middle",
+    "{a} – und sind eiskalt, verschießen kaum": "{a} – and they're ice-cold, they hardly ever miss", "{a} – werden aber nervös, wenn es eng wird": "{a} – but they get nervous when it's tight",
+    "– und sind eiskalt, verschießen kaum": "– and they're ice-cold, they hardly ever miss", "– werden aber nervös, wenn es eng wird": "– but they get nervous when it's tight",
+    "FC Flutlicht": "Floodlight FC", "Sporting Abseits": "Sporting Offside", "Real Nachspielzeit": "Real Stoppage Time", "Inter Eckfahne": "Inter Corner Flag", "Dynamo Doppelpass": "Dynamo One-Two",
+    "Athletic Grätsche": "Athletic Sliding Tackle", "Olympique Lattenkreuz": "Olympique Top Corner", "AC Konter": "AC Counter-Attack", "Borussia Bananenflanke": "Borussia Banana Cross", "Union Fallrückzieher": "Union Bicycle Kick",
+    "Racing Rabona": "Racing Rabona", "Juventus Joker": "Juventus Joker", "Spartak Steilpass": "Spartak Through Ball", "Ajax Außenrist": "Ajax Outside Foot", "Vitória Viererkette": "Vitória Back Four",
+    "Flutlicht": "Floodlight", "Abseits": "Offside", "Nachspielzeit": "Stoppage Time", "Eckfahne": "Corner Flag", "Doppelpass": "One-Two", "Grätsche": "Sliding Tackle", "Lattenkreuz": "Top Corner", "Konter": "Counter-Attack",
+    "Bananenflanke": "Banana Cross", "Fallrückzieher": "Bicycle Kick", "Rabona": "Rabona", "Joker": "Joker", "Steilpass": "Through Ball", "Außenrist": "Outside Foot", "Viererkette": "Back Four",
+    "Sportplatz {a}": "{a} Recreation Ground", "{a}-Kampfbahn": "{a} Ground", "{a}-Stadion": "{a} Stadium", "{a}-Arena": "{a} Arena", "{a}-Park": "{a} Park", "{a}-Kessel": "{a} Cauldron", "Ball-Knowledge-Arena": "Ball Knowledge Arena",
+    "Sportplatz, rund 300 Zuschauer, Sonntag 15 Uhr": "Recreation ground, around 300 spectators, Sunday 3 pm", "Kleines Stadion, 4.000 Zuschauer, Abendspiel": "Small stadium, 4,000 spectators, evening kick-off",
+    "Stadion unter Flutlicht, 18.000 Zuschauer": "Stadium under floodlights, 18,000 spectators", "Großes Stadion, 45.000 Zuschauer": "Big stadium, 45,000 spectators", "Finalarena, 70.000 Zuschauer, ausverkauft": "Final arena, 70,000 spectators, sold out",
+    "Tor": "Goal", "verschossen oder gehalten": "missed or saved", "VERLÄNGERUNG": "SUDDEN DEATH", "Elfmeterschießen beendet": "Shoot-out over",
+    "<span class=\"who\">{0}</span> · Gegner: {1}": "<span class=\"who\">{0}</span> · Opponent: {1}", "Lies den Scouting-Bericht – dann Anpfiff.": "Read the scouting report – then kick off.",
+    "<span class=\"who\">{0}</span> schießt · Schütze: {1}": "<span class=\"who\">{0}</span> {0?shoot:shoots} · Taker: {1}",
+    "{0} (Torwart): Wohin springst du? {1} schaut bitte weg.": "{0} (keeper): where do you dive? {1}, please look away.",
+    "Dein Tipp aus dem Quiz: Der Schütze zielt auf die {0} (markiert). Wohin springst du?": "Your tip from the quiz: the taker is aiming at the {0} (marked). Where do you dive?",
+    "Du bist der Torwart: Wohin springst du?": "You're in goal: where do you dive?", "{0}Wähle deine Ecke. {1}{2}": "{0}Pick your corner. {1}{2}",
+    "Der Torwart springt gleich.": "The keeper is about to dive.", " Quiz richtig: grüner Bereich größer!": " Quiz correct: bigger green zone!", " Quiz falsch: grüner Bereich kleiner.": " Quiz wrong: smaller green zone.",
+    "Richtig = größerer grüner Bereich beim Schuss.": "Correct = bigger green zone for your kick.", "Richtig = du siehst, auf welche Seite der Schütze zielt.": "Correct = you see which side the taker is aiming for.",
+    "Stoppe die Leiste im grünen Bereich – dort geht der Ball genau in {0}.": "Stop the bar in the green zone – then the ball goes exactly {0}.",
+    "Der Computer legt sich den Ball zurecht …": "The computer is placing the ball …", "Anpfiff – {0} gegen {1}": "Kick-off – {0} against {1}", "Anpfiff – Elfmeterschießen": "Kick-off – penalty shoot-out", "Heimat": "Home",
+    "Spielort": "Venue", "Torwart": "Keeper", "Schützen": "Takers", "Schütze": "Taker", "Scouting-Bericht": "Scouting report",
+    "<div class=\"pk-scout-row\"><span aria-hidden=\"true\">🏟️</span><span><b>Spielort</b>{0} · {1}</span></div>": "<div class=\"pk-scout-row\"><span aria-hidden=\"true\">🏟️</span><span><b>Venue</b>{0} · {1}</span></div>",
+    "<div class=\"pk-scout-row\"><span aria-hidden=\"true\">🧤</span><span><b>Torwart</b>{0}</span></div>": "<div class=\"pk-scout-row\"><span aria-hidden=\"true\">🧤</span><span><b>Keeper</b>{0}</span></div>",
+    "<div class=\"pk-scout-row\"><span aria-hidden=\"true\">⚽</span><span><b>Schützen</b>{0}</span></div>": "<div class=\"pk-scout-row\"><span aria-hidden=\"true\">⚽</span><span><b>Takers</b>{0}</span></div>",
+    "Stufe {0} – je weiter du kommst, desto schwerer": "level {0} – the further you get, the harder it becomes",
+    "<button type=\"button\" class=\"start-btn\" id=\"pk-scout-go\">Anpfiff</button>": "<button type=\"button\" class=\"start-btn\" id=\"pk-scout-go\">Kick-off</button>",
+    "{0}: {1} legt sich den Ball zurecht": "{0}: {1} places the ball", "Die Wahl des Torwarts ist gespeichert. Gerät an {0} (Schütze: {1}) weitergeben.": "The keeper's choice is saved. Pass the device to {0} (taker: {1}).",
+    "{0} {1} das Elfmeterschießen {2}:{3}{4}!": "{0} {0?win:wins} the shoot-out {2}:{3}{4}!", " nach Verlängerung": " after sudden death", "nach Verlängerung": "after sudden death",
+    "🏆 Pokalsieger! Finale gegen {0} {1}:{2}{3} gewonnen. Das ist dein {4}. Pokal!": "🏆 Cup winners! Final against {0} won {1}:{2}{3}. That's cup number {4}!",
+    "Neue Karriere": "New career", "{0} überstanden: {1}:{2}{3} gegen {4}! Als Nächstes: {5} gegen {6}. Spielstand gespeichert.": "{0} done: {1}:{2}{3} against {4}! Next up: {5} against {6}. Progress saved.",
+    "✈ Weiter ins {0}": "✈ On to the {0}", "Speichern & später weiterspielen": "Save & continue later", "Aus {0} {1}: {2}:{3}{4} gegen {5}. Beim nächsten Mal!": "Out in the {1}: {2}:{3}{4} against {5}. Better luck next time!",
+    "<span class=\"pk-ce-main\"><i class=\"coin\" aria-hidden=\"true\"></i><b>+{0}</b> Münzen · Kontostand {1}</span><span class=\"pk-ce-sub\">{2} – einlösen in der Kabine</span>": "<span class=\"pk-ce-main\"><i class=\"coin\" aria-hidden=\"true\"></i><b>+{0}</b> coins · balance {1}</span><span class=\"pk-ce-sub\">{2} – spend them in the dressing room</span>",
+    "Karriere starten": "Start career", "{0} gegen {1} · {2} · {3} von {4} Runden geschafft": "{0} against {1} · {2} · {3} of {4} rounds completed", "mit Quiz": "with quiz", "ohne Quiz": "without quiz",
+    "Bei welchem Verein spielte {0}?": "Which club did {0} play for?", "Aus welchem Land kommt {0}?": "Which country is {0} from?", "Wer von ihnen hat schon für {0} gespielt?": "Which of them has played for {0}?",
+    "Welcher Jahrgang ist {0}?": "In which year was {0} born?", "Wer von ihnen ist {0}?": "Which of them is a {0}?", "Quiz · {0} schießt": "Quiz · {0} {0?shoot:shoots}", "Quiz · Torwart-Tipp": "Quiz · keeper's tip",
+    "Zeit abgelaufen.": "Time's up.", "Richtig!": "Correct!", "Leider falsch.": "Sorry, wrong.", "Dein grüner Bereich wird größer.": "Your green zone gets bigger.", "Dein grüner Bereich wird kleiner.": "Your green zone gets smaller.",
+    "Du siehst gleich, auf welche Seite der Schütze zielt.": "You'll see which side the taker is aiming for.", "Kein Tipp für dich – du musst raten.": "No tip for you – you'll have to guess.",
+    "🏆 Deine Pokale: {0}{1}": "🏆 Your cups: {0}{1}", " · weitestes Ziel ohne Pokal: {0}": " · furthest run without a cup: {0}",
+    "Easy: der Computer-Torwart rät nur, der Computer-Schütze verschießt oft": "Easy: the computer keeper just guesses, the computer taker often misses",
+    "Okay: der Computer-Torwart rät meistens, der Schütze trifft etwa dreimal von vier": "Okay: the computer keeper mostly guesses, the taker scores about three times out of four",
+    "Advanced: der Computer merkt sich, wohin du am liebsten schießt und schießt, wo du selten springst": "Advanced: the computer remembers where you like to shoot and shoots where you rarely dive",
+    "Profi: der Computer liest dein Muster gut und trifft sicher": "Pro: the computer reads your pattern well and scores reliably", "Ball Knowledge: fast fehlerfreier Schütze, der Torwart erkennt jede Gewohnheit": "Ball Knowledge: an almost flawless taker, the keeper spots every habit",
+    "Karriere: 1. Runde, Achtelfinale, Viertelfinale, Halbfinale, Finale – jeder Gegner ist stärker. Wer verliert, fliegt raus": "Career: round 1, last 16, quarter-final, semi-final, final – every opponent is stronger. Lose and you're out",
+    "Vor jedem Spiel gibt es einen Scouting-Bericht: Wohin springt der Torwart, wohin schießen die Schützen?": "Before every match you get a scouting report: where does the keeper dive, where do the takers shoot?",
+    "5 Schüsse pro Team, bei Gleichstand Verlängerung. Gewinnst du das Finale, gibt es einen Pokal": "5 kicks per team, sudden death if level. Win the final and you get a cup",
+    "Gegen Computer: ihr schießt abwechselnd, du bist Schütze und Torwart": "Vs computer: you take turns, you're both taker and keeper",
+    "{0} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt": "{0} kicks per team; if level it goes to sudden death until one team is ahead",
+    "2 Spieler: Gerät an einem Bildschirm. Erst wählt der Torwart seine Zone verdeckt, dann gibst du das Gerät an den Schützen weiter": "2 players: one device, one screen. First the keeper picks a zone in secret, then you pass the device to the taker",
+    "Quiz vor jedem Schuss (8 Sekunden): Als Schütze macht eine richtige Antwort den grünen Bereich größer, eine falsche kleiner. Als Torwart verrät dir eine richtige Antwort, auf welche Seite der Schütze zielt": "Quiz before every kick (8 seconds): as the taker, a correct answer makes the green zone bigger, a wrong one smaller. As the keeper, a correct answer tells you which side the taker is aiming for",
+    "(zu zweit nur für den Schützen)": "(with two players only for the taker)", "Als Schütze: Zone wählen, dann die Leiste im grünen Bereich stoppen – gelb ist unsauber, rot geht vorbei": "As the taker: pick a zone, then stop the bar in the green zone – yellow is scuffed, red goes wide",
+    "Das laufende Elfmeterschießen wird beendet (Stand {0} : {1}).": "The current shoot-out will end (score {0} : {1}).",
+    "TOOOR!": "GOAL!", "GEHALTEN!": "SAVED!", "PFOSTEN!": "POST!", "DANEBEN!": "WIDE!", "DRÜBER!": "OVER!", "gehalten": "saved", "vorbei": "missed",
+    "Tippen = überspringen": "Tap = skip", "WIEDERHOLUNG · ANLAUF": "REPLAY · RUN-UP", "WIEDERHOLUNG · NETZKAMERA": "REPLAY · NET CAM", "WIEDERHOLUNG · ZEITLUPE": "REPLAY · SLOW MOTION",
+    "NÄCHSTES ZIEL · {a}": "NEXT DESTINATION · {a}", "FINALE": "FINAL", "FLUTLICHT-ARENA": "FLOODLIGHT ARENA", "VEREINSHEIM": "CLUBHOUSE", "BALL KNOWLEDGE · KABINE": "BALL KNOWLEDGE · DRESSING ROOM",
+    "BÄCKEREI BALLKORN": "BALLCORN BAKERY", "AUTOHAUS ABSEITS": "OFFSIDE MOTORS", "GETRÄNKE ECKFAHNE": "CORNER FLAG DRINKS", "SPORT STEILPASS": "THROUGH BALL SPORTS", "PIZZERIA ELFMETER": "PENALTY PIZZERIA", "FAHRSCHULE FLANKE": "CROSS DRIVING SCHOOL",
+    // Kabine & Shop
+    "Kabine": "Dressing room", "← Zurück": "← Back", "↔ Ziehen zum Drehen": "↔ Drag to turn", "Ganz": "Full", "Kopf": "Head", "Schuhe": "Boots", "Rücken": "Back", "Spieler": "Player", "Trikot": "Kit", "Extras": "Extras", "Nr.": "No.",
+    "Münzen gibt es gegen den Computer und in der Karriere: Sieg 15 bis 70 (je nach Stufe), jede gewonnene Karriere-Runde 30 bis 110, Pokalsieg +150, dazu jedes eigene Tor und jede Parade +3. Anprobieren ist kostenlos.": "You earn coins against the computer and in career mode: a win gives 15 to 70 (depending on level), every career round won 30 to 110, winning the cup +150, plus +3 for every goal you score and every save. Trying things on is free.",
+    "Vereinsfarben": "Club colours", "Klassik Weiß": "Classic white", "Nachtschwarz": "Midnight black", "Rot-Weiß gestreift": "Red and white stripes", "Grün-Weiß Ringel": "Green and white hoops", "Halb Blau, halb Gelb": "Half blue, half yellow",
+    "Weiß mit Schärpe": "White with sash", "Chevron Navy": "Navy chevron", "Nadelstreifen": "Pinstripes", "Sonnenuntergang": "Sunset", "Viertel Orange": "Orange quarters", "Retro-Zacken 90er": "90s retro zigzag", "Gold-Edition": "Gold edition",
+    "Klassisch Schwarz": "Classic black", "Weiß": "White", "Neongelb": "Neon yellow", "Pink": "Pink", "Royalblau": "Royal blue", "Orange": "Orange", "Rot": "Red", "Goldschuh": "Golden boot",
+    "Nummer": "Number", "Hals": "Neck", "Ohren": "Ears", "Augen": "Eyes", "Oberarm": "Upper arm", "linkes Handgelenk": "left wrist", "rechtes Handgelenk": "right wrist",
+    "Basecap": "Baseball cap", "Mütze": "Beanie", "Stirnband": "Headband", "Goldkette": "Gold chain", "Ohrringe": "Earrings", "Uhr": "Watch", "Schweißband": "Sweatband", "Kapitänsbinde": "Captain's armband", "Sportbrille": "Sports glasses", "Schlauchschal": "Snood",
+    "Der Kapitän": "The Captain", "Der Techniker": "The Technician", "Die Kante": "The Tank", "Der Künstler": "The Artist", "Der Sprinter": "The Sprinter", "Der Routinier": "The Veteran", "Der Showman": "The Showman", "Der Mittelfeldmotor": "The Engine",
+    "Kapitän": "Captain", "Techniker": "Technician", "Kante": "Tank", "Künstler": "Artist", "Sprinter": "Sprinter", "Routinier": "Veteran", "Showman": "Showman", "Mittelfeldmotor": "Engine",
+    "{0} · {1} Münzen": "{0} · {1} coins", "{0} · {1} · Nr. {2}{3}": "{0} · {1} · No. {2}{3}", " · {a} Extra": " · {a} extra", " · {a} Extras": " · {a} extras",
+    "Tippe auf ein Extra, um es anzuprobieren.": "Tap an extra to try it on.", "Steht auf deinem Trikot": "On your shirt", "Kostenlos – zeigt sich auf dem Rücken": "Free – shows on your back",
+    "Trägst du gerade": "Wearing it now", "Schon gekauft": "Already bought", "Preis {0}": "Price {0}", "Noch {0} nötig": "{0} more needed", "Kaufen · {0}": "Buy · {0}", "Ablegen": "Take off", "Anlegen": "Put on",
+    "Deine Nummer": "Your number", "Angezogen": "Wearing", "Auswählen": "Select", "Übernehmen": "Use it", "Anziehen": "Wear", "dabei": "wearing", "gekauft": "bought", "gratis": "free",
+    "{0}<div style=\"display:flex;gap:10px;align-items:center\">{1}{2}</div><span>3D-Vorschau braucht WebGL – Kaufen und Anziehen klappt trotzdem.</span>": "{0}<div style=\"display:flex;gap:10px;align-items:center\">{1}{2}</div><span>The 3D preview needs WebGL – buying and wearing still work.</span>",
+    "Sieg {0}": "win {0}", "Pokal 150": "cup 150", "{a} Tor {b}": "{a} goal {b}", "{a} Tore {b}": "{a} goals {b}", "{a} Parade {b}": "{a} save {b}", "{a} Paraden {b}": "{a} saves {b}",
+    "ersetzt {a}": "replaces {a}", "Kopf, ": "Head, ",
+    // Vereinskette
+    "{0} von {1} Leben": "{0} of {1} lives", "schon in der Kette": "already in the chain", "Der Computer überlegt …": "The computer is thinking …",
+    "{0}: Tippe einen Namen und wähle ihn aus der Liste. Passen kostet ein Leben.": "{0}: type a name and pick it from the list. Passing costs a life.", "Best of {0}": "Best of {0}", "überlegt …": "is thinking …",
+    "<span class=\"who\">Computer</span> überlegt …": "<span class=\"who\">Computer</span> is thinking …", "Am Zug: <span class=\"who\">{0}</span> · Kette: {1}": "To play: <span class=\"who\">{0}</span> · Chain: {1}",
+    "Gesucht: ein Spieler mit gemeinsamem Verein oder gemeinsamem Titel": "Wanted: a player with a shared club or a shared trophy", "Gesucht: ein Spieler, der auch bei einem dieser Vereine war": "Wanted: a player who was also at one of these clubs",
+    "Anpfiff – Startspieler: {0}": "Kick-off – starting player: {0}", "{0} ist schon in der Kette.": "{0} is already in the chain.", "{0} und {1} {2}": "{0} and {1} {2}",
+    "haben keinen gemeinsamen Verein und keinen gemeinsamen Titel": "have no shared club and no shared trophy", "waren nie beim selben Verein": "were never at the same club",
+    "Dem Computer fällt niemand ein": "The computer can't think of anyone", "{0} – {1} {2} ein Leben": "{0} – {1} {1?lose:loses} a life",
+    "{0}. {1}: noch {2} Leben. {3} {4} dran – mit demselben Spieler.": "{0}. {1}: lives left {2}. {3} {3?are:is} up – with the same player.",
+    "Sackgasse: Zu {0} gibt es keinen freien Spieler mehr – {1} {2} die Runde": "Dead end: there are no free players left for {0} – {1} {1?lose:loses} the round",
+    "{0}. {1} {2} keine Leben mehr": "{0}. {1} {1?have:has} no lives left", "{0}. Kette: {1} Spieler.": "{0}. Chain length: {1}.", " {0} {1} das Spiel {2}:{3}!": " {0} {0?win:wins} the match {2}:{3}!",
+    "Tor für {0} – {1}:{2}": "Goal for {0:l} – {1}:{2}", "Gepasst": "Passed", "Falsche Verbindung": "Wrong link", "Zeit abgelaufen": "Time's up",
+    "Easy: Startspieler sind Weltstars und Legenden; der Computer kennt nur die bekanntesten Namen und patzt oft": "Easy: starting players are world stars and legends; the computer only knows the biggest names and often slips up",
+    "Okay: bekannte Startspieler; der Computer kennt bekannte Namen": "Okay: well-known starting players; the computer knows well-known names", "Advanced: auch Stammspieler als Start; der Computer kennt deutlich mehr Spieler": "Advanced: regular starters as starting players too; the computer knows many more players",
+    "Profi: auch Ergänzungsspieler; der Computer kennt fast alle und patzt selten": "Pro: squad players too; the computer knows almost everyone and rarely slips up", "Ball Knowledge: jeder Spieler kann Start sein; der Computer kennt die ganze Datenbank": "Ball Knowledge: any player can start; the computer knows the whole database",
+    "Verbindung: gemeinsamer Verein oder gemeinsamer Titel (WM, EM, CL, EL, Conference League)": "Link: a shared club or a shared trophy (World Cup, Euros, CL, EL, Conference League)",
+    "Verbindung: die beiden Spieler waren mindestens einmal beim selben Verein (nicht unbedingt gleichzeitig)": "Link: the two players were at the same club at least once (not necessarily at the same time)",
+    "Jeder hat {0} Leben pro Runde: falsche Verbindung, Passen oder Zeitablauf kosten eins. Gibt es keinen freien Spieler mehr, verliert, wer dran ist": "Everyone has {0} lives per round: a wrong link, passing or running out of time costs one. If there are no free players left, whoever is up loses",
+    "Best of {0}: wer zuerst {1} Runden gewinnt": "Best of {0}: first to win {1} rounds", "Unbegrenzt: Runde um Runde": "Unlimited: round after round", "Zugzeit: {0} pro Antwort": "Turn time: {0} per answer", "pro Antwort": "per answer",
+    "Nenne abwechselnd einen Spieler, der mit dem letzten Spieler der Kette mindestens einmal beim selben Verein war (nicht unbedingt gleichzeitig). Jeder Spieler darf nur einmal vorkommen.": "Take turns naming a player who was at the same club as the last player in the chain at least once (not necessarily at the same time). Each player may only appear once.",
+    "Falsche Verbindung, Passen oder Zeitablauf kosten ein Leben, dann ist der Gegner mit demselben Spieler dran. Wer keine Leben mehr hat, verliert die Runde. Tipp: Wer einen Spieler ohne freie Verbindungen nennt, stellt den Gegner vor eine Sackgasse.": "A wrong link, passing or running out of time costs a life, then your opponent goes with the same player. Whoever runs out of lives loses the round. Tip: name a player with no free links left and your opponent hits a dead end.",
+    "BEST OF 3": "BEST OF 3",
+    // Wer bin ich?
+    "Generation": "Generation", "Geboren in den {0} · {1} {2} in den Top-5-Ligen": "Born in the {0} · {1} {2} in the top five leagues",     "keiner der fünf großen Titel (WM, EM, CL, EL, Conference League)": "none of the five major trophies (World Cup, Euros, CL, EL, Conference League)", " · {0} Ligaspiele, {1} Tore": " · {0} league apps, {1} goals",
+    "Name": "Name", "Jahrgang {0} · Initialen {1} · {2} Buchstaben": "Born {0} · initials {1} · {2} letters", "Jetzt erkannt = {0} {1}. Falscher Tipp oder Passen deckt den nächsten Hinweis auf.": "Recognise him now = {0} {1}. A wrong guess or passing reveals the next clue.",
+    "Runde {0}/{1}": "Round {0}/{1}", "{0}Hinweis <span class=\"who\">{1} von {2}</span>": "{0}Clue <span class=\"who\">{1} of {2}</span>", "Anpfiff – Runde {0} von {1}": "Kick-off – round {0} of {1}",
+    "{0} ist es nicht.": "It's not {0}.", "Zeit abgelaufen – {0}": "Time's up – {0}", "Gepasst.": "Passed.", " – {0} ist dran": " – {0} {0?are:is} up", "{0} Hinweis {1} ist aufgedeckt{2}.": "{0} Clue {1} is revealed{2}.",
+    "{0} {1} {2} nach {3} {4} erkannt: +{5} {6}!": "{0} recognised {2} after {3} {4}: +{5} {6}!",     "Niemand hat ihn erkannt – gesucht war {0}.": "Nobody recognised him – it was {0}.", " Endstand: {0} von {1} möglichen Punkten, {2} von {3} Spielern erkannt.": " Final score: {0} of {1} possible points, {2} of {3} players recognised.",
+    " Endstand {0}:{1} – unentschieden!": " Final score {0}:{1} – a draw!",
+    "6 Hinweise, vom Groben zum Genauen: Generation und Anzahl Vereine, Nation, Titel, Ligen, Vereine, zuletzt Jahrgang und Initialen": "6 clues, from vague to precise: generation and number of clubs, nation, trophies, leagues, clubs, finally year of birth and initials",
+    "Punkte: erkannt bei Hinweis 1 = 6 Punkte, bei Hinweis 6 = 1 Punkt. Falscher Tipp, Passen oder Zeitablauf decken den nächsten Hinweis auf": "Points: recognised at clue 1 = 6 points, at clue 6 = 1 point. A wrong guess, passing or running out of time reveals the next clue",
+    "Solo: {0} Runden, sammle so viele Punkte wie möglich": "Solo: {0} rounds, collect as many points as you can", "2 Spieler: ihr ratet abwechselnd, nach jedem Fehlversuch ist der andere dran. {0} Runden, mehr Punkte gewinnt": "2 players: you take turns guessing, after every miss it's the other's turn. {0} rounds, most points wins",
+    "Zugzeit: {0} pro Hinweis": "Turn time: {0} per clue", "pro Hinweis": "per clue", "Das laufende Spiel wird beendet, der Punktestand geht verloren.": "The current game will end and the score will be lost.",
+    "{a}er": "{a}s",
+    // Zeitstrahl
+    "früher geboren": "born earlier", "später geboren": "born later", "Vereine in den Top-5-Ligen": "Clubs in the top five leagues", "weniger Vereine": "fewer clubs", "mehr Vereine": "more clubs",
+    "Große Titel (WM, EM, CL, EL, ECL)": "Major trophies (World Cup, Euros, CL, EL, ECL)", "weniger Titel": "fewer trophies", "mehr Titel": "more trophies", "kein Titel": "no trophy",
+    "Ligaspiele der Karriere": "Career league apps", "Ligatore der Karriere": "Career league goals", "Tore": "Goals", "Tippe auf die Lücke, in die der Spieler gehört.": "Tap the gap where the player belongs.", "Spiel beendet": "Game over",
+    "{0}Kriterium: <span class=\"who\">{1}</span>": "{0}Criterion: <span class=\"who\">{1}</span>",
+    "<small>Wohin gehört er? · {0}</small><b>{1}</b><span class=\"meta\">{2} · noch {3} danach</span>": "<small>Where does he belong? · {0}</small><b>{1}</b><span class=\"meta\">{2} · {3} more after him</span>",
+    "Hier einsortieren (Position {a})": "Place here (position {a})", "＋ hier": "＋ here", " <small>Jg. {0}</small>": " <small>b. {0}</small>", "Jg. {a}": "b. {a}",
+    "Anpfiff – Zeitstrahl nach {0}": "Kick-off – timeline by {0}", "Richtig! {a}: {b}.": "Correct! {a}: {b}.",
+    "<span style=\"color:var(--bad)\">{0} – {1} ({2}) gehört an die markierte Stelle. −1 Leben.</span>": "<span style=\"color:var(--bad)\">{0} – {1} ({2}) belongs in the marked spot. −1 life.</span>", "Falsch": "Wrong",
+    "{0}: {1} falsch einsortiert ({2}) – ein Leben weg": "{0}: {1} placed wrongly ({2}) – a life lost", "Zeitstrahl komplett! {0} von {1} richtig einsortiert, {2} {3} übrig.": "Timeline complete! {0} of {1} placed correctly, lives left: {2}.",
+    "Keine Leben mehr – {0} Spieler richtig einsortiert.": "No lives left – {0} players placed correctly.", "{0} hat keine Leben mehr – {1} gewinnt ({2}:{3} richtig)!": "{0} {0?have:has} no lives left – {1} {1?win:wins} ({2}:{3} correct)!",
+    "Zeitstrahl komplett – unentschieden ({0}:{1} richtig)!": "Timeline complete – a draw ({0}:{1} correct)!", "Zeitstrahl komplett – {0} gewinnt mit {1}:{2} richtig{3}!": "Timeline complete – {0} {0?win:wins} with {1}:{2} correct{3}!", " und mehr Leben": " and more lives",
+    "Geburtsjahr: oben die Ältesten, unten die Jüngsten": "Year of birth: oldest at the top, youngest at the bottom",
+    "Vereine: wie viele verschiedene Vereine in den Top-5-Ligen (Bundesliga, Premier League, La Liga, Serie A, Ligue 1)": "Clubs: how many different clubs in the top five leagues (Bundesliga, Premier League, La Liga, Serie A, Ligue 1)",
+    "Titel: wie oft die fünf großen Titel gewonnen wurden (WM, EM, CL, EL, Conference League) – drei CL-Siege zählen dreimal": "Trophies: how often the five major trophies were won (World Cup, Euros, CL, EL, Conference League) – three CL wins count three times",
+    "Titel: wie viele der fünf großen Titel gewonnen wurden (WM, EM, CL, EL, Conference League) – jeder Titel zählt einmal": "Trophies: how many of the five major trophies were won (World Cup, Euros, CL, EL, Conference League) – each trophy counts once",
+    "Ligaspiele: alle Ligaspiele der Karriere laut Wikipedia (ohne Pokal und Europapokal)": "League apps: all career league appearances according to Wikipedia (excluding cups and European competitions)",
+    "Ligatore: alle Ligatore der Karriere laut Wikipedia (ohne Pokal und Europapokal)": "League goals: all career league goals according to Wikipedia (excluding cups and European competitions)",
+    "Gemischt: jedes Spiel wird eines der {0} Kriterien ausgelost": "Mixed: each game draws one of the {0} criteria at random", "fünf": "five", "drei": "three",
+    "{0} Spieler: einer liegt schon, die anderen {1} sortierst du nacheinander ein. Jeder hat {2} Leben": "{0} players: one is already placed, you slot the other {1} in one by one. Everyone has {2} lives",
+    "Falsch einsortiert kostet ein Leben, der Spieler rutscht dann an seinen richtigen Platz. Bei gleichem Wert ist jede Reihenfolge richtig": "A wrong placement costs a life, and the player then slides into his correct spot. With equal values, any order is correct",
+    "Solo: schaffst du den ganzen Zeitstrahl?": "Solo: can you complete the whole timeline?", "2 Spieler: ihr sortiert abwechselnd. Wer keine Leben mehr hat, verliert; sonst gewinnt, wer mehr richtig hat": "2 players: you take turns placing. Whoever runs out of lives loses; otherwise whoever has more correct wins",
+    "Zugzeit: {0} pro Spieler": "Turn time: {0} per player", "pro Spieler": "per player", "Der laufende Zeitstrahl wird beendet.": "The current timeline will end.",
+    // Ergänzungen aus dem Testlauf
+    "Profi": "Pro", "{a} pro Zug": "{a} per turn", "{a} pro Tipp": "{a} per guess", "{a} pro Hinweis": "{a} per clue", "{a} pro Antwort": "{a} per answer", "{a} pro Spieler": "{a} per player",
+    "{a} Versuche": "{a} guesses", "{a} Runden": "{a} rounds", "{a} Schüsse": "{a} kicks", "{a} Sekunden": "{a} seconds",
+    "{a}: {b} – passt nicht": "{a}: {b} – no match", "{a}: {b} – passt": "{a}: {b} – match", "{a}: {b} – passt teilweise": "{a}: {b} – partial match",
+    "{a} (zu zweit nur für den Schützen)": "{a} (with two players only for the taker)",
+    "Richtig! {a}": "Correct! {a}", "Leider falsch. {a}": "Sorry, wrong. {a}", "Zeit abgelaufen. {a}": "Time's up. {a}",
+    "wählst {a}": "pick {a}", "wählt {a}": "picks {a}", "Zeile {a}": "Row {a}", "Spalte {a}": "Column {a}", "wird gewählt": "being picked",
+    "Easy: Startspieler sind Weltstars und Legenden": "Easy: starting players are world stars and legends", "Okay: bekannte Startspieler": "Okay: well-known starting players",
+    "Advanced: auch Stammspieler als Start": "Advanced: regular starters as starting players too", "Profi: auch Ergänzungsspieler": "Pro: squad players too", "Ball Knowledge: jeder Spieler kann Start sein": "Ball Knowledge: any player can start",
+    "{a}: richtig": "{a}: correct", "{a}: falsche Stelle": "{a}: wrong place", "{a}: nicht enthalten": "{a}: not in the word", "richtig": "correct", "falsche Stelle": "wrong place",
+    "RUNDE {a}": "ROUND {a}", "Tor für Du!": "Goal for you!", "Tor für dich!": "Goal for you!",
+    "{a} (X)": "{a} (X)", "{a} (O)": "{a} (O)", "{a} Lösungen": "{a} solutions", "{a} Lösung": "{a} solution", "{a}: {b} – teilweise": "{a}: {b} – partial match",
+    "{a} passt": "{a} {a?pass:passes}", "Letzter Spieler der Kette": "Last player in the chain", "Startspieler": "Starting player",
+    "▲ früher geboren": "▲ born earlier", "▼ später geboren": "▼ born later", "▲ weniger Vereine": "▲ fewer clubs", "▼ mehr Vereine": "▼ more clubs", "▲ weniger Titel": "▲ fewer trophies", "▼ mehr Titel": "▼ more trophies",
+    "▲ weniger Ligaspiele": "▲ fewer league apps", "▼ mehr Ligaspiele": "▼ more league apps", "▲ weniger Ligatore": "▲ fewer league goals", "▼ mehr Ligatore": "▼ more league goals", "weniger Ligaspiele": "fewer league apps", "mehr Ligaspiele": "more league apps", "weniger Ligatore": "fewer league goals", "mehr Ligatore": "more league goals",
+    "{a} Verein": "{a} club", "{a} Vereine": "{a} clubs", "{a} Titel": "{a} trophies", "{a} Spiele": "{a} apps", "{a} Tor": "{a} goal", "{a} Tore": "{a} goals", "1 Titel": "1 trophy",
+    "verdeckt": "hidden", "{a} P.": "{a} pts", "⏭ gepasst": "⏭ passed", "⏱ Zeit": "⏱ time", "{a}0ern": "{a}0s",
+  });
+  // Wörter, die nur als Teil eines Satzes vorkommen (Verbformen, Pronomen)
+  const CAP_EN = { "in der": "in the", "im": "in the", "Verein": "club", "Vereine": "clubs", "Punkt": "point", "Punkte": "points", "Hinweis": "clue", "Hinweisen": "clues", "Versuch": "guess", "Versuche": "guesses", "Leben": "lives", "Lösung": "solution", "Lösungen": "solutions" };
 
   // ---------- Schwierigkeitsstufen ----------
   const EASY_CLUBS = ["FC Bayern München","Borussia Dortmund","Bayer 04 Leverkusen","RB Leipzig","FC Schalke 04","Werder Bremen","Hamburger SV","VfB Stuttgart","Eintracht Frankfurt","Borussia Mönchengladbach","VfL Wolfsburg","1. FC Köln","Real Madrid","FC Barcelona","Atlético Madrid","FC Sevilla","FC Valencia","FC Villarreal","Athletic Bilbao","Real Sociedad","Betis Sevilla","Manchester United","Manchester City","FC Liverpool","FC Chelsea","FC Arsenal","Tottenham Hotspur","Newcastle United","Aston Villa","FC Everton","West Ham United","Leicester City","Juventus Turin","AC Milan","Inter Mailand","AS Rom","SSC Neapel","Lazio Rom","AC Florenz","Atalanta Bergamo","Paris Saint-Germain","Olympique Marseille","Olympique Lyon","AS Monaco","OSC Lille","OGC Nizza"];
@@ -2088,8 +2620,9 @@
   const isTitle = k => k >= NC + CC;
   // Als Kategorie wählbar: alle Nationen und Titel, aber nur Vereine, die in den letzten 5 Saisons erstklassig waren
   const selectable = k => !isClub(k) || DB.clubs[k - NC][4] === 1;
-  const catName = k => isNation(k) ? DB.nations[k][0] : isClub(k) ? DB.clubs[k - NC][0] : DB.titles[k - NC - CC][0];
-  const catSub = k => isNation(k) ? "Nation" : isClub(k) ? DB.clubs[k - NC][1] : "Titel";
+  const catRaw = k => isNation(k) ? DB.nations[k][0] : isClub(k) ? DB.clubs[k - NC][0] : DB.titles[k - NC - CC][0];
+  const catName = k => isNation(k) ? natName(DB.nations[k][0]) : isClub(k) ? clubName(DB.clubs[k - NC][0], DB.clubs[k - NC][1]) : titleName(DB.titles[k - NC - CC][0]);
+  const catSub = k => isNation(k) ? "Nation" : isClub(k) ? DB.clubs[k - NC][1] : tr("Titel");
   const catSize = k => isNation(k) ? DB.nations[k][1] : isClub(k) ? DB.clubs[k - NC][3] : DB.titles[k - NC - CC][1];
   // Suchbegriffe, unter denen die Titel zusätzlich gefunden werden
   const TITLE_ALIAS = {
@@ -2116,7 +2649,8 @@
       if (p[5]) for (const t of p[5]) BITS[(NC + CC + t) * W + w] |= b;
     }
     CATNORM = [];
-    for (let k = 0; k < NC + CC + NT; k++) CATNORM[k] = normalize(catName(k) + (isTitle(k) ? " " + (TITLE_ALIAS[catName(k)] || "") : ""));
+    // Suche findet Kategorien auf Deutsch und Englisch („Deutschland“ wie „Germany“)
+    for (let k = 0; k < NC + CC + NT; k++) { const r = catRaw(k), e = isNation(k) ? NAT_EN[r] : isClub(k) ? clubEn(r, DB.clubs[k - NC][1]) : TITLE_EN[r]; CATNORM[k] = normalize(r + (e && e !== r ? " " + e : "") + (isTitle(k) ? " " + (TITLE_ALIAS[r] || "") : "")); }
     // Spielbar = mindestens ein erlaubter Verein (erstklassig in den letzten 5 Saisons) oder ein Titel.
     // Alle anderen bleiben in der Datei, werden aber ausgeblendet – steigt ein Verein auf, genügt es, ihn freizuschalten.
     REACH = new Uint8Array(NP);
@@ -2434,11 +2968,11 @@
   function buildSoundList() {
     $("snd-list").innerHTML = SOUND_LIST.map(([k, name, hint]) => `
       <div class="snd-row" data-snd="${k}">
-        <span class="snd-name">${esc(name)}<small>${esc(hint)}</small></span>
-        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="${esc(name)} an oder aus"><i></i></button>
-        <input type="range" min="0" max="100" step="10" value="100" aria-label="Lautstärke ${esc(name)}">
+        <span class="snd-name">${esc(tr(name))}<small>${esc(tr(hint))}</small></span>
+        <button type="button" class="switch" role="switch" aria-checked="true" aria-label="${esc(tr("{n} an oder aus", { n: tr(name) }))}"><i></i></button>
+        <input type="range" min="0" max="100" step="10" value="100" aria-label="${esc(tr("Lautstärke {n}", { n: tr(name) }))}">
         <output class="snd-val">100 %</output>
-        <button type="button" class="snd-test" aria-label="${esc(name)} anhören">▶</button>
+        <button type="button" class="snd-test" aria-label="${esc(tr("{n} anhören", { n: tr(name) }))}">▶</button>
       </div>`).join("");
     $("snd-list").querySelectorAll(".snd-row").forEach(row => {
       const k = row.dataset.snd;
@@ -2510,7 +3044,7 @@
     guessInput.value = ""; pendingPick = null; hideSuggest();
     // Die Anfrage beendet den eigenen Zug sofort, der andere entscheidet in seinem Zug
     const nxt = other(by), nxtName = who(nxt) === "Computer" ? "der Computer" : who(nxt);
-    failTurn(`${who(by)} ${verb(by, "fragst", "fragt")} nach einem neuen Raster – ${nxtName} ${verb(nxt, "bist", "ist")} dran`, 1000, "request");
+    failTurn(tr(`{0} {1} nach einem neuen Raster – {2} {3} dran`, [who(by), verb(by, "fragst", "fragt"), nxtName, verb(nxt, "bist", "ist")]), 1000, "request");
   }
   function acceptRequest() {
     if (!state.request || state.over) return;
@@ -2521,7 +3055,7 @@
     if (state.requestNote && state.requestNote.until === p) state.requestNote = null;
     if (state.request && state.request.by !== p) {
       state.request = null;
-      state.requestNote = { text: `${who(p)} ${verb(p, "hast", "hat")} weitergespielt – Anfrage abgelehnt, das Raster bleibt.`, until: other(p) };
+      state.requestNote = { text: tr(`{0} {1} weitergespielt – Anfrage abgelehnt, das Raster bleibt.`, [who(p), verb(p, "hast", "hat")]), until: other(p) };
     }
   }
   // Computer entscheidet über deine Anfrage, wenn er am Zug ist. true = angenommen (neues Raster läuft)
@@ -2557,7 +3091,7 @@
         txt.textContent = `${who(by)} ${verb(by, "möchtest", "möchte")} ${want}. Der Computer entscheidet jetzt.`;
         btn.hidden = true;
       } else {
-        txt.textContent = `${who(by)} möchte ${want}. ${who(to)}: annehmen – oder einfach normal weiterspielen, dann bleibt alles, wie es ist.`;
+        txt.textContent = tr(`{0} möchte {1}. {2}: annehmen – oder einfach normal weiterspielen, dann bleibt alles, wie es ist.`, [who(by), want, who(to)]);
         btn.hidden = false; btn.textContent = `${who(to)}: Annehmen`;
         btn.classList.toggle("x", to === "X");
       }
@@ -2578,7 +3112,7 @@
     const [ax] = draftSlot();
     const other = (ax === "r" ? state.cols : state.rows).filter(x => x !== null);
     if (isNation(k) && other.some(o => isNation(o))) return "zwei Nationen können sich nicht kreuzen";
-    for (const o of other) if (pairCount(k, o) === 0) return `0 Spieler mit ${catName(o)}`;
+    for (const o of other) if (pairCount(k, o) === 0) return tr(`0 Spieler mit {0}`, [catName(o)]);
     return null;
   }
   function beginDraftStep() {
@@ -2662,12 +3196,12 @@
   function timeUp() {
     if (state.over || state.busy || !humanTurn() || state.phase !== "play") return;
     guessInput.value = ""; pendingPick = null; hideSuggest();
-    failTurn(isDu(state.turn) ? "Zeit abgelaufen – du verlierst den Zug" : `Zeit abgelaufen – ${who(state.turn)} verliert den Zug`, 1400, "time");
+    failTurn(isDu(state.turn) ? "Zeit abgelaufen – du verlierst den Zug" : tr(`Zeit abgelaufen – {0} verliert den Zug`, [who(state.turn)]), 1400, "time");
   }
   function skipTurn() {
     if (state.over || state.busy || !humanTurn() || state.phase !== "play") return;
     guessInput.value = ""; pendingPick = null; hideSuggest();
-    failTurn(`${who(state.turn)} ${verb(state.turn, "setzt", "setzt")} aus`, 700, "skip");
+    failTurn(tr(`{0} {1} aus`, [who(state.turn), verb(state.turn, "setzt", "setzt")]), 700, "skip");
   }
   const rc = i => ({ r: Math.floor(i / 3), c: i % 3 });
   function checkWin() {
@@ -2721,7 +3255,7 @@
         el.type = "button";
         el.className = "cell" + (cell ? " filled " + cell.s.toLowerCase() : "") + (state.activeCell === i ? " active" : "") +
           (win && win.line.includes(i) ? " win" : "") + (drafting ? " locked" : "");
-        if (a !== null && b !== null) el.setAttribute("aria-label", `${catName(a)} und ${catName(b)}`);
+        if (a !== null && b !== null) el.setAttribute("aria-label", tr(`{0} und {1}`, [catName(a), catName(b)]));
         if (cell) {
           el.innerHTML = `<span class="mark">${cell.s}</span><span class="pname">${esc(DB.players[cell.p][0])}</span>`;
         } else if (a !== null && b !== null) {
@@ -2735,17 +3269,17 @@
     $("name-x").textContent = `${who("X")} (X)`;
     $("name-o").textContent = `${who("O")} (O)`;
     syncBig();
-    document.querySelector(".score-mid").textContent = state.bestOf ? `Runde ${state.roundNo} · Best of ${state.bestOf}` : `Runde ${state.roundNo}`;
+    document.querySelector(".score-mid").textContent = state.bestOf ? tr(`Runde {0} · Best of {1}`, [state.roundNo, state.bestOf]) : tr(`Runde {0}`, [state.roundNo]);
     $("score-x").textContent = state.score.X;
     $("score-o").textContent = state.score.O;
     turnChip.style.background = state.turn === "X" ? "var(--accent)" : "var(--accent-2)";
     if (!state.over && !turnBanner.classList.contains("err")) {
       if (drafting) {
-        turnText.innerHTML = state.busy ? `<span class="who">Computer wählt …</span>`
+        turnText.innerHTML = state.busy ? tr(`<span class="who">Computer wählt …</span>`)
           : `<span class="who">${who(state.turn)}</span> ${verb(state.turn, "wählst", "wählt")} ${slotLabel(draftSlot())}`;
       } else {
         turnText.innerHTML = state.busy && state.turn === "O" && state.mode === "cpu"
-          ? `<span class="who">Computer überlegt …</span>` : `Am Zug: <span class="who">${who(state.turn)}</span>`;
+          ? tr(`<span class="who">Computer überlegt …</span>`) : tr(`Am Zug: <span class="who">{0}</span>`, [who(state.turn)]);
       }
     }
     $("skip-btn").disabled = drafting || state.over || state.busy || !humanTurn();
@@ -2759,7 +3293,7 @@
     guessSubmit.textContent = drafting ? "Wählen" : "Setzen";
     if (drafting) {
       activeTag.innerHTML = humanTurn()
-        ? `Wähle eine Nation, einen Verein oder einen Titel für <b>${slotLabel(draftSlot())}</b>. Jedes Feld braucht mindestens eine Lösung, und zwei Nationen dürfen sich nicht kreuzen.`
+        ? tr(`Wähle eine Nation, einen Verein oder einen Titel für <b>{0}</b>. Jedes Feld braucht mindestens eine Lösung, und zwei Nationen dürfen sich nicht kreuzen.`, [slotLabel(draftSlot())])
         : "Der Computer wählt eine Kategorie.";
       if (canType) guessInput.focus({ preventScroll: true });
     } else if (!humanTurn() && !state.over) {
@@ -2841,7 +3375,7 @@
     const i = sugItems[k]; if (i === undefined) return;
     if (state.phase === "draft") {
       const why = draftCheck(i);
-      if (why) { flashNote(`${catName(i)} geht hier nicht: ${why}.`); return; }
+      if (why) { flashNote(tr(`{0} geht hier nicht: {1}.`, [catName(i), why])); return; }
       applyDraft(i); return;
     }
     pendingPick = i; guessInput.value = DB.players[i][0]; hideSuggest();
@@ -2872,7 +3406,7 @@
     if (!nq) return;
     const exact = []; for (let k = 0; k < CATNORM.length; k++) if (CATNORM[k] === nq) exact.push(k);
     const k = exact.find(x => !draftCheck(x));
-    if (k === undefined) { flashNote(exact.length ? `${catName(exact[0])} geht hier nicht: ${draftCheck(exact[0])}.` : "Bitte eine Nation, einen Verein oder einen Titel aus der Liste wählen."); return; }
+    if (k === undefined) { flashNote(exact.length ? tr(`{0} geht hier nicht: {1}.`, [catName(exact[0]), draftCheck(exact[0])]) : "Bitte eine Nation, einen Verein oder einen Titel aus der Liste wählen."); return; }
     applyDraft(k);
   }
 
@@ -2909,19 +3443,19 @@
     else { const nq = normalize(raw); pool = []; for (let i = 0; i < NORM.length; i++) if (NORM[i] === nq) pool.push(i); }
     guessInput.value = ""; pendingPick = null; hideSuggest();
     if (!pool.length) return failTurn("Spieler nicht in der Datenbank – Zug verloren");
-    if (!pool.some(i => REACH[i])) return failTurn(`${DB.players[pool[0]][0]} passt nicht zu ${catName(a)} × ${catName(b)} – Zug verloren`);
+    if (!pool.some(i => REACH[i])) return failTurn(tr(`{0} passt nicht zu {1} × {2} – Zug verloren`, [DB.players[pool[0]][0], catName(a), catName(b)]));
     if (!pool.some(eligible)) {
       const p = DB.players[pool[0]];
       const jg = p[1] ? " (Jg. " + p[1] + ")" : "";
-      const why = { oldies: `ist zu jung für „Oldies but Goldies“${jg}`, gen2000: `ist vor 2000 geboren${jg} – nicht „Born in the 2000s“`,
-                    klassik: `hat schon vor 2000 Profi gespielt${jg} – nicht im Classic-Modus` }[state.variant] || "gehört nicht zu diesem Modus";
-      return failTurn(`${p[0]} ${why} – Zug verloren`);
+      const why = { oldies: tr(`ist zu jung für „Oldies but Goldies“{0}`, [jg]), gen2000: tr(`ist vor 2000 geboren{0} – nicht „Born in the 2000s“`, [jg]),
+                    klassik: tr(`hat schon vor 2000 Profi gespielt{0} – nicht im Classic-Modus`, [jg]) }[state.variant] || "gehört nicht zu diesem Modus";
+      return failTurn(tr(`{0} {1} – Zug verloren`, [p[0], why]));
     }
     pool = pool.filter(eligible);
     const fits = pool.filter(i => hasCat(i, a) && hasCat(i, b));
-    if (!fits.length) return failTurn(`${DB.players[pool[0]][0]} passt nicht zu ${catName(a)} × ${catName(b)} – Zug verloren`);
+    if (!fits.length) return failTurn(tr(`{0} passt nicht zu {1} × {2} – Zug verloren`, [DB.players[pool[0]][0], catName(a), catName(b)]));
     const free = fits.filter(i => !state.used.has(i));
-    if (!free.length) return failTurn(`${DB.players[fits[0]][0]} wurde schon gesetzt – Zug verloren`);
+    if (!free.length) return failTurn(tr(`{0} wurde schon gesetzt – Zug verloren`, [DB.players[fits[0]][0]]));
     place(free[0]);
   }
   guessForm.addEventListener("submit", e => {
@@ -2947,13 +3481,13 @@
       const stand = `${state.score.X} : ${state.score.O}`;
       if (state.bestOf && state.score[win.s] >= needWins()) {
         state.matchOver = true;
-        resultText.textContent = `${who(win.s)} ${verb(win.s, "gewinnst", "gewinnt")} das Spiel ${stand}!`;
+        resultText.textContent = tr(`{0} {1} das Spiel {2}!`, [who(win.s), verb(win.s, "gewinnst", "gewinnt"), stand]);
       } else {
-        resultText.textContent = `${who(win.s)} ${verb(win.s, "gewinnst", "gewinnt")} Runde ${state.roundNo} – Stand ${stand}`;
+        resultText.textContent = tr(`{0} {1} Runde {2} – Stand {3}`, [who(win.s), verb(win.s, "gewinnst", "gewinnt"), state.roundNo, stand]);
       }
       finish(); return;
     }
-    if (state.cells.every(Boolean)) { state.over = true; resultText.textContent = `Runde ${state.roundNo} unentschieden – das Raster ist voll.`; finish(); return; }
+    if (state.cells.every(Boolean)) { state.over = true; resultText.textContent = tr(`Runde {0} unentschieden – das Raster ist voll.`, [state.roundNo]); finish(); return; }
     state.turn = state.turn === "X" ? "O" : "X";
     state.activeCell = null;
     beginTurn();
@@ -2962,7 +3496,7 @@
   function showGoal(s) {
     const el = $("goal-anim"), txt = $("goal-text");
     clearTimeout(goalTimer);
-    txt.textContent = `Tor für ${who(s)}!`.replace("Tor für Du!", "Tor für dich!");
+    txt.textContent = tr(`Tor für {0}!`, [who(s)]).replace("Tor für Du!", "Tor für dich!");
     txt.style.color = s === "X" ? "var(--x-mark)" : "var(--o-mark)";
     el.hidden = true; void el.offsetWidth; el.hidden = false;       // Animation neu starten
     goalTimer = setTimeout(() => { el.hidden = true; }, 1950);
@@ -3020,19 +3554,19 @@
     store("kaderraster-mode", m);
   }
   function setLevel(l) { state.level = l; pressed("[data-lvl]", "lvl", l); store("kaderraster-level", l); }
-  const fmtN = n => n.toLocaleString("de-DE");
+  const fmtN = n => n.toLocaleString(LOC());
   // Beschreibung je Stufe; die Zahl zeigt, wie viele Spieler des gewählten Modus zur Bekanntheits-Gruppe gehören (Schätzung)
-  const tierNum = l => (TIER_CUT[l] ? ` (ca. ${fmtN(TIER_CUT[l])} Spieler)` : "");
+  const tierNum = l => (TIER_CUT[l] ? tr(` (ca. {0} Spieler)`, [fmtN(TIER_CUT[l])]) : "");
   const LEVEL_TXT = {
-    easy: () => `Easy: 46 Großvereine und große Nationen, in jedem Feld mindestens 2 Weltstars oder Legenden${tierNum("easy")}`,
-    okay: () => `Okay: Großvereine und große Nationen, in jedem Feld mindestens 2 bekannte Namen${tierNum("okay")}`,
-    advanced: () => `Advanced: mehr Vereine, in jedem Feld mindestens 2 Spieler, die Fußballfans meist kennen${tierNum("advanced")}`,
+    easy: () => tr(`Easy: 46 Großvereine und große Nationen, in jedem Feld mindestens 2 Weltstars oder Legenden{0}`, [tierNum("easy")]),
+    okay: () => tr(`Okay: Großvereine und große Nationen, in jedem Feld mindestens 2 bekannte Namen{0}`, [tierNum("okay")]),
+    advanced: () => tr(`Advanced: mehr Vereine, in jedem Feld mindestens 2 Spieler, die Fußballfans meist kennen{0}`, [tierNum("advanced")]),
     pro: () => "Profi: breite Auswahl an Vereinen und Nationen, auch Ergänzungs- und Kaderspieler als Lösung",
     ball: () => "Ball Knowledge: alles ist erlaubt – auch kleine Vereine, kleine Nationen und Randfiguren",
   };
   const CAT_TXT = { random: "Zufall: das Raster wird ausgelost", draft: "Selbst wählen: ihr wählt die Kategorien abwechselnd, Spieler 1 die Zeilen, Spieler 2 bzw. der Computer die Spalten" };
-  const bestTxt = () => state.bestOf ? `Best of ${state.bestOf}: wer zuerst ${needWins()} Runden gewinnt, gewinnt das Spiel. Übersprungene Raster zählen nicht` : "Unbegrenzt: ihr spielt Runde um Runde, der Spielstand läuft einfach weiter";
-  const timeTxt = t => t ? `Zugzeit: ${t === 60 ? "1 Minute" : t + " Sekunden"} pro Zug` : "Zugzeit: ohne Zeitlimit";
+  const bestTxt = () => state.bestOf ? tr(`Best of {0}: wer zuerst {1} Runden gewinnt, gewinnt das Spiel. Übersprungene Raster zählen nicht`, [state.bestOf, needWins()]) : "Unbegrenzt: ihr spielt Runde um Runde, der Spielstand läuft einfach weiter";
+  const timeTxt = t => t ? tr(`Zugzeit: {0} pro Zug`, [t === 60 ? "1 Minute" : t + " Sekunden"]) : "Zugzeit: ohne Zeitlimit";
   function renderMenuHelp() {
     $("menu-help").innerHTML = [bestTxt(), LEVEL_TXT[state.level](), CAT_TXT[state.catMode], timeTxt(state.time)].map(t => `<li>${esc(t)}</li>`).join("");
   }
@@ -3056,7 +3590,8 @@
     pen: ["Fußball-Spiel · Elfmeterschießen", "Karriere vom Pokal bis ins Finale: Vor jedem Schuss eine Quizfrage – wer Ball Knowledge hat, trifft leichter und liest den Schützen. Dann Ecke wählen und die Leiste im grünen Bereich stoppen."],
   };
   const HOME_TXT = ["Fußball-Quiz · Games", "Sieben Fußball-Games, eine Spielerdatenbank. Wähle zuerst ein Game, danach den Spielmodus."];
-  function setMasthead(t) { $("eyebrow").textContent = t[0]; $("sub").textContent = t[1]; }
+  let curMast = HOME_TXT;
+  function setMasthead(t) { curMast = t; $("eyebrow").textContent = tr(t[0]); $("sub").textContent = tr(t[1]); }
   function setGame(g) {
     activeGame = g;
     pressed("[data-game]", "game", g);
@@ -3069,17 +3604,30 @@
     $("home").hidden = true; $("vpick").hidden = false;
     setTheme("alltime");
     setMasthead(GAME_TXT[activeGame]);
-    $("vpick-game").textContent = GAME_TXT[activeGame][0].split(" · ").pop();
+    $("vpick-game").textContent = tr(GAME_TXT[activeGame][0]).split(" · ").pop();
     syncBig();
     window.scrollTo({ top: 0 });
+  }
+  let lastVariantN = 0;
+  function setVariantTags() {
+    const v = state.variant, tag = tr("{v} · {n} Spieler", { v: VARIANT_NAME[v] || "", n: lastVariantN.toLocaleString(LOC()) });
+    for (const id of ["variant-tag", "wvariant-tag", "lvariant-tag", "pvariant-tag", "kvariant-tag", "bvariant-tag", "zvariant-tag"]) $(id).textContent = tag;
+  }
+  // Nach dem Umschalten der Sprache: alles neu beschriften, was aus dem Programm kommt
+  function i18nRefresh() {
+    setMasthead(curMast);
+    if (!$("vpick").hidden) $("vpick-game").textContent = tr(GAME_TXT[activeGame][0]).split(" · ").pop();
+    buildSoundList(); renderSoundSettings();
+    if (DB) { variantTexts(); if (lastVariantN) setVariantTags(); }
+    renderAllMenuHelp(); kbSyncMenu();
+    try { if (kb.open) { kbRender(); kbPush(); } if (pk.opp) pkStadium(pk.opp); if (!$("pk-scout").hidden && pk.opp) pkShowScout(); } catch (e) {}
   }
   function chooseVariant(v) {
     state.variant = v;
     setTheme(v);
     const n = buildMask(v);
     store("kaderraster-variant", v);
-    const tag = `${VARIANT_NAME[v]} · ${n.toLocaleString("de-DE")} Spieler`;
-    for (const id of ["variant-tag", "wvariant-tag", "lvariant-tag", "pvariant-tag", "kvariant-tag", "bvariant-tag", "zvariant-tag"]) $(id).textContent = tag;
+    lastVariantN = n; setVariantTags();
     $("home").hidden = true; $("vpick").hidden = true;
     setMasthead(GAME_TXT[activeGame]);
     for (const g in PANELS) { $(PANELS[g][0]).hidden = g !== activeGame; $(PANELS[g][1]).hidden = true; }
@@ -3155,8 +3703,8 @@
   }
   function askLeave() {
     if (state.matchOver) { toMenu(); return; }
-    const detail = state.score.X + state.score.O > 0 ? ` (Stand ${state.score.X} : ${state.score.O})` : "";
-    openLeave(`Das laufende Spiel wird beendet, der Spielstand geht verloren${detail}.`, toMenu);
+    const detail = state.score.X + state.score.O > 0 ? tr(` (Stand {0} : {1})`, [state.score.X, state.score.O]) : "";
+    openLeave(tr(`Das laufende Spiel wird beendet, der Spielstand geht verloren{0}.`, [detail]), toMenu);
   }
   function closeLeave(leave) {
     const dlg = $("leave-dialog");
@@ -3254,16 +3802,16 @@
     const no = wd.guesses.slice(0, k + 1).filter(x => x.by === g.by).length;
     const dot = wdSolo() ? "" : `<i style="background:${g.by === "X" ? "var(--accent)" : "var(--accent-2)"}"></i>`;
     const who = wdSolo() ? "" : esc(wdWho(g.by)) + " · ";
-    if (g.timeout) return `<div class="wd-row skip">${"" }<div class="wd-who">${dot}<span>Zeit abgelaufen</span><span class="wd-no">${who}Tipp ${no}</span></div></div>`;
+    if (g.timeout) return tr(`<div class="wd-row skip">{0}<div class="wd-who">{1}<span>Zeit abgelaufen</span><span class="wd-no">{2}Tipp {3}</span></div></div>`, ["" , dot, who, no]);
     const p = DB.players[g.p], f = g.fb;
     const st = { g: "passt", y: "teilweise", n: "passt nicht" };
     const tiles = [["Nation", f.nation], ["Jahrgang", f.year], ["Vereine", f.clubs], ["Ligen", f.leagues], ["Titel", f.titles]]
       .map(([lab, t], j) => `<div class="wd-tile ${t.st}" style="--i:${j}" aria-label="${lab}: ${esc(t.text)} – ${st[t.st]}"><small>${lab}</small><b>${esc(t.text)}</b></div>`).join("");
     const parts = [];
-    if (f.shared.clubs.length) parts.push(`<b>Gemeinsame Vereine:</b> ${f.shared.clubs.map(esc).join(", ")}`);
+    if (f.shared.clubs.length) parts.push(tr(`<b>Gemeinsame Vereine:</b> {0}`, [f.shared.clubs.map(esc).join(", ")]));
     if (f.shared.leagues.length) parts.push(`<b>Ligen:</b> ${f.shared.leagues.map(esc).join(", ")}`);
-    if (f.shared.titles.length) parts.push(`<b>Titel:</b> ${f.shared.titles.map(esc).join(", ")}`);
-    return `<div class="wd-row${k === wd.fresh ? " fresh" : ""}"><div class="wd-who">${dot}<span>${esc(p[0])}</span><span class="wd-no">${who}Tipp ${no}</span></div>` +
+    if (f.shared.titles.length) parts.push(tr(`<b>Titel:</b> {0}`, [f.shared.titles.map(esc).join(", ")]));
+    return tr(`<div class="wd-row{0}"><div class="wd-who">{1}<span>{2}</span><span class="wd-no">{3}Tipp {4}</span></div>`, [k === wd.fresh ? " fresh" : "", dot, esc(p[0]), who, no]) +
       `<div class="wd-tiles">${tiles}</div>${parts.length ? `<div class="wd-detail">${parts.join(" · ")}</div>` : ""}</div>`;
   }
 
@@ -3272,20 +3820,20 @@
     $("wd-name-x").textContent = solo ? "Gelöst" : `${wdWho("X")} (X)`;
     $("wd-name-o").textContent = solo ? "Verpasst" : `${wdWho("O")} (O)`;
     $("wd-score-x").textContent = wd.score.X; $("wd-score-o").textContent = wd.score.O;
-    $("wd-mid").textContent = `Runde ${wd.roundNo}`;
+    $("wd-mid").textContent = tr(`Runde {0}`, [wd.roundNo]);
     syncBig();
     $("wd-turn-chip").style.background = solo || wd.turn === "X" ? "var(--accent)" : "var(--accent-2)";
     if (wd.over) $("wd-turn-text").textContent = "Runde beendet";
-    else if (solo) $("wd-turn-text").innerHTML = `${wdNoName() ? "" : esc(wdWho("X")) + ": "}Versuch <span class="who">${wd.guesses.length + 1} von ${wd.tries}</span>`;
-    else $("wd-turn-text").innerHTML = `Am Zug: <span class="who">${esc(wdWho(wd.turn))}</span>`;
+    else if (solo) $("wd-turn-text").innerHTML = tr(`{0}Versuch <span class="who">{1} von {2}</span>`, [wdNoName() ? "" : esc(wdWho("X")) + ": ", wd.guesses.length + 1, wd.tries]);
+    else $("wd-turn-text").innerHTML = tr(`Am Zug: <span class="who">{0}</span>`, [esc(wdWho(wd.turn))]);
     wdGuessInput.disabled = wd.over; $("wd-submit").disabled = wd.over; $("wd-giveup").disabled = wd.over;
     if (wd.note) $("wd-tag").innerHTML = `<span style="color:var(--bad)">${esc(wd.note)}</span>`;
     else if (wd.over) $("wd-tag").textContent = "";
     else if (solo) $("wd-tag").textContent = "Wer ist der Geheimspieler? Tippe einen Namen und wähle ihn aus der Liste.";
-    else $("wd-tag").textContent = `${wdWho(wd.turn)}: noch ${wdLeft(wd.turn)} ${wdLeft(wd.turn) === 1 ? "Versuch" : "Versuche"}. Gemeinsamer Tippverlauf, neueste Tipps oben.`;
+    else $("wd-tag").textContent = tr(`{0}: noch {1} {2}. Gemeinsamer Tippverlauf, neueste Tipps oben.`, [wdWho(wd.turn), wdLeft(wd.turn), wdLeft(wd.turn) === 1 ? "Versuch" : "Versuche"]);
     const rows = [];
     for (let k = wd.guesses.length - 1; k >= 0; k--) rows.push(wdRowHTML(wd.guesses[k], k));
-    $("wd-board").innerHTML = rows.join("") || `<div class="datanote">Noch kein Tipp – schon der erste verrät dir einiges.</div>`;
+    $("wd-board").innerHTML = rows.join("") || tr(`<div class="datanote">Noch kein Tipp – schon der erste verrät dir einiges.</div>`);
     wd.fresh = -1;
     wdRenderTimer(wdDeadline ? wdDeadline - Date.now() : 0);
     if (!wd.over && !wd.busy) wdGuessInput.focus({ preventScroll: true });
@@ -3324,7 +3872,7 @@
     wdGuessInput.value = ""; wdHideSuggest();
     SFX.play("time"); vibrate(120);
     wd.guesses.push({ by: wd.turn, timeout: true });
-    tick_log(`Zeit abgelaufen – ${wdWho(wd.turn)} ${wdVerb(wd.turn, "verlierst", "verliert")} den Versuch`);
+    tick_log(tr(`Zeit abgelaufen – {0} {1} den Versuch`, [wdWho(wd.turn), wdVerb(wd.turn, "verlierst", "verliert")]));
     wd.note = "Zeit abgelaufen – der Versuch ist verbraucht.";
     wdNext();
   }
@@ -3367,13 +3915,13 @@
     const p = DB.players[wd.secret];
     const clubs = [...new Set(p[3])].map(c => DB.clubs[c][0]);
     const titles = (p[5] || []).map(t => DB.titles[t][0]);
-    return `<b>${esc(p[0])}</b> · Jg. ${p[1] || "?"}${p[2].length ? " · " + esc(DB.nations[p[2][0]][0]) : ""}<br>Vereine: ${clubs.map(esc).join(", ")}` +
-      (titles.length ? `<br>Titel: ${titles.map(esc).join(", ")}` : "");
+    return tr(`<b>{0}</b> · Jg. {1}{2}<br>Vereine: {3}`, [esc(p[0]), p[1] || "?", p[2].length ? " · " + esc(DB.nations[p[2][0]][0]) : "", clubs.map(esc).join(", ")]) +
+      (titles.length ? tr(`<br>Titel: {0}`, [titles.map(esc).join(", ")]) : "");
   }
   function wdGoal(s) {
     const el = $("wd-goal"), txt = $("wd-goal-text");
     clearTimeout(wdGoalTimer);
-    txt.textContent = wdNoName() ? "Tor für dich!" : `Tor für ${wdWho(s)}!`;
+    txt.textContent = wdNoName() ? "Tor für dich!" : tr(`Tor für {0}!`, [wdWho(s)]);
     txt.style.color = s === "X" ? "var(--x-mark)" : "var(--o-mark)";
     el.hidden = true; void el.offsetWidth; el.hidden = false;
     wdGoalTimer = setTimeout(() => { el.hidden = true; }, 1950);
@@ -3387,7 +3935,7 @@
     if (kind === "win") {
       wd.score[wdSolo() ? "X" : by]++;
       const n = wd.guesses.filter(g => g.by === by).length;
-      txt = `${wdWho(by)} ${wdVerb(by, "hast", "hat")} ${p[0]} gefunden (${n}. Tipp)!`;
+      txt = tr(`{0} {1} {2} gefunden ({3}. Tipp)!`, [wdWho(by), wdVerb(by, "hast", "hat"), p[0], n]);
       SFX.play("goal"); vibrate([60, 40, 60, 40, 120]); wdGoal(wdSolo() ? "X" : by);
     } else {
       if (wdSolo()) wd.score.O++;
@@ -3407,7 +3955,7 @@
     if (normalize(wdGuessInput.value).length < 2) { wdHideSuggest(); return; }
     wdSuggest.innerHTML = list.length
       ? list.map((i, k) => { const done = wd.guessed.has(i); return `<li role="option" id="wsug-${k}" data-k="${k}" aria-selected="false"${done ? ' aria-disabled="true" class="off"' : ""}><span>${esc(DB.players[i][0])}</span><span class="meta">${done ? "schon getippt" : esc(describe(i))}</span></li>`; }).join("")
-      : `<li class="empty">Kein Spieler gefunden</li>`;
+      : tr(`<li class="empty">Kein Spieler gefunden</li>`);
     wdSuggest.hidden = false; wdGuessInput.setAttribute("aria-expanded", "true");
   }
   function wdHideSuggest() { wdSuggest.hidden = true; wdGuessInput.setAttribute("aria-expanded", "false"); wdSugItems = []; wdSugIdx = -1; }
@@ -3460,15 +4008,15 @@
   function wdSetTries(n) { wd.tries = n; pressed("[data-wtries]", "wtries", n); store("kaderraster-w-tries", String(n)); }
   function wdSetTime(t) { wd.time = t; pressed("[data-wtime]", "wtime", t); store("kaderraster-w-time", String(t)); }
   const WD_LEVEL_TXT = {
-    easy: () => `Easy: der Geheimspieler ist einer der bekanntesten${tierNum("easy")} – Weltstars und Legenden`,
-    okay: () => `Okay: der Geheimspieler ist ein bekannter Name${tierNum("okay")}`,
-    advanced: () => `Advanced: auch Stammspieler und Nationalspieler, die Fans meist kennen${tierNum("advanced")}`,
-    pro: () => `Profi: auch Ergänzungs- und Kaderspieler${tierNum("pro")}`,
-    ball: () => `Ball Knowledge: alle Spieler des gewählten Modus, auch Randfiguren${TIER_CUT.ball ? ` (${fmtN(TIER_CUT.ball)} Spieler)` : ""}`,
+    easy: () => tr(`Easy: der Geheimspieler ist einer der bekanntesten{0} – Weltstars und Legenden`, [tierNum("easy")]),
+    okay: () => tr(`Okay: der Geheimspieler ist ein bekannter Name{0}`, [tierNum("okay")]),
+    advanced: () => tr(`Advanced: auch Stammspieler und Nationalspieler, die Fans meist kennen{0}`, [tierNum("advanced")]),
+    pro: () => tr(`Profi: auch Ergänzungs- und Kaderspieler{0}`, [tierNum("pro")]),
+    ball: () => tr(`Ball Knowledge: alle Spieler des gewählten Modus, auch Randfiguren{0}`, [TIER_CUT.ball ? tr(` ({0} Spieler)`, [fmtN(TIER_CUT.ball)]) : ""]),
   };
-  const wdTimeTxt = t => t ? `Zugzeit: ${t === 60 ? "1 Minute" : t + " Sekunden"} pro Tipp, danach ist der Versuch verbraucht` : "Zugzeit: ohne Zeitlimit";
+  const wdTimeTxt = t => t ? tr(`Zugzeit: {0} pro Tipp, danach ist der Versuch verbraucht`, [t === 60 ? "1 Minute" : t + " Sekunden"]) : "Zugzeit: ohne Zeitlimit";
   function wdRenderMenuHelp() {
-    const modeTxt = wd.mode === "solo" ? `Solo: du hast ${wd.tries} Versuche für den Geheimspieler` : `2 Spieler: ihr tippt abwechselnd, jeder hat ${wd.tries} Versuche. Wer den Geheimspieler trifft, bekommt den Punkt`;
+    const modeTxt = wd.mode === "solo" ? tr(`Solo: du hast {0} Versuche für den Geheimspieler`, [wd.tries]) : tr(`2 Spieler: ihr tippt abwechselnd, jeder hat {0} Versuche. Wer den Geheimspieler trifft, bekommt den Punkt`, [wd.tries]);
     $("wmenu-help").innerHTML = [modeTxt, WD_LEVEL_TXT[wd.level](), wdTimeTxt(wd.time)].map(t => `<li>${esc(t)}</li>`).join("");
   }
   function wdSummary() {
@@ -3497,8 +4045,8 @@
   }
   function wdAskLeave() {
     if (wd.over && wd.score.X + wd.score.O === 0) { wdToMenu(); return; }
-    const detail = wd.score.X + wd.score.O > 0 ? ` (Stand ${wd.score.X} : ${wd.score.O})` : "";
-    openLeave(`${wd.over ? "Das Spiel wird beendet" : "Die laufende Runde wird beendet"}, der Spielstand geht verloren${detail}.`, wdToMenu);
+    const detail = wd.score.X + wd.score.O > 0 ? tr(` (Stand {0} : {1})`, [wd.score.X, wd.score.O]) : "";
+    openLeave(tr(`{0}, der Spielstand geht verloren{1}.`, [wd.over ? "Das Spiel wird beendet" : "Die laufende Runde wird beendet", detail]), wdToMenu);
   }
   document.querySelectorAll("[data-wmode]").forEach(b => b.addEventListener("click", () => { wdSetMode(b.dataset.wmode); wdRenderMenuHelp(); }));
   document.querySelectorAll("[data-wlvl]").forEach(b => b.addEventListener("click", () => { wdSetLevel(b.dataset.wlvl); wdRenderMenuHelp(); }));
@@ -3570,22 +4118,22 @@
   }
   function lkHintHTML() {
     const p = DB.players[lk.secret], w = lk.word;
-    const chips = [`<b>${w.length}</b> Buchstaben`];
+    const chips = [tr(`<b>{0}</b> Buchstaben`, [w.length])];
     const nation = p[2].length ? DB.nations[p[2][0]][0] : null;
     if (lk.level === "easy") {
-      if (nation) chips.push(`Nation: <b>${esc(nation)}</b>`);
-      if (p[1]) chips.push(`Jahrgang <b>${p[1]}</b>`);
+      if (nation) chips.push(tr(`Nation: <b>{0}</b>`, [esc(nation)]));
+      if (p[1]) chips.push(tr(`Jahrgang <b>{0}</b>`, [p[1]]));
       const cl = [...new Set(p[3])].map(c => DB.clubs[c][0]);
       const club = cl.find(n => ELITE_CLUBS.includes(n)) || cl.find(n => EASY_CLUBS.includes(n)) || cl[0];
-      if (club) chips.push(`Verein: <b>${esc(club)}</b>`);
-      chips.push(`beginnt mit <b>${w[0]}</b>`);
+      if (club) chips.push(tr(`Verein: <b>{0}</b>`, [esc(club)]));
+      chips.push(tr(`beginnt mit <b>{0}</b>`, [w[0]]));
     } else if (lk.level === "okay") {
-      if (nation) chips.push(`Nation: <b>${esc(nation)}</b>`);
-      if (p[1]) chips.push(`Jahrgang <b>${p[1]}</b>`);
+      if (nation) chips.push(tr(`Nation: <b>{0}</b>`, [esc(nation)]));
+      if (p[1]) chips.push(tr(`Jahrgang <b>{0}</b>`, [p[1]]));
     } else if (lk.level === "advanced") {
-      if (nation) chips.push(`Nation: <b>${esc(nation)}</b>`);
+      if (nation) chips.push(tr(`Nation: <b>{0}</b>`, [esc(nation)]));
     } else if (lk.level === "pro") {
-      if (p[1]) chips.push(`Jahrzehnt <b>${Math.floor(p[1] / 10) * 10}er</b>`);
+      if (p[1]) chips.push(tr(`Jahrzehnt <b>{0}er</b>`, [Math.floor(p[1] / 10) * 10]));
     }
     return chips.map(c => `<span class="lk-chip">${c}</span>`).join("");
   }
@@ -3600,27 +4148,27 @@
     $("lk-name-x").textContent = solo ? "Gelöst" : `${lkWho("X")} (X)`;
     $("lk-name-o").textContent = solo ? "Verpasst" : `${lkWho("O")} (O)`;
     $("lk-score-x").textContent = lk.score.X; $("lk-score-o").textContent = lk.score.O;
-    $("lk-mid").textContent = `Runde ${lk.roundNo}`;
+    $("lk-mid").textContent = tr(`Runde {0}`, [lk.roundNo]);
     syncBig();
     $("lk-turn-chip").style.background = solo || lk.turn === "X" ? "var(--accent)" : "var(--accent-2)";
     if (lk.over) $("lk-turn-text").textContent = "Runde beendet";
-    else if (solo) $("lk-turn-text").innerHTML = `${lkNoName() ? "" : esc(lkWho("X")) + ": "}Versuch <span class="who">${lk.guesses.length + 1} von ${lk.tries}</span>`;
-    else $("lk-turn-text").innerHTML = `Am Zug: <span class="who">${esc(lkWho(lk.turn))}</span>`;
+    else if (solo) $("lk-turn-text").innerHTML = tr(`{0}Versuch <span class="who">{1} von {2}</span>`, [lkNoName() ? "" : esc(lkWho("X")) + ": ", lk.guesses.length + 1, lk.tries]);
+    else $("lk-turn-text").innerHTML = tr(`Am Zug: <span class="who">{0}</span>`, [esc(lkWho(lk.turn))]);
     $("lk-giveup").disabled = lk.over;
     $("lk-hint").innerHTML = lk.secret >= 0 ? lkHintHTML() : "";
-    if (lk.confirm && !lk.over) $("lk-tag").innerHTML = `<span class="lk-ask">„${esc(lk.confirm)}“ hat nur ${lk.confirm.length} von ${n} Buchstaben – trotzdem abschicken? Das kostet einen Versuch.</span>` +
+    if (lk.confirm && !lk.over) $("lk-tag").innerHTML = tr(`<span class="lk-ask">„{0}“ hat nur {1} von {2} Buchstaben – trotzdem abschicken? Das kostet einen Versuch.</span>`, [esc(lk.confirm), lk.confirm.length, n]) +
       `<span class="lk-ask-btns"><button type="button" data-lkc="yes">Ja, abschicken</button><button type="button" data-lkc="no">Weiter tippen</button></span>`;
     else if (lk.note) $("lk-tag").innerHTML = `<span style="color:var(--bad)">${esc(lk.note)}</span>`;
     else if (lk.over) $("lk-tag").textContent = "";
     else if (solo) $("lk-tag").textContent = "Tippe den gesuchten Nachnamen und bestätige mit Enter.";
-    else $("lk-tag").textContent = `${lkWho(lk.turn)}: noch ${lkLeft(lk.turn)} ${lkLeft(lk.turn) === 1 ? "Versuch" : "Versuche"}. Gemeinsames Feld, die Buchstaben gelten für beide.`;
+    else $("lk-tag").textContent = tr(`{0}: noch {1} {2}. Gemeinsames Feld, die Buchstaben gelten für beide.`, [lkWho(lk.turn), lkLeft(lk.turn), lkLeft(lk.turn) === 1 ? "Versuch" : "Versuche"]);
     // Feld
     const rows = [];
     lk.guesses.forEach((g, k) => {
       const no = lk.guesses.slice(0, k + 1).filter(x => x.by === g.by).length;
       const dot = solo ? "" : `<i style="background:${g.by === "X" ? "var(--accent)" : "var(--accent-2)"}"></i>`;
-      const cap = solo ? "" : `<div class="lk-cap">${dot}<span>${esc(lkWho(g.by))}</span><span class="wd-no">Tipp ${no}</span></div>`;
-      if (g.timeout) { rows.push(`${cap}<div class="lk-row skip">Zeit abgelaufen – Versuch verbraucht</div>`); return; }
+      const cap = solo ? "" : tr(`<div class="lk-cap">{0}<span>{1}</span><span class="wd-no">Tipp {2}</span></div>`, [dot, esc(lkWho(g.by)), no]);
+      if (g.timeout) { rows.push(tr(`{0}<div class="lk-row skip">Zeit abgelaufen – Versuch verbraucht</div>`, [cap])); return; }
       const st = { g: "richtig", y: "falsche Stelle", n: "nicht enthalten" };
       rows.push(`${cap}<div class="lk-row${k === lk.fresh ? " fresh" : ""}" style="--n:${n}">` +
         [...g.word].map((c, j) => `<div class="lk-tile ${g.res[j]}" style="--i:${j}" aria-label="${c}: ${st[g.res[j]]}">${c}</div>`).join("") +
@@ -3673,7 +4221,7 @@
     SFX.play("time"); vibrate(120);
     lk.typed = ""; lk.confirm = "";
     lk.guesses.push({ by: lk.turn, timeout: true });
-    tick_log(`Zeit abgelaufen – ${lkWho(lk.turn)} ${lkVerb(lk.turn, "verlierst", "verliert")} den Versuch`);
+    tick_log(tr(`Zeit abgelaufen – {0} {1} den Versuch`, [lkWho(lk.turn), lkVerb(lk.turn, "verlierst", "verliert")]));
     lk.note = "Zeit abgelaufen – der Versuch ist verbraucht.";
     lkNext();
   }
@@ -3701,8 +4249,8 @@
   function lkSubmit() {
     if (lk.over || lk.busy) return;
     const w = lk.word;
-    if (lk.typed.length < 3) { lk.confirm = ""; lkNote(`Mindestens 3 Buchstaben (gesucht: ${w.length}).`); return; }
-    if (!LKDICT.has(lk.typed.toLowerCase())) { lk.confirm = ""; lkNote(`„${lk.typed}“ ist kein Spielername aus dem Pool – probier ein anderes Wort.`); return; }
+    if (lk.typed.length < 3) { lk.confirm = ""; lkNote(tr(`Mindestens 3 Buchstaben (gesucht: {0}).`, [w.length])); return; }
+    if (!LKDICT.has(lk.typed.toLowerCase())) { lk.confirm = ""; lkNote(tr(`„{0}“ ist kein Spielername aus dem Pool – probier ein anderes Wort.`, [lk.typed])); return; }
     if (lk.guesses.some(g => g.word === lk.typed)) { lk.confirm = ""; lkNote("Dieses Wort wurde schon getippt."); return; }
     // Kürzerer Name: erst nachfragen (zweites Enter oder „Ja, abschicken“ bestätigt)
     if (lk.typed.length < w.length && lk.confirm !== lk.typed) { lk.confirm = lk.typed; lk.note = ""; lkRender(); return; }
@@ -3725,12 +4273,12 @@
     const p = DB.players[lk.secret];
     const clubs = [...new Set(p[3])].map(c => DB.clubs[c][0]);
     const titles = (p[5] || []).map(t => DB.titles[t][0]);
-    return `<b>${esc(p[0])}</b> · Jg. ${p[1] || "?"}${p[2].length ? " · " + esc(DB.nations[p[2][0]][0]) : ""}<br>Vereine: ${clubs.map(esc).join(", ")}` + (titles.length ? `<br>Titel: ${titles.map(esc).join(", ")}` : "");
+    return tr(`<b>{0}</b> · Jg. {1}{2}<br>Vereine: {3}`, [esc(p[0]), p[1] || "?", p[2].length ? " · " + esc(DB.nations[p[2][0]][0]) : "", clubs.map(esc).join(", ")]) + (titles.length ? tr(`<br>Titel: {0}`, [titles.map(esc).join(", ")]) : "");
   }
   function lkGoal(s) {
     const el = $("lk-goal"), txt = $("lk-goal-text");
     clearTimeout(lkGoalTimer);
-    txt.textContent = lkNoName() ? "Tor für dich!" : `Tor für ${lkWho(s)}!`;
+    txt.textContent = lkNoName() ? "Tor für dich!" : tr(`Tor für {0}!`, [lkWho(s)]);
     txt.style.color = s === "X" ? "var(--x-mark)" : "var(--o-mark)";
     el.hidden = true; void el.offsetWidth; el.hidden = false;
     lkGoalTimer = setTimeout(() => { el.hidden = true; }, 1950);
@@ -3742,7 +4290,7 @@
     if (kind === "win") {
       lk.score[lkSolo() ? "X" : by]++;
       const n = lk.guesses.filter(g => g.by === by).length;
-      txt = `${lkWho(by)} ${lkVerb(by, "hast", "hat")} ${lk.word} gefunden (${n}. Tipp)!`;
+      txt = tr(`{0} {1} {2} gefunden ({3}. Tipp)!`, [lkWho(by), lkVerb(by, "hast", "hat"), lk.word, n]);
       SFX.play("goal"); vibrate([60, 40, 60, 40, 120]); lkGoal(lkSolo() ? "X" : by);
     } else {
       if (lkSolo()) lk.score.O++;
@@ -3778,15 +4326,15 @@
   function lkSetTries(n) { lk.tries = n; pressed("[data-ltries]", "ltries", n); store("kaderraster-l-tries", String(n)); }
   function lkSetTime(t) { lk.time = t; pressed("[data-ltime]", "ltime", t); store("kaderraster-l-time", String(t)); }
   const LK_LEVEL_TXT = {
-    easy: () => `Easy: einer der bekanntesten Spieler${tierNum("easy")}. Hinweise: Nation, Jahrgang, Verein und erster Buchstabe`,
-    okay: () => `Okay: ein bekannter Name${tierNum("okay")}. Hinweise: Nation und Jahrgang`,
-    advanced: () => `Advanced: auch Stammspieler und Nationalspieler${tierNum("advanced")}. Hinweis: Nation`,
-    pro: () => `Profi: auch Ergänzungs- und Kaderspieler${tierNum("pro")}. Hinweis: Jahrzehnt`,
-    ball: () => `Ball Knowledge: alle Spieler des Modus. Einziger Hinweis: die Länge des Namens`,
+    easy: () => tr(`Easy: einer der bekanntesten Spieler{0}. Hinweise: Nation, Jahrgang, Verein und erster Buchstabe`, [tierNum("easy")]),
+    okay: () => tr(`Okay: ein bekannter Name{0}. Hinweise: Nation und Jahrgang`, [tierNum("okay")]),
+    advanced: () => tr(`Advanced: auch Stammspieler und Nationalspieler{0}. Hinweis: Nation`, [tierNum("advanced")]),
+    pro: () => tr(`Profi: auch Ergänzungs- und Kaderspieler{0}. Hinweis: Jahrzehnt`, [tierNum("pro")]),
+    ball: () => tr(`Ball Knowledge: alle Spieler des Modus. Einziger Hinweis: die Länge des Namens`),
   };
   function lkRenderMenuHelp() {
-    const modeTxt = lk.mode === "solo" ? `Solo: du hast ${lk.tries} Versuche für den gesuchten Nachnamen` : `2 Spieler: ihr ratet abwechselnd im gleichen Feld, jeder hat ${lk.tries} Versuche. Wer das Wort findet, bekommt den Punkt`;
-    const t = lk.time ? `Zugzeit: ${lk.time === 60 ? "1 Minute" : lk.time + " Sekunden"} pro Tipp, danach ist der Versuch verbraucht` : "Zugzeit: ohne Zeitlimit";
+    const modeTxt = lk.mode === "solo" ? tr(`Solo: du hast {0} Versuche für den gesuchten Nachnamen`, [lk.tries]) : tr(`2 Spieler: ihr ratet abwechselnd im gleichen Feld, jeder hat {0} Versuche. Wer das Wort findet, bekommt den Punkt`, [lk.tries]);
+    const t = lk.time ? tr(`Zugzeit: {0} pro Tipp, danach ist der Versuch verbraucht`, [lk.time === 60 ? "1 Minute" : lk.time + " Sekunden"]) : "Zugzeit: ohne Zeitlimit";
     $("lmenu-help").innerHTML = [modeTxt, LK_LEVEL_TXT[lk.level](), t].map(x => `<li>${esc(x)}</li>`).join("");
   }
   function lkSummary() {
@@ -3811,8 +4359,8 @@
   }
   function lkAskLeave() {
     if (lk.over && lk.score.X + lk.score.O === 0) { lkToMenu(); return; }
-    const detail = lk.score.X + lk.score.O > 0 ? ` (Stand ${lk.score.X} : ${lk.score.O})` : "";
-    openLeave(`${lk.over ? "Das Spiel wird beendet" : "Die laufende Runde wird beendet"}, der Spielstand geht verloren${detail}.`, lkToMenu);
+    const detail = lk.score.X + lk.score.O > 0 ? tr(` (Stand {0} : {1})`, [lk.score.X, lk.score.O]) : "";
+    openLeave(tr(`{0}, der Spielstand geht verloren{1}.`, [lk.over ? "Das Spiel wird beendet" : "Die laufende Runde wird beendet", detail]), lkToMenu);
   }
   for (const [attr, fn, conv] of [["lmode", lkSetMode, String], ["llvl", lkSetLevel, String], ["ltries", lkSetTries, Number], ["ltime", lkSetTime, Number]])
     document.querySelectorAll(`[data-${attr}]`).forEach(b => b.addEventListener("click", () => { fn(conv(b.dataset[attr])); lkRenderMenuHelp(); }));
@@ -3897,16 +4445,16 @@
     pkApplyKits();
     const tt = $("pk-turn-text"), tag = $("pk-tag"), nm = esc(pk.shooterName);
     if (pk.over) { tt.textContent = "Elfmeterschießen beendet"; tag.textContent = ""; return; }
-    if (pk.phase === "scout") { tt.innerHTML = `<span class="who">${esc(PK_STAGES[pk.career.stage].name)}</span> · Gegner: ${esc(pk.opp.club)}`; tag.textContent = "Lies den Scouting-Bericht – dann Anpfiff."; return; }
+    if (pk.phase === "scout") { tt.innerHTML = tr(`<span class="who">{0}</span> · Gegner: {1}`, [esc(PK_STAGES[pk.career.stage].name), esc(pk.opp.club)]); tag.textContent = "Lies den Scouting-Bericht – dann Anpfiff."; return; }
     const kW = pkWho(pk.kicker), gW = pkWho(pk.keeper);
-    tt.innerHTML = `<span class="who">${esc(kW)}</span> schießt · Schütze: ${nm}`;
+    tt.innerHTML = tr(`<span class="who">{0}</span> schießt · Schütze: {1}`, [esc(kW), nm]);
     const COLN = ["linke Seite", "Mitte", "rechte Seite"];
-    if (pk.phase === "keeperPick") tag.textContent = pk.mode === "pvp" ? `${gW} (Torwart): Wohin springst du? ${kW} schaut bitte weg.`
-      : pk.hintCol !== null ? `Dein Tipp aus dem Quiz: Der Schütze zielt auf die ${COLN[pk.hintCol]} (markiert). Wohin springst du?` : "Du bist der Torwart: Wohin springst du?";
-    else if (pk.phase === "shooterPick") tag.textContent = `${pk.mode === "pvp" ? kW + ": " : ""}Wähle deine Ecke. ${pkVsCpu() ? "Der Torwart springt gleich." : ""}${pk.band > 1 ? " Quiz richtig: grüner Bereich größer!" : pk.band < 1 ? " Quiz falsch: grüner Bereich kleiner." : ""}`.trim();
+    if (pk.phase === "keeperPick") tag.textContent = pk.mode === "pvp" ? tr(`{0} (Torwart): Wohin springst du? {1} schaut bitte weg.`, [gW, kW])
+      : pk.hintCol !== null ? tr(`Dein Tipp aus dem Quiz: Der Schütze zielt auf die {0} (markiert). Wohin springst du?`, [COLN[pk.hintCol]]) : "Du bist der Torwart: Wohin springst du?";
+    else if (pk.phase === "shooterPick") tag.textContent = tr(`{0}Wähle deine Ecke. {1}{2}`, [pk.mode === "pvp" ? kW + ": " : "", pkVsCpu() ? "Der Torwart springt gleich." : "", pk.band > 1 ? " Quiz richtig: grüner Bereich größer!" : pk.band < 1 ? " Quiz falsch: grüner Bereich kleiner." : ""]).trim();
     else if (pk.phase === "quiz") tag.textContent = pk.quizKind === "kick" ? "Richtig = größerer grüner Bereich beim Schuss." : "Richtig = du siehst, auf welche Seite der Schütze zielt.";
     else if (pk.phase === "scout") tag.textContent = "";
-    else if (pk.phase === "meter") tag.textContent = `Stoppe die Leiste im grünen Bereich – dort geht der Ball genau in ${PK_ZNAME[pk.zone[1]][pk.zone[0]]}.`;
+    else if (pk.phase === "meter") tag.textContent = tr(`Stoppe die Leiste im grünen Bereich – dort geht der Ball genau in {0}.`, [PK_ZNAME[pk.zone[1]][pk.zone[0]]]);
     else if (pk.phase === "cpu") tag.textContent = "Der Computer legt sich den Ball zurecht …";
     else tag.textContent = "";
   }
@@ -3973,13 +4521,13 @@
   }
   function pkKickOff() {
     $("pk-scout").hidden = true;
-    tickerItems = []; tick_log(pk.opp ? `Anpfiff – ${PK_STAGES[pk.career.stage].name} gegen ${pk.opp.club}` : "Anpfiff – Elfmeterschießen");
+    tickerItems = []; tick_log(pk.opp ? tr(`Anpfiff – {0} gegen {1}`, [PK_STAGES[pk.career.stage].name, pk.opp.club]) : "Anpfiff – Elfmeterschießen");
     SFX.play("kickoff");
     pkNextKick();
   }
   // Stadion des Gegners: Fans, Banden und Dach in Vereinsfarben
   function pkStadium(o) {
-    PK3.setStadium(o ? { color: o.color, color2: o.color2, club: o.club, tier: pk.mode === "career" && pk.career ? pk.career.stage : 3 } : { color: pkCss("--x-mark", "#4fd987"), color2: pkCss("--o-mark", "#ffb454"), club: "", tier: 3 });
+    PK3.setStadium(o ? { color: o.color, color2: o.color2, club: trText(o.club), tier: pk.mode === "career" && pk.career ? pk.career.stage : 3 } : { color: pkCss("--x-mark", "#4fd987"), color2: pkCss("--o-mark", "#ffb454"), club: "", tier: 3 });
   }
   // Flug von Stadion zu Stadion (Karriere): Klick überspringt
   function pkTravel(done) {
@@ -3988,7 +4536,7 @@
     const tv = $("pk-travel"), tok = pk.token, P = "tv_";
     let finished = false;
     const end = () => { if (finished || tok !== pk.token) return; finished = true; PK3.hold(false); tv.hidden = true; tv.innerHTML = ""; const cv = $("pk-3d"); cv.classList.remove("arrive"); void cv.offsetWidth; cv.classList.add("arrive"); done(); };
-    tv.innerHTML = PKFLY.build({ stage: st.name, from, arena: o.arena, club: o.club, color: o.color, color2: o.color2, tier: c.stage, fromTier: Math.max(0, c.stage - 1) }, P);
+    tv.innerHTML = PKFLY.build({ stage: tr(st.name), from: trText(from), arena: trText(o.arena), club: trText(o.club), color: o.color, color2: o.color2, tier: c.stage, fromTier: Math.max(0, c.stage - 1) }, P);
     tv.hidden = false; PK3.hold(true);
     // Helikopter-Kamera: Ball fliegt mit Schatten über die Landkarte, dann Zoom bis auf den Platz
     try {
@@ -4009,11 +4557,11 @@
   function pkShowScout() {
     const o = pk.opp, st = PK_STAGES[pk.career.stage];
     $("pk-scout").innerHTML = `${pkPathHTML()}<span class="pk-scout-stage">${esc(st.name)} · Scouting-Bericht</span><span class="pk-scout-opp">${esc(o.club)}</span>` +
-      `<div class="pk-scout-row"><span aria-hidden="true">🏟️</span><span><b>Spielort</b>${esc(o.arena)} · ${esc(PK_VENUE[Math.min(pk.career.stage, PK_VENUE.length - 1)])}</span></div>` +
-      `<div class="pk-scout-row"><span aria-hidden="true">🧤</span><span><b>Torwart</b>${esc(o.keeper.t)}</span></div>` +
-      `<div class="pk-scout-row"><span aria-hidden="true">⚽</span><span><b>Schützen</b>${esc(o.shooter.t)}</span></div>` +
-      `<div class="pk-scout-row"><span aria-hidden="true">🧠</span><span><b>Quizfragen</b>${pk.quiz ? `Stufe ${esc(LEVEL_NAME[st.quiz])} – je weiter du kommst, desto schwerer` : "aus"}</span></div>` +
-      `<button type="button" class="start-btn" id="pk-scout-go">Anpfiff</button>`;
+      tr(`<div class="pk-scout-row"><span aria-hidden="true">🏟️</span><span><b>Spielort</b>{0} · {1}</span></div>`, [esc(o.arena), esc(PK_VENUE[Math.min(pk.career.stage, PK_VENUE.length - 1)])]) +
+      tr(`<div class="pk-scout-row"><span aria-hidden="true">🧤</span><span><b>Torwart</b>{0}</span></div>`, [esc(o.keeper.t)]) +
+      tr(`<div class="pk-scout-row"><span aria-hidden="true">⚽</span><span><b>Schützen</b>{0}</span></div>`, [esc(o.shooter.t)]) +
+      `<div class="pk-scout-row"><span aria-hidden="true">🧠</span><span><b>Quizfragen</b>${pk.quiz ? tr(`Stufe {0} – je weiter du kommst, desto schwerer`, [esc(LEVEL_NAME[st.quiz])]) : "aus"}</span></div>` +
+      tr(`<button type="button" class="start-btn" id="pk-scout-go">Anpfiff</button>`);
     $("pk-scout").hidden = false;
     $("pk-scout-go").addEventListener("click", pkKickOff);
     try { $("pk-scout").scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) {}
@@ -4027,7 +4575,7 @@
     const pl = pk.pool.length ? pk.pool[Math.floor(Math.random() * pk.pool.length)] : -1;
     pk.shooterName = pkHuman(pk.kicker) ? pkWho(pk.kicker) : (pl >= 0 ? DB.players[pl][0] : "Schütze");
     pkSetShirt();
-    tick_log(`${pkWho(pk.kicker)}: ${pk.shooterName} legt sich den Ball zurecht`);
+    tick_log(tr(`{0}: {1} legt sich den Ball zurecht`, [pkWho(pk.kicker), pk.shooterName]));
     // Computer-Torwart entscheidet sofort (verdeckt), ein menschlicher Torwart wählt zuerst
     if (!pkHuman(pk.keeper)) { pk.dive = pkCpuDive(); pkShooterPhase(); }
     else if (!pkHuman(pk.kicker)) {                                          // Computer schießt: Schuss steht schon fest, das Quiz kann einen Tipp geben
@@ -4040,13 +4588,13 @@
   function pkSetShirt() {
     const human = pkHuman(pk.kicker);
     const name = human ? pkWho(pk.kicker) : pk.shooterName.split(/\s+/).pop();
-    pk.shirt = { name: (name || "").toUpperCase().slice(0, 14), num: human ? (pk.kicker === "X" ? kbEq().num : "9") : String(2 + Math.floor(Math.random() * 30)) };
+    pk.shirt = { name: trText(name || "").toUpperCase().slice(0, 14), num: human ? (pk.kicker === "X" ? kbEq().num : "9") : String(2 + Math.floor(Math.random() * 30)) };
     pkApplyKits();
   }
   function pkShooterPhase() {
     if (pkHuman(pk.keeper) && pkHuman(pk.kicker)) {                         // 2 Spieler an einem Gerät: Gerät weitergeben
       pk.phase = "handoff"; pkShowZones(false);
-      $("pk-handoff-text").textContent = `Die Wahl des Torwarts ist gespeichert. Gerät an ${pkWho(pk.kicker)} (Schütze: ${pk.shooterName}) weitergeben.`;
+      $("pk-handoff-text").textContent = tr(`Die Wahl des Torwarts ist gespeichert. Gerät an {0} (Schütze: {1}) weitergeben.`, [pkWho(pk.kicker), pk.shooterName]);
       $("pk-handoff").hidden = false; pkRender(); return;
     }
     pkAfterHandoff();
@@ -4450,8 +4998,8 @@
         ctx.fillStyle = "rgba(0,0,0,.92)"; ctx.fillRect(0, 0, W, bar); ctx.fillRect(0, H - bar, W, bar);
         ctx.font = `600 ${(9 * s).toFixed(1)}px "IBM Plex Mono", monospace`; ctx.textBaseline = "middle"; ctx.textAlign = "left";
         ctx.fillStyle = (Math.floor(now / 450) % 2) ? "#ffb454" : "rgba(255,180,84,.35)"; ctx.beginPath(); ctx.arc(14 * s, bar / 2, 3 * s, 0, 6.283); ctx.fill();
-        ctx.fillStyle = "#fff"; ctx.fillText(t < RP.s1 ? "WIEDERHOLUNG · ANLAUF" : t < RP.s2 ? "WIEDERHOLUNG · NETZKAMERA" : "WIEDERHOLUNG · ZEITLUPE", 22 * s, bar / 2);
-        ctx.textAlign = "right"; ctx.fillStyle = "rgba(255,255,255,.6)"; ctx.fillText("Tippen = überspringen", W - 10 * s, H - bar / 2);
+        ctx.fillStyle = "#fff"; ctx.fillText(t < RP.s1 ? tr("WIEDERHOLUNG · ANLAUF") : t < RP.s2 ? tr("WIEDERHOLUNG · NETZKAMERA") : tr("WIEDERHOLUNG · ZEITLUPE"), 22 * s, bar / 2);
+        ctx.textAlign = "right"; ctx.fillStyle = "rgba(255,255,255,.6)"; ctx.fillText(tr("Tippen = überspringen"), W - 10 * s, H - bar / 2);
       }
     }
     function finishReplay() { if (S.mode !== "replay") return; const cb = S.onDone; S.mode = "kick"; S.t0 = performance.now() - 99999; S.onDone = null; if (cb) cb(); }
@@ -5710,9 +6258,9 @@
       const pt = { p: [-40, 0, 70, 40, 0, 70, 40, 0, -10, -40, 0, -10], n: [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0], t: [0, 1, 1, 1, 1, 0, 0, 0], i: [0, 1, 2, 0, 2, 3] };
       add(pt, { tex: pitchTex(tierIx === 0 ? 1 : 0), c: day ? [.8, .84, .78] : T.time === "dusk" ? [.84, .86, .84] : [.86, .9, .86], sp: .04 });
       // Werbebanden
-      const clubT = (o.club || "BALL KNOWLEDGE").toUpperCase(), fin = tierIx === 4 ? "FINALE" : "BALL KNOWLEDGE";
+      const clubT = (o.club || "BALL KNOWLEDGE").toUpperCase(), fin = tierIx === 4 ? tr("FINALE") : "BALL KNOWLEDGE";
       const ledA = texLED(`${clubT}  ·  ${fin}  ·  PLAY  ·  `, css(col), "#0b0f15");
-      const ledB = texLED(`BALL KNOWLEDGE  ·  PLAY  ·  ${tierIx === 4 ? "FINALE" : "FLUTLICHT-ARENA"}  ·  `, "#f2f5f8", css(mixc(col, [0, 0, 0], .55)));
+      const ledB = texLED(`BALL KNOWLEDGE  ·  PLAY  ·  ${tierIx === 4 ? tr("FINALE") : tr("FLUTLICHT-ARENA")}  ·  `, "#f2f5f8", css(mixc(col, [0, 0, 0], .55)));
       s.ledMats = [{ tex: ledA, em: 1, uv: [0, 0], uvs: [4, 1] }, { tex: ledB, em: 1, uv: [0, 0], uvs: [3, 1] }];
       const boardQ = (x0, z0, x1, z1, mat, h = .95) => {
         add(quad([x0, 0, z0], [x1, 0, z1], [x1, h, z1], [x0, h, z0]), mat);
@@ -5723,7 +6271,7 @@
       const railM = { c: [.8, .82, .85], sp: .6 };
       if (tierIx === 0) {
         // Sportplatz: Holzbanden mit Werbung aus dem Ort, Geländer rundherum
-        const ads = [["BÄCKEREI BALLKORN", "#f4efe2", "#8a2a1a"], ["AUTOHAUS ABSEITS", "#1f4f8a", "#ffffff"], ["GETRÄNKE ECKFAHNE", "#c0392b", "#ffffff"], ["SPORT STEILPASS", "#2e7d32", "#ffffff"], ["PIZZERIA ELFMETER", "#f2c94c", "#2b2b2b"], ["FAHRSCHULE FLANKE", "#ffffff", "#1f4f8a"]];
+        const ads = [[tr("BÄCKEREI BALLKORN"), "#f4efe2", "#8a2a1a"], [tr("AUTOHAUS ABSEITS"), "#1f4f8a", "#ffffff"], [tr("GETRÄNKE ECKFAHNE"), "#c0392b", "#ffffff"], [tr("SPORT STEILPASS"), "#2e7d32", "#ffffff"], [tr("PIZZERIA ELFMETER"), "#f2c94c", "#2b2b2b"], [tr("FAHRSCHULE FLANKE"), "#ffffff", "#1f4f8a"]];
         const woodTex = texDraw(1024, 64, (x, w, h) => {
           ads.forEach(([t, bg, fg], k) => {
             const x0 = k * w / 6; x.fillStyle = "#6b4a2c"; x.fillRect(x0, 0, w / 6, h); x.fillStyle = bg; x.fillRect(x0 + 3, 4, w / 6 - 6, h - 8);
@@ -5755,7 +6303,7 @@
         add(hv.walls, wall, VH); add(hv.roof, roofC, VH);
         for (let k = 0; k < 5; k++) add(box(1.6, 1.2, .1, -5.2 + k * 2.6, 2.3, 3.53), winM, VH);
         add(box(1.2, 2.2, .1, 5.6, 1.1, 3.53), { c: [.36, .24, .16] }, VH);
-        const sign = texDraw(512, 64, (x, w, h) => { x.fillStyle = "#1f3d2a"; x.fillRect(0, 0, w, h); x.strokeStyle = "#f4efe2"; x.lineWidth = 4; x.strokeRect(4, 4, w - 8, h - 8); x.fillStyle = "#f4efe2"; x.font = `700 44px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText("VEREINSHEIM", w / 2, h / 2 + 2); });
+        const sign = texDraw(512, 64, (x, w, h) => { x.fillStyle = "#1f3d2a"; x.fillRect(0, 0, w, h); x.strokeStyle = "#f4efe2"; x.lineWidth = 4; x.strokeRect(4, 4, w - 8, h - 8); x.fillStyle = "#f4efe2"; x.font = `700 44px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText(tr("VEREINSHEIM"), w / 2, h / 2 + 2); });
         add(quad([-3.4, 3.1, 3.58], [3.4, 3.1, 3.58], [3.4, 3.85, 3.58], [-3.4, 3.85, 3.58]), { tex: sign, em: .25, sp: .1 }, VH);
         const tree = merge([colored(xf(loft([[0, .2, .2], [-3.2, .32, .32]], 8), M.T(0, 3.2, 0)), [.34, .24, .16]), colored(ellipsoid(2.3, 2.7, 2.3, 5.3, 0, 12, 8), [.17, .33, .14]), colored(ellipsoid(1.7, 2.0, 1.7, 7.2, .3, 12, 8), [.22, .4, .18]), colored(ellipsoid(1.5, 1.6, 1.5, 5.8, -1.1, 10, 6), [.19, .37, .15])]);
         const treeM = mesh(tree), r = rnd(12), treeMat = { vc: true, sp: .05 };
@@ -5969,19 +6517,19 @@
     const yawTo = (dx, dz) => Math.atan2(-dx, -dz);
     function teamBase(team, i) { return [TEAMX[team] + (i - (NTEAM - 1) / 2) * .64, 52.5 + (i % 2) * .06]; }
     // Zustände: tense (Arm in Arm), cheer (Jubel), sad (Enttäuschung)
-    function teamPose(team, i, st, tr, now) {
+    function teamPose(team, i, st, tR, now) {
       const [bx, bz] = teamBase(team, i), ph = i * 1.37 + (team === "X" ? 0 : 2.1);
       if (st === "cheer") {
-        const run = (i % 3 === 0) ? eo(cl(tr, 0, 900)) * 2.2 : 0, jump = Math.max(0, Math.sin(tr / 160 + ph)) * (.28 + (i % 2) * .08);
-        const P = pose({ root: [bx + Math.sin(ph) * .3 * eo(cl(tr, 0, 600)), 1.0 + jump, bz - run], yaw: Math.sin(ph) * .4, sp: [-.08, 0, 0], nk: [-.25, 0],
+        const run = (i % 3 === 0) ? eo(cl(tR, 0, 900)) * 2.2 : 0, jump = Math.max(0, Math.sin(tR / 160 + ph)) * (.28 + (i % 2) * .08);
+        const P = pose({ root: [bx + Math.sin(ph) * .3 * eo(cl(tR, 0, 600)), 1.0 + jump, bz - run], yaw: Math.sin(ph) * .4, sp: [-.08, 0, 0], nk: [-.25, 0],
           lS: [.25, 2.7 + Math.sin(tr / 140 + ph) * .15, 0], rS: [.25, 2.7 + Math.cos(tr / 150 + ph) * .15, 0], lE: .35, rE: .35, lH: [.15 * jump * 3, .06], rH: [.1, .06], lK: .25 + jump, rK: .3 + jump * .6 });
-        return blend(teamPose(team, i, "tense", 0, now), P, eio(cl(tr, 0, 260)));
+        return blend(teamPose(team, i, "tense", 0, now), P, eio(cl(tR, 0, 260)));
       }
       if (st === "sad") {
         const crouch = i % 3 === 1;
         const P = crouch ? pose({ root: [bx, .82, bz + .05], yaw: Math.sin(ph) * .2, sp: [.75, 0, 0], nk: [.35, 0], lH: [.55, .1], rH: [.55, .1], lK: .95, rK: .95, lA: .3, rA: .3, lS: [.95, .25, 0], rS: [.95, .25, 0], lE: .15, rE: .15 })
           : pose({ root: [bx, .99, bz + .1], yaw: Math.sin(ph) * .5, sp: [-.06, 0, 0], nk: [-.2 + (i % 2) * .5, 0], lH: [-.05, .05], rH: [.08, .05], lK: .1, rK: .12, lS: [.45, 2.2, -1.35], rS: [.45, 2.2, -1.35], lE: 2.05, rE: 2.05 });
-        return blend(teamPose(team, i, "tense", 0, now), P, eio(cl(tr, 0, 500)));
+        return blend(teamPose(team, i, "tense", 0, now), P, eio(cl(tR, 0, 500)));
       }
       const end = i === 0 ? -1 : i === NTEAM - 1 ? 1 : 0, b = Math.sin(now / 340 + ph);
       return pose({ root: [bx + b * .015, .99 + Math.abs(Math.sin(now / 520 + ph)) * .01, bz], yaw: 0, sp: [.12, 0, 0], nk: [-.12, Math.sin(now / 900 + ph) * .15],
@@ -6271,7 +6819,7 @@
       const dpr = Math.min(S.mode === "replay" ? Math.min(1.6, S.dprCap) : S.dprCap, window.devicePixelRatio || 1), W = Math.max(2, Math.round(cv.clientWidth * dpr)), H = Math.max(2, Math.round(cv.clientHeight * dpr));
       if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
       if (S.mode === "kabine") { gl.viewport(0, 0, W, H); frameKabine(now, W, H); return; }
-      const key = S.stadO.color + S.stadO.color2 + S.stadO.club + "|" + S.stadO.tier;
+      const key = S.stadO.color + S.stadO.color2 + S.stadO.club + "|" + S.stadO.tier + "|" + LANG;
       if (S.stadKey !== key) { if (ST) freeRes(ST.res); RES = []; ST = buildStadium(S.stadO); ST.res = RES; RES = null; S.stadKey = key; SH1 = { tex: ST.shadowTex, blend: "a", dw: false, a: .75, em: 1, fog: false, po: 1 }; SH2 = { tex: ST.shadowTex, blend: "a", dw: false, a: .28, em: 1, fog: false, po: 1 }; GLOW = { tex: ST.glowTex, blend: "add", dw: false, em: 1, a: .9, fog: false }; FLASH = { tex: ST.flashTex, blend: "add", dw: false, em: 1, a: 1, fog: false }; CAMM = { vc: true, sp: .8 }; }
       ensureFigs();
       const F = S.figs;
@@ -6442,7 +6990,7 @@
         x.strokeStyle = "#c62828"; x.lineWidth = 3; x.setLineDash([8, 6]); x.beginPath(); x.moveTo(190, 128); x.quadraticCurveTo(260, 100, 300, 90); x.stroke(); x.setLineDash([]);
         x.beginPath(); x.moveTo(320, 170); x.lineTo(400, 130); x.stroke(); x.beginPath(); x.moveTo(400, 130); x.lineTo(386, 132); x.moveTo(400, 130); x.lineTo(392, 142); x.stroke();
       });
-      const banner = texDraw(1024, 128, (x, W, H) => { x.fillStyle = "#0b0f14"; x.fillRect(0, 0, W, H); x.fillStyle = "#ffb454"; x.fillRect(0, 0, W, 6); x.fillRect(0, H - 6, W, 6); x.font = `700 76px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillStyle = "#f2f5f8"; x.fillText("BALL KNOWLEDGE · KABINE", W / 2, H / 2 + 4, W - 60); });
+      const banner = texDraw(1024, 128, (x, W, H) => { x.fillStyle = "#0b0f14"; x.fillRect(0, 0, W, H); x.fillStyle = "#ffb454"; x.fillRect(0, 0, W, 6); x.fillRect(0, H - 6, W, 6); x.font = `700 76px "Bebas Neue", "Arial Narrow", Arial, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillStyle = "#f2f5f8"; x.fillText(tr("BALL KNOWLEDGE · KABINE"), W / 2, H / 2 + 4, W - 60); });
       const woodM = { tex: wood, sp: .25, c: [1, 1, 1] }, woodD = { tex: wood, sp: .2, c: [.55, .5, .48] }, wallM = { tex: tiles, sp: .35, uvs: [1, 1] }, led = { c: [1, .93, .8], em: 1 };
       // Boden, Decke, Wände
       add(quad([-3.6, 0, 3.6], [3.6, 0, 3.6], [3.6, 0, -2.4], [-3.6, 0, -2.4], 3, 2.5), { tex: floorT, sp: .18 });
@@ -6505,7 +7053,8 @@
       KB.camNow = cam; return cam;
     }
     function frameKabine(now, W, H) {
-      if (!KB.room) KB.room = kbBuildRoom();
+      if (KB.room && KB.lang !== LANG) { freeRes(KB.res); KB.room = null; }
+      if (!KB.room) { KB.room = kbBuildRoom(); KB.lang = LANG; }
       if (KB.pendingLockers) { kbLockers(KB.pendingLockers); KB.pendingLockers = null; }
       const fig = KB.fig || S.figs && S.figs.shooter || defaultFig("shooter");
       // Drehen: direkt beim Ziehen, sonst sanft zum Ziel; nach 4 s ohne Berührung leichtes Pendeln
@@ -6553,8 +7102,8 @@
       x.fillStyle = "rgba(0,0,0,.92)"; x.fillRect(0, 0, w, bar); x.fillRect(0, h - bar, w, bar);
       x.font = `600 ${(9 * s).toFixed(1)}px "IBM Plex Mono", monospace`; x.textBaseline = "middle"; x.textAlign = "left";
       x.fillStyle = (Math.floor(t / 450) % 2) ? "#ffb454" : "rgba(255,180,84,.35)"; x.beginPath(); x.arc(14 * s, bar / 2, 3 * s, 0, 6.283); x.fill();
-      x.fillStyle = "#fff"; x.fillText(t < RP.s1 ? "WIEDERHOLUNG · ANLAUF" : t < RP.s2 ? "WIEDERHOLUNG · NETZKAMERA" : "WIEDERHOLUNG · ZEITLUPE", 22 * s, bar / 2);
-      x.textAlign = "right"; x.fillStyle = "rgba(255,255,255,.6)"; x.fillText("Tippen = überspringen", w - 10 * s, h - bar / 2);
+      x.fillStyle = "#fff"; x.fillText(t < RP.s1 ? tr("WIEDERHOLUNG · ANLAUF") : t < RP.s2 ? tr("WIEDERHOLUNG · NETZKAMERA") : tr("WIEDERHOLUNG · ZEITLUPE"), 22 * s, bar / 2);
+      x.textAlign = "right"; x.fillStyle = "rgba(255,255,255,.6)"; x.fillText(tr("Tippen = überspringen"), w - 10 * s, h - bar / 2);
     }
     function hideOverlay() { if (OV && !OV.hidden) { OV.hidden = true; } }
     // Nach der Wiederholung des entscheidenden Schusses: Jubel-Finale
@@ -6829,7 +7378,7 @@
     pk.over = true; pk.phase = "over"; pk.token++; pkClearTimers(); pkHideQuiz();
     pkShowZones(false); $("pk-meter-wrap").hidden = true;
     const extra = pk.kicks.X.length > pk.shots ? " nach Verlängerung" : "";
-    let txt = `${pkWho(w)} ${pkVsCpu() && w === "X" && !state.names.X ? "gewinnst" : "gewinnt"} das Elfmeterschießen ${pk.score.X}:${pk.score.O}${extra}!`;
+    let txt = tr(`{0} {1} das Elfmeterschießen {2}:{3}{4}!`, [pkWho(w), pkVsCpu() && w === "X" && !state.names.X ? "gewinnst" : "gewinnt", pk.score.X, pk.score.O, extra]);
     let again = "Neues Elfmeterschießen", menu = "Hauptmenü", happy = !(pkVsCpu() && w === "O");
     const stage0 = pk.career ? pk.career.stage : 0; let trophy = false;
     if (pk.mode === "career") {
@@ -6839,19 +7388,19 @@
         pkStoreBest(c.stage);
         if (c.stage >= PK_STAGES.length) {
           const n = pkTrophies() + 1; store("kaderraster-p-trophies", String(n));
-          txt = `🏆 Pokalsieger! Finale gegen ${pk.opp.club} ${pk.score.X}:${pk.score.O}${extra} gewonnen. Das ist dein ${n}. Pokal!`;
+          txt = tr(`🏆 Pokalsieger! Finale gegen {0} {1}:{2}{3} gewonnen. Das ist dein {4}. Pokal!`, [pk.opp.club, pk.score.X, pk.score.O, extra, n]);
           again = "Neue Karriere"; c.done = true; trophy = true; pkConfetti(); pkClearCareer();
         } else {
           const nx = PK_STAGES[c.stage];
-          txt = `${st.name} überstanden: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}! Als Nächstes: ${nx.name} gegen ${c.opps[c.stage].club}. Spielstand gespeichert.`;
-          again = `✈ Weiter ins ${nx.name}`; menu = "Speichern & später weiterspielen"; pkSaveCareer();
+          txt = tr(`{0} überstanden: {1}:{2}{3} gegen {4}! Als Nächstes: {5} gegen {6}. Spielstand gespeichert.`, [st.name, pk.score.X, pk.score.O, extra, pk.opp.club, nx.name, c.opps[c.stage].club]);
+          again = tr(`✈ Weiter ins {0}`, [nx.name]); menu = "Speichern & später weiterspielen"; pkSaveCareer();
         }
-      } else { txt = `Aus ${c.stage === 0 ? "in der" : "im"} ${st.name}: ${pk.score.X}:${pk.score.O}${extra} gegen ${pk.opp.club}. Beim nächsten Mal!`; again = "Neue Karriere"; c.done = true; pkClearCareer(); }
+      } else { txt = tr(`Aus {0} {1}: {2}:{3}{4} gegen {5}. Beim nächsten Mal!`, [c.stage === 0 ? "in der" : "im", st.name, pk.score.X, pk.score.O, extra, pk.opp.club]); again = "Neue Karriere"; c.done = true; pkClearCareer(); }
     }
     $("pk-menu-btn-2").textContent = menu;
     $("pk-result-text").textContent = txt;
     const earn = pkEarnCoins(w, stage0, trophy), ce = $("pk-coins-earn");
-    if (earn && earn.total > 0) { ce.innerHTML = `<span class="pk-ce-main"><i class="coin" aria-hidden="true"></i><b>+${earn.total}</b> Münzen · Kontostand ${kbCoins().toLocaleString("de-DE")}</span><span class="pk-ce-sub">${esc(earn.parts.join(" · "))} – einlösen in der Kabine</span>`; ce.hidden = false; setTimeout(() => SFX.play("coin"), 1900); }
+    if (earn && earn.total > 0) { ce.innerHTML = tr(`<span class="pk-ce-main"><i class="coin" aria-hidden="true"></i><b>+{0}</b> Münzen · Kontostand {1}</span><span class="pk-ce-sub">{2} – einlösen in der Kabine</span>`, [earn.total, kbCoins().toLocaleString(LOC()), esc(earn.parts.join(" · "))]); ce.hidden = false; setTimeout(() => SFX.play("coin"), 1900); }
     else ce.hidden = true;
     $("pk-play-again").textContent = again;
     $("pk-result-banner").classList.add("show");
@@ -6904,7 +7453,7 @@
     $("pstart-btn").textContent = pk.mode === "career" ? (d ? "Neue Karriere" : "Karriere starten") : "Anpfiff";
     if (!d) return;
     const st = PK_STAGES[d.stage];
-    $("pk-continue-txt").textContent = `${st.name} gegen ${d.opps[d.stage].club} · ${d.quiz ? "mit Quiz" : "ohne Quiz"} · ${d.stage} von ${PK_STAGES.length} Runden geschafft`;
+    $("pk-continue-txt").textContent = tr(`{0} gegen {1} · {2} · {3} von {4} Runden geschafft`, [st.name, d.opps[d.stage].club, d.quiz ? "mit Quiz" : "ohne Quiz", d.stage, PK_STAGES.length]);
   }
   function pkContinueCareer() {
     const d = pkLoadCareer(); if (!d) { pkRenderContinue(); return; }
@@ -6953,21 +7502,21 @@
         const lg = DB.clubs[right][1];
         let wrong = pkPickN(bigClubs, 3, c => !mine.includes(c) && DB.clubs[c][1] === lg);
         if (wrong.length < 3) wrong = wrong.concat(pkPickN(bigClubs, 3 - wrong.length, c => !mine.includes(c) && !wrong.includes(c)));
-        const r = mk(`Bei welchem Verein spielte ${nm(i)}?`, DB.clubs[right][0], wrong.map(c => DB.clubs[c][0])); if (r) return r;
+        const r = mk(tr(`Bei welchem Verein spielte {0}?`, [nm(i)]), DB.clubs[right][0], wrong.map(c => DB.clubs[c][0])); if (r) return r;
       } else if (type === "nation" && p[2].length) {
         const right = p[2][0], wrong = pkPickN(bigNations, 3, n => n !== right);
         const r = mk(`Aus welchem Land kommt ${nm(i)}?`, DB.nations[right][0], wrong.map(n => DB.nations[n][0])); if (r) return r;
       } else if (type === "who") {
         const c = g3Rand([...new Set(p[3])].filter(k => DB.clubs[k][4] === 1)); if (c === undefined) continue;
         const wrong = pkPickN(pool, 3, j => !DB.players[j][3].includes(c) && j !== i);
-        const r = mk(`Wer von ihnen hat schon für ${DB.clubs[c][0]} gespielt?`, nm(i), wrong.map(nm)); if (r) return r;
+        const r = mk(tr(`Wer von ihnen hat schon für {0} gespielt?`, [DB.clubs[c][0]]), nm(i), wrong.map(nm)); if (r) return r;
       } else if (type === "year" && p[1]) {
         const ds = g3Shuffle([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]).slice(0, 3);
-        const r = mk(`Welcher Jahrgang ist ${nm(i)}?`, String(p[1]), ds.map(d => String(p[1] + d))); if (r) return r;
+        const r = mk(tr(`Welcher Jahrgang ist {0}?`, [nm(i)]), String(p[1]), ds.map(d => String(p[1] + d))); if (r) return r;
       } else if (type === "title" && (p[5] || []).length) {
         const t = g3Rand(p[5]);
         const wrong = pkPickN(pool, 3, j => !(DB.players[j][5] || []).includes(t));
-        const r = mk(`Wer von ihnen ist ${DB.titles[t][0]}?`, nm(i), wrong.map(nm)); if (r) return r;
+        const r = mk(tr(`Wer von ihnen ist {0}?`, [DB.titles[t][0]]), nm(i), wrong.map(nm)); if (r) return r;
       }
     }
     return null;
@@ -6979,7 +7528,7 @@
     const q = pkMakeQuestion(pkQuizTier());
     if (!q) { cont(); return; }
     pk.phase = "quiz"; pk.quizKind = kind; pkShowZones(false); $("pk-meter-wrap").hidden = true;
-    $("pk-quiz-kind").textContent = kind === "kick" ? `Quiz · ${pkWho(pk.kicker)} schießt` : "Quiz · Torwart-Tipp";
+    $("pk-quiz-kind").textContent = kind === "kick" ? tr(`Quiz · {0} schießt`, [pkWho(pk.kicker)]) : "Quiz · Torwart-Tipp";
     $("pk-quiz-q").textContent = q.q;
     $("pk-quiz-fb").textContent = "";
     $("pk-quiz-opts").innerHTML = q.opts.map((o, k) => `<button type="button" data-qo="${k}">${esc(o)}</button>`).join("");
@@ -7010,8 +7559,8 @@
     $("pname-field-o").hidden = solo; $("pk-level-wrap").hidden = m !== "cpu"; $("pk-shots-wrap").hidden = m === "career";
     $("pname-label-x").textContent = solo ? "Dein Name" : "Name Spieler 1";
     $("pname-input-x").placeholder = solo ? "optional" : "Spieler 1";
-    const tr = $("pk-trophies"); tr.hidden = m !== "career";
-    if (m === "career") { const n = pkTrophies(), b = pkBest(); tr.textContent = `🏆 Deine Pokale: ${n}${b > 0 && b < PK_STAGES.length ? ` · weitestes Ziel ohne Pokal: ${PK_STAGES[b].name}` : ""}`; }
+    const trophyEl = $("pk-trophies"); trophyEl.hidden = m !== "career";
+    if (m === "career") { const n = pkTrophies(), b = pkBest(); trophyEl.textContent = `🏆 Deine Pokale: ${n}${b > 0 && b < PK_STAGES.length ? tr(` · weitestes Ziel ohne Pokal: {0}`, [PK_STAGES[b].name]) : ""}`; }
     pkRenderContinue();
   }
   function pkSetQuiz(on) { pk.quiz = on; pressed("[data-pquiz]", "pquiz", on ? "1" : "0"); store("kaderraster-p-quiz", on ? "1" : "0"); }
@@ -7026,8 +7575,8 @@
   };
   function pkRenderMenuHelp() {
     const a = pk.mode === "career" ? ["Karriere: 1. Runde, Achtelfinale, Viertelfinale, Halbfinale, Finale – jeder Gegner ist stärker. Wer verliert, fliegt raus", "Vor jedem Spiel gibt es einen Scouting-Bericht: Wohin springt der Torwart, wohin schießen die Schützen?", "5 Schüsse pro Team, bei Gleichstand Verlängerung. Gewinnst du das Finale, gibt es einen Pokal"]
-      : pk.mode === "cpu" ? [`Gegen Computer: ihr schießt abwechselnd, du bist Schütze und Torwart`, PK_LEVEL_TXT[pk.level], `${pk.shots} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt`]
-      : ["2 Spieler: Gerät an einem Bildschirm. Erst wählt der Torwart seine Zone verdeckt, dann gibst du das Gerät an den Schützen weiter", `${pk.shots} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt`];
+      : pk.mode === "cpu" ? [tr(`Gegen Computer: ihr schießt abwechselnd, du bist Schütze und Torwart`), PK_LEVEL_TXT[pk.level], tr(`{0} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt`, [pk.shots])]
+      : ["2 Spieler: Gerät an einem Bildschirm. Erst wählt der Torwart seine Zone verdeckt, dann gibst du das Gerät an den Schützen weiter", tr(`{0} Schüsse pro Team; bei Gleichstand geht es in die Verlängerung, bis ein Team vorne liegt`, [pk.shots])];
     if (pk.quiz) a.push("Quiz vor jedem Schuss (8 Sekunden): Als Schütze macht eine richtige Antwort den grünen Bereich größer, eine falsche kleiner. Als Torwart verrät dir eine richtige Antwort, auf welche Seite der Schütze zielt" + (pk.mode === "pvp" ? " (zu zweit nur für den Schützen)" : ""));
     a.push("Als Schütze: Zone wählen, dann die Leiste im grünen Bereich stoppen – gelb ist unsauber, rot geht vorbei");
     $("pmenu-help").innerHTML = a.map(x => `<li>${esc(x)}</li>`).join("");
@@ -7057,7 +7606,7 @@
   }
   function pkAskLeave() {
     if (pk.over || pk.phase === "scout") { pkToMenu(); return; }
-    openLeave(`Das laufende Elfmeterschießen wird beendet (Stand ${pk.score.X} : ${pk.score.O}).`, pkToMenu);
+    openLeave(tr(`Das laufende Elfmeterschießen wird beendet (Stand {0} : {1}).`, [pk.score.X, pk.score.O]), pkToMenu);
   }
   for (const [attr, fn, conv] of [["pmode", pkSetMode, String], ["plvl", pkSetLevel, String], ["pshots", pkSetShots, Number], ["pquiz", pkSetQuiz, v => v === "1"]])
     document.querySelectorAll(`[data-${attr}]`).forEach(b => b.addEventListener("click", () => { fn(conv(b.dataset[attr])); pkRenderMenuHelp(); }));
@@ -7131,11 +7680,11 @@
     if (s) { if (kb.tab === "acc") { if (!eq.acc.includes(s)) eq.acc = kbWithAcc(eq.acc, s); } else eq[kb.tab] = s; }
     return eq;
   }
-  const kbShortName = c => c.name.replace(/^(Der|Die|Das) /, "");
+  const kbShortName = c => tr(c.name).replace(/^(Der|Die|Das|The) /, "");
   function kbPush() {
     if (!PK3.bodies()) { kbNoGL(); return; }
     const eq = kbPreviewEq(), C = PKCHAR.CHARACTERS.find(c => c.id === eq.char) || PKCHAR.CHARACTERS[0], kit = pkMyKit(eq);
-    const name = (cleanName($("pname-input-x").value) || "Du").toUpperCase().slice(0, 14), ink = k => pkLum(k.shirt) > .6 ? "#0b0f14" : "#ffffff";
+    const name = (cleanName($("pname-input-x").value) || tr("Du")).toUpperCase().slice(0, 14), ink = k => pkLum(k.shirt) > .6 ? "#0b0f14" : "#ffffff";
     const others = SHOP.kit.filter(k => k.id !== eq.kit).slice(0, 6), mates = PKCHAR.CHARACTERS.filter(c => c.id !== C.id), nums = ["4", "8", "7", "11", "23", "6"];
     const lockers = others.map((k, i) => { const kk = pkMyKit({ kit: k.id, boots: "schwarz" }); return { kit: Object.assign({}, kk, { ink: ink(kk) }), name: kbShortName(mates[i % mates.length]), num: nums[i] }; });
     lockers.splice(3, 0, { kit: Object.assign({}, kit, { ink: ink(kit) }), name, num: eq.num });
@@ -7194,7 +7743,7 @@
     schal: `<path d="M14 16 L42 16 L44 40 L12 40 Z" fill="#1c2430"/><path d="M14 22 H42 M13 34 H43" stroke="#2f3a48" stroke-width="2"/>`,
   };
   const kbAccSVG = id => `<svg viewBox="0 0 56 56" aria-hidden="true">${KB_ACC_SVG[id] || ""}</svg>`;
-  const kbCoinTxt = n => `<i class="coin" aria-hidden="true"></i>${n.toLocaleString("de-DE")}`;
+  const kbCoinTxt = n => `<i class="coin" aria-hidden="true"></i>${n.toLocaleString(LOC())}`;
   function kbItemHTML(tab, it, eq) {
     const own = kbHas(tab, it), on = tab === "acc" ? eq.acc.includes(it.id) : eq[tab] === it.id, sel = kb.sel === it.id;
     const icon = tab === "char" ? kbFaceSVG(it.c) : tab === "kit" ? kbJerseySVG(pkMyKit({ kit: it.id, boots: "schwarz" }), it.id, "") : tab === "boots" ? kbBootSVG(it) : tab === "acc" ? kbAccSVG(it.id) : `<span class="kb-num">${esc(it.id)}</span>`;
@@ -7203,13 +7752,13 @@
   }
   function kbSyncMenu() {
     const c = kbCoins(), C = pkMyChar();
-    $("kb-open-d").innerHTML = kbCoinTxt(c); $("kb-open").title = `${C.name} · ${c} Münzen`;
+    $("kb-open-d").innerHTML = kbCoinTxt(c); $("kb-open").title = tr(`{0} · {1} Münzen`, [C.name, c]);
   }
   function kbRender() {
     const eq = kbEq(), coins = kbCoins(), t = kb.tab, list = SHOP[t];
-    $("kb-coins-n").textContent = coins.toLocaleString("de-DE");
+    $("kb-coins-n").textContent = coins.toLocaleString(LOC());
     const C = PKCHAR.CHARACTERS.find(c => c.id === eq.char) || PKCHAR.CHARACTERS[0], K = SHOP.kit.find(k => k.id === eq.kit);
-    $("kb-sub").textContent = `${C.name} · ${K ? K.name : "Vereinsfarben"} · Nr. ${eq.num}${eq.acc.length ? " · " + eq.acc.length + (eq.acc.length === 1 ? " Extra" : " Extras") : ""}`;
+    $("kb-sub").textContent = tr(`{0} · {1} · Nr. {2}{3}`, [C.name, K ? K.name : "Vereinsfarben", eq.num, eq.acc.length ? " · " + eq.acc.length + (eq.acc.length === 1 ? " Extra" : " Extras") : ""]);
     document.querySelectorAll("[data-kbt]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.kbt === t)));
     document.querySelectorAll("[data-kbv]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.kbv === kb.view)));
     const grid = $("kb-grid"); grid.classList.toggle("nums", t === "num");
@@ -7225,11 +7774,11 @@
       const clash = eq.acc.filter(a => a !== sel.id && PKCHAR.ACCESSORIES[a] && PKCHAR.ACCESSORIES[a].slot === sel.slot).map(a => PKCHAR.ACCESSORIES[a].name);
       info.innerHTML = `${esc(KB_SLOT[sel.slot] || sel.slot)}${clash.length && !on ? ` · ersetzt ${esc(clash.join(", "))}` : ""}${own ? "" : ` · ${kbCoinTxt(sel.price)}`}`;
     } else if (t === "num") info.textContent = on ? "Steht auf deinem Trikot" : "Kostenlos – zeigt sich auf dem Rücken";
-    else info.innerHTML = on ? "Trägst du gerade" : own ? "Schon gekauft" : `Preis ${kbCoinTxt(sel.price)}`;
+    else info.innerHTML = on ? "Trägst du gerade" : own ? "Schon gekauft" : tr(`Preis {0}`, [kbCoinTxt(sel.price)]);
     if (!own) {
       const miss = sel.price - coins;
-      if (miss > 0) { btn.innerHTML = `Noch ${kbCoinTxt(miss)} nötig`; btn.disabled = true; }
-      else { btn.innerHTML = `Kaufen · ${kbCoinTxt(sel.price)}`; btn.dataset.act = "buy"; }
+      if (miss > 0) { btn.innerHTML = tr(`Noch {0} nötig`, [kbCoinTxt(miss)]); btn.disabled = true; }
+      else { btn.innerHTML = tr(`Kaufen · {0}`, [kbCoinTxt(sel.price)]); btn.dataset.act = "buy"; }
     } else if (t === "acc") { btn.textContent = on ? "Ablegen" : "Anlegen"; btn.dataset.act = on ? "off" : "on"; }
     else if (on) { btn.textContent = t === "num" ? "Deine Nummer" : "Angezogen"; btn.disabled = true; }
     else { btn.textContent = t === "char" ? "Auswählen" : t === "num" ? "Übernehmen" : "Anziehen"; btn.dataset.act = "on"; }
@@ -7265,7 +7814,7 @@
   function kbSetView(v) { kb.view = v; PK3.kabineView(v); document.querySelectorAll("[data-kbv]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.kbv === v))); }
   function kbNoGL() {
     const eq = kbPreviewEq(), kit = pkMyKit(eq), b = SHOP.boots.find(x => x.id === eq.boots) || SHOP.boots[0];
-    $("kb-nogl").innerHTML = `${kbJerseySVG(kit, "big", eq.num)}<div style="display:flex;gap:10px;align-items:center">${kbBootSVG(b).replace("<svg ", '<svg style="width:52px;height:52px" ')}${eq.acc.map(a => kbAccSVG(a).replace("<svg ", '<svg style="width:34px;height:34px" ')).join("")}</div><span>3D-Vorschau braucht WebGL – Kaufen und Anziehen klappt trotzdem.</span>`;
+    $("kb-nogl").innerHTML = tr(`{0}<div style="display:flex;gap:10px;align-items:center">{1}{2}</div><span>3D-Vorschau braucht WebGL – Kaufen und Anziehen klappt trotzdem.</span>`, [kbJerseySVG(kit, "big", eq.num), kbBootSVG(b).replace("<svg ", '<svg style="width:52px;height:52px" '), eq.acc.map(a => kbAccSVG(a).replace("<svg ", '<svg style="width:34px;height:34px" ')).join("")]);
     $("kb-nogl").hidden = false;
   }
   function kbOpen() {
@@ -7310,7 +7859,7 @@
     const win = w === "X", goals = pk.score.X, saves = pk.saves || 0;
     const winC = win ? (pk.mode === "career" ? 30 + stage0 * 20 : ({ easy: 15, okay: 25, advanced: 35, pro: 50, ball: 70 })[pk.level] || 25) : 0;
     const parts = [];
-    if (winC) parts.push(`Sieg ${winC}`);
+    if (winC) parts.push(tr(`Sieg {0}`, [winC]));
     if (trophy) parts.push("Pokal 150");
     if (goals) parts.push(`${goals} ${goals === 1 ? "Tor" : "Tore"} ${goals * 3}`);
     if (saves) parts.push(`${saves} ${saves === 1 ? "Parade" : "Paraden"} ${saves * 3}`);
@@ -7380,7 +7929,7 @@
       if (normalize(input.value).length < 2) { hide(); return; }
       list.innerHTML = arr.length
         ? arr.map((i, k) => { const why = cfg.isDone(i); return `<li role="option" id="${cfg.idp}-${k}" data-k="${k}" aria-selected="false"${why ? ' aria-disabled="true" class="off"' : ""}><span>${esc(DB.players[i][0])}</span><span class="meta">${esc(why || describe(i))}</span></li>`; }).join("")
-        : `<li class="empty">Kein Spieler gefunden</li>`;
+        : tr(`<li class="empty">Kein Spieler gefunden</li>`);
       list.hidden = false; input.setAttribute("aria-expanded", "true");
     }
     function hl(k) {
@@ -7490,15 +8039,15 @@
     if (ck.note) { tag.innerHTML = `<span style="color:var(--bad)">${esc(ck.note)}</span>`; return; }
     if (ck.over) tag.textContent = "";
     else if (ck.busy) tag.textContent = "Der Computer überlegt …";
-    else tag.textContent = `${ckWho(ck.turn)}: Tippe einen Namen und wähle ihn aus der Liste. Passen kostet ein Leben.`;
+    else tag.textContent = tr(`{0}: Tippe einen Namen und wähle ihn aus der Liste. Passen kostet ein Leben.`, [ckWho(ck.turn)]);
   }
   function ckRender() {
     $("ck-name-x").textContent = ckWho("X"); $("ck-name-o").textContent = ckWho("O");
     $("ck-score-x").textContent = ck.score.X; $("ck-score-o").textContent = ck.score.O;
-    $("ck-mid").textContent = ck.best ? `Best of ${ck.best}` : `Runde ${ck.roundNo}`;
+    $("ck-mid").textContent = ck.best ? `Best of ${ck.best}` : tr(`Runde {0}`, [ck.roundNo]);
     syncBig();
     setTurnChip("ck-turn-chip", ck.turn);
-    $("ck-turn-text").innerHTML = ck.over ? "Runde beendet" : ck.busy ? `<span class="who">Computer</span> überlegt …` : `Am Zug: <span class="who">${esc(ckWho(ck.turn))}</span> · Kette: ${ck.chain.length}`;
+    $("ck-turn-text").innerHTML = ck.over ? "Runde beendet" : ck.busy ? tr(`<span class="who">Computer</span> überlegt …`) : tr(`Am Zug: <span class="who">{0}</span> · Kette: {1}`, [esc(ckWho(ck.turn)), ck.chain.length]);
     $("ck-lives").innerHTML = ["X", "O"].map(s => `<span class="g3-life ${s === "X" ? "x" : "o"}">${esc(ckWho(s))} ${livesHTML(ck.lives[s], CK_LIVES)}</span>`).join("");
     const lp = DB.players[ckLast()];
     const clubs = [...new Set(lp[3])].map(c => DB.clubs[c][0]).sort((a, b) => a.localeCompare(b, "de"));
@@ -7531,7 +8080,7 @@
     Object.assign(ck, { turn: ck.starter, lives: { X: CK_LIVES, O: CK_LIVES }, over: false, busy: false, note: "", fresh: false });
     $("ck-result-banner").classList.remove("show");
     ckSearch.clear();
-    tickerItems = []; tick_log(`Anpfiff – Startspieler: ${DB.players[s][0]}`);
+    tickerItems = []; tick_log(tr(`Anpfiff – Startspieler: {0}`, [DB.players[s][0]]));
     SFX.play("kickoff");
     ckBeginTurn();
   }
@@ -7555,12 +8104,12 @@
   }
   function ckAnswer(i) {
     if (ck.over) return;
-    if (ck.used.has(i)) { ck.note = `${DB.players[i][0]} ist schon in der Kette.`; ckRenderTag(); return; }
+    if (ck.used.has(i)) { ck.note = tr(`{0} ist schon in der Kette.`, [DB.players[i][0]]); ckRenderTag(); return; }
     const by = ck.turn, last = ckLast(), l = ckLinks(last, i);
     ckTimer.stop();
     if (!l.ok) {
       SFX.play("wrong"); vibrate(80);
-      ckMiss("wrong", `${DB.players[i][0]} und ${DB.players[last][0]} ${ck.conn === "both" ? "haben keinen gemeinsamen Verein und keinen gemeinsamen Titel" : "waren nie beim selben Verein"}`);
+      ckMiss("wrong", tr(`{0} und {1} {2}`, [DB.players[i][0], DB.players[last][0], ck.conn === "both" ? "haben keinen gemeinsamen Verein und keinen gemeinsamen Titel" : "waren nie beim selben Verein"]));
       return;
     }
     ck.used.add(i); ck.chain.push({ p: i, by, l }); ck.note = ""; ck.fresh = true;
@@ -7578,9 +8127,9 @@
     if (kind === "time") { SFX.play("time"); vibrate(120); }
     else if (kind === "pass") SFX.play("skip");
     else if (kind === "cpu") SFX.play("wrong");
-    tick_log(`${what} – ${ckWho(by)} ${ckV(by, "verlierst", "verliert")} ein Leben`);
+    tick_log(tr(`{0} – {1} {2} ein Leben`, [what, ckWho(by), ckV(by, "verlierst", "verliert")]));
     if (ck.lives[by] <= 0) { ckEnd(other(by), "lives", what); return; }
-    ck.note = `${what}. ${ckWho(by)}: noch ${ck.lives[by]} Leben. ${ckWho(other(by))} ${ckV(other(by), "bist", "ist")} dran – mit demselben Spieler.`;
+    ck.note = tr(`{0}. {1}: noch {2} Leben. {3} {4} dran – mit demselben Spieler.`, [what, ckWho(by), ck.lives[by], ckWho(other(by)), ckV(other(by), "bist", "ist")]);
     ck.turn = other(by);
     ckBeginTurn();
   }
@@ -7592,14 +8141,14 @@
     const need = ck.best ? Math.floor(ck.best / 2) + 1 : 0;
     ck.matchOver = need > 0 && ck.score[w] >= need;
     const reason = kind === "dead"
-      ? `Sackgasse: Zu ${DB.players[ckLast()][0]} gibt es keinen freien Spieler mehr – ${ckWho(l)} ${ckV(l, "verlierst", "verliert")} die Runde`
-      : `${what}. ${ckWho(l)} ${ckV(l, "hast", "hat")} keine Leben mehr`;
-    let txt = `${reason}. Kette: ${ck.chain.length} Spieler.`;
-    if (ck.matchOver) txt += ` ${ckWho(w)} ${ckV(w, "gewinnst", "gewinnt")} das Spiel ${ck.score[w]}:${ck.score[l]}!`;
-    playGoal("ck-", ckDu(w) ? "Tor für dich!" : `Tor für ${ckWho(w)}!`, w);
+      ? tr(`Sackgasse: Zu {0} gibt es keinen freien Spieler mehr – {1} {2} die Runde`, [DB.players[ckLast()][0], ckWho(l), ckV(l, "verlierst", "verliert")])
+      : tr(`{0}. {1} {2} keine Leben mehr`, [what, ckWho(l), ckV(l, "hast", "hat")]);
+    let txt = tr(`{0}. Kette: {1} Spieler.`, [reason, ck.chain.length]);
+    if (ck.matchOver) txt += tr(` {0} {1} das Spiel {2}:{3}!`, [ckWho(w), ckV(w, "gewinnst", "gewinnt"), ck.score[w], ck.score[l]]);
+    playGoal("ck-", ckDu(w) ? "Tor für dich!" : tr(`Tor für {0}!`, [ckWho(w)]), w);
     if (ck.mode === "cpu" && w === "O") SFX.play("lose"); else { SFX.play("goal"); vibrate([60, 40, 60, 40, 120]); }
     if (ck.matchOver) setTimeout(() => SFX.play("final"), 1500);
-    tick_log(`Tor für ${ckWho(w)} – ${ck.score.X}:${ck.score.O}`);
+    tick_log(tr(`Tor für {0} – {1}:{2}`, [ckWho(w), ck.score.X, ck.score.O]));
     $("ck-result-text").textContent = txt;
     $("ck-play-again").textContent = ck.matchOver ? "Neues Spiel" : "Nächste Runde";
     $("ck-result-banner").classList.add("show");
@@ -7626,9 +8175,9 @@
     }[ck.level];
     $("kmenu-help").innerHTML = [
       ck.conn === "both" ? "Verbindung: gemeinsamer Verein oder gemeinsamer Titel (WM, EM, CL, EL, Conference League)" : "Verbindung: die beiden Spieler waren mindestens einmal beim selben Verein (nicht unbedingt gleichzeitig)",
-      `Jeder hat ${CK_LIVES} Leben pro Runde: falsche Verbindung, Passen oder Zeitablauf kosten eins. Gibt es keinen freien Spieler mehr, verliert, wer dran ist`,
+      tr(`Jeder hat {0} Leben pro Runde: falsche Verbindung, Passen oder Zeitablauf kosten eins. Gibt es keinen freien Spieler mehr, verliert, wer dran ist`, [CK_LIVES]),
       ck.mode === "cpu" ? lv : lv.split(";")[0],
-      ck.best ? `Best of ${ck.best}: wer zuerst ${Math.floor(ck.best / 2) + 1} Runden gewinnt` : "Unbegrenzt: Runde um Runde",
+      ck.best ? tr(`Best of {0}: wer zuerst {1} Runden gewinnt`, [ck.best, Math.floor(ck.best / 2) + 1]) : "Unbegrenzt: Runde um Runde",
       ck.time ? `Zugzeit: ${ck.time === 60 ? "1 Minute" : ck.time + " Sekunden"} pro Antwort` : "Zugzeit: ohne Zeitlimit",
     ].map(t => `<li>${esc(t)}</li>`).join("");
   }
@@ -7654,8 +8203,8 @@
   }
   function ckAskLeave() {
     if (ck.matchOver || (ck.over && ck.score.X + ck.score.O === 0)) { ckToMenu(); return; }
-    const d = ck.score.X + ck.score.O > 0 ? ` (Stand ${ck.score.X} : ${ck.score.O})` : "";
-    openLeave(`Das laufende Spiel wird beendet, der Spielstand geht verloren${d}.`, ckToMenu);
+    const d = ck.score.X + ck.score.O > 0 ? tr(` (Stand {0} : {1})`, [ck.score.X, ck.score.O]) : "";
+    openLeave(tr(`Das laufende Spiel wird beendet, der Spielstand geht verloren{0}.`, [d]), ckToMenu);
   }
   document.querySelectorAll("[data-kmode]").forEach(b => b.addEventListener("click", () => { ckSetMode(b.dataset.kmode); ckRenderMenuHelp(); }));
   document.querySelectorAll("[data-klvl]").forEach(b => b.addEventListener("click", () => { ckSetLevel(b.dataset.klvl); ckRenderMenuHelp(); }));
@@ -7705,29 +8254,29 @@
     const initials = words.map(w => w.charAt(0).toUpperCase() + ".").join(" ");
     const lens = words.map(w => w.replace(/[^\p{L}]/gu, "").length).join(" + ");
     return [
-      ["Generation", `Geboren in den ${p[1] ? Math.floor(p[1] / 10) * 10 + "ern" : "?"} · ${clubs.length} ${clubs.length === 1 ? "Verein" : "Vereine"} in den Top-5-Ligen`],
+      ["Generation", tr(`Geboren in den {0} · {1} {2} in den Top-5-Ligen`, [p[1] ? Math.floor(p[1] / 10) * 10 + "ern" : "?", clubs.length, clubs.length === 1 ? "Verein" : "Vereine"])],
       ["Nation", p[2].length ? DB.nations[p[2][0]][0] : "unbekannt"],
       ["Titel", titles.length ? titles.join(", ") : "keiner der fünf großen Titel (WM, EM, CL, EL, Conference League)"],
       ["Ligen", leagues.join(", ") + (stGames(i) >= 0 ? ` · ${stGames(i)} Ligaspiele, ${Math.max(0, stGoals(i))} Tore` : "")],
       ["Vereine", clubs.join(", ")],
-      ["Name", `Jahrgang ${p[1] || "?"} · Initialen ${initials} · ${lens} Buchstaben`],
+      ["Name", tr(`Jahrgang {0} · Initialen {1} · {2} Buchstaben`, [p[1] || "?", initials, lens])],
     ];
   }
   function wiRenderTag() {
     const tag = $("wi-tag");
     if (wi.note) tag.innerHTML = `<span style="color:var(--bad)">${esc(wi.note)}</span>`;
     else if (wi.over) tag.textContent = "";
-    else tag.textContent = `Jetzt erkannt = ${wiPts()} ${wiPts() === 1 ? "Punkt" : "Punkte"}. Falscher Tipp oder Passen deckt den nächsten Hinweis auf.`;
+    else tag.textContent = tr(`Jetzt erkannt = {0} {1}. Falscher Tipp oder Passen deckt den nächsten Hinweis auf.`, [wiPts(), wiPts() === 1 ? "Punkt" : "Punkte"]);
   }
   function wiRender() {
     const solo = wiSolo();
     $("wi-name-x").textContent = solo ? "Punkte" : wiWho("X");
     $("wi-name-o").textContent = solo ? "Erkannt" : wiWho("O");
     $("wi-score-x").textContent = wi.score.X; $("wi-score-o").textContent = solo ? wi.solved : wi.score.O;
-    $("wi-mid").textContent = `Runde ${wi.roundNo}/${wi.rounds}`;
+    $("wi-mid").textContent = tr(`Runde {0}/{1}`, [wi.roundNo, wi.rounds]);
     syncBig();
     setTurnChip("wi-turn-chip", solo ? "X" : wi.turn);
-    $("wi-turn-text").innerHTML = wi.over ? "Runde beendet" : `${solo ? "" : `<span class="who">${esc(wiWho(wi.turn))}</span> · `}Hinweis <span class="who">${wi.shown} von ${WI_MAX}</span>`;
+    $("wi-turn-text").innerHTML = wi.over ? "Runde beendet" : tr(`{0}Hinweis <span class="who">{1} von {2}</span>`, [solo ? "" : `<span class="who">${esc(wiWho(wi.turn))}</span> · `, wi.shown, WI_MAX]);
     const H = wiHints(wi.secret), all = wi.over;
     $("wi-hints").innerHTML = H.map(([lab, txt], k) => {
       const open = all || k < wi.shown;
@@ -7751,7 +8300,7 @@
     Object.assign(wi, { shown: 1, turn: wi.starter, over: false, guessed: new Set(), log: [], note: "", fresh: 0 });
     $("wi-result-banner").classList.remove("show"); $("wi-reveal").innerHTML = "";
     wiSearch.clear();
-    tickerItems = []; tick_log(`Anpfiff – Runde ${wi.roundNo} von ${wi.rounds}`);
+    tickerItems = []; tick_log(tr(`Anpfiff – Runde {0} von {1}`, [wi.roundNo, wi.rounds]));
     SFX.play("kickoff");
     wiBeginTurn();
   }
@@ -7766,7 +8315,7 @@
     if (wiIsSecret(i)) { wiEnd(by); return; }
     SFX.play("wrong"); vibrate(60);
     tick_log(`${wiWho(by)} ${wiV("tippst", "tippt")} ${DB.players[i][0]} – falsch`);
-    wiNext(`${DB.players[i][0]} ist es nicht.`);
+    wiNext(tr(`{0} ist es nicht.`, [DB.players[i][0]]));
   }
   function wiMiss(kind) {
     if (wi.over) return;
@@ -7781,7 +8330,7 @@
     if (wi.shown >= WI_MAX) { wiEnd(null); return; }
     wi.shown++; wi.fresh = wi.shown - 1;
     if (!wiSolo()) wi.turn = other(wi.turn);
-    wi.note = `${msg} Hinweis ${wi.shown} ist aufgedeckt${wiSolo() ? "" : ` – ${wiWho(wi.turn)} ist dran`}.`;
+    wi.note = tr(`{0} Hinweis {1} ist aufgedeckt{2}.`, [msg, wi.shown, wiSolo() ? "" : tr(` – {0} ist dran`, [wiWho(wi.turn)])]);
     SFX.play("pick");
     wiBeginTurn();
   }
@@ -7793,17 +8342,17 @@
     if (w) {
       const pts = wiPts();
       wi.score[w] += pts; if (wiSolo()) wi.solved++;
-      txt = `${wiWho(w)} ${wiV("hast", "hat")} ${p[0]} nach ${wi.shown} ${wi.shown === 1 ? "Hinweis" : "Hinweisen"} erkannt: +${pts} ${pts === 1 ? "Punkt" : "Punkte"}!`;
+      txt = tr(`{0} {1} {2} nach {3} {4} erkannt: +{5} {6}!`, [wiWho(w), wiV("hast", "hat"), p[0], wi.shown, wi.shown === 1 ? "Hinweis" : "Hinweisen", pts, pts === 1 ? "Punkt" : "Punkte"]);
       SFX.play("goal"); vibrate([60, 40, 60, 40, 120]);
-      playGoal("wi-", wiDu() ? "Tor für dich!" : `Tor für ${wiWho(w)}!`, wiSolo() ? "X" : w);
+      playGoal("wi-", wiDu() ? "Tor für dich!" : tr(`Tor für {0}!`, [wiWho(w)]), wiSolo() ? "X" : w);
     } else {
-      txt = `Niemand hat ihn erkannt – gesucht war ${p[0]}.`;
+      txt = tr(`Niemand hat ihn erkannt – gesucht war {0}.`, [p[0]]);
       SFX.play("lose");
     }
     wi.matchOver = wi.roundNo >= wi.rounds;
     if (wi.matchOver) {
-      if (wiSolo()) txt += ` Endstand: ${wi.score.X} von ${wi.rounds * WI_MAX} möglichen Punkten, ${wi.solved} von ${wi.rounds} Spielern erkannt.`;
-      else if (wi.score.X === wi.score.O) txt += ` Endstand ${wi.score.X}:${wi.score.O} – unentschieden!`;
+      if (wiSolo()) txt += tr(` Endstand: {0} von {1} möglichen Punkten, {2} von {3} Spielern erkannt.`, [wi.score.X, wi.rounds * WI_MAX, wi.solved, wi.rounds]);
+      else if (wi.score.X === wi.score.O) txt += tr(` Endstand {0}:{1} – unentschieden!`, [wi.score.X, wi.score.O]);
       else { const win = wi.score.X > wi.score.O ? "X" : "O"; txt += ` ${wiWho(win)} gewinnt ${wi.score[win]}:${wi.score[other(win)]}!`; }
       setTimeout(() => SFX.play("final"), 1500);
     }
@@ -7812,7 +8361,7 @@
     $("wi-play-again").textContent = wi.matchOver ? "Neues Spiel" : "Nächste Runde";
     $("wi-result-banner").classList.add("show");
     const clubs = [...new Set(p[3])].map(c => DB.clubs[c][0]);
-    $("wi-reveal").innerHTML = `<b>${esc(p[0])}</b> · Jg. ${p[1] || "?"}${p[2].length ? " · " + esc(DB.nations[p[2][0]][0]) : ""}<br>Vereine: ${clubs.map(esc).join(", ")}`;
+    $("wi-reveal").innerHTML = tr(`<b>{0}</b> · Jg. {1}{2}<br>Vereine: {3}`, [esc(p[0]), p[1] || "?", p[2].length ? " · " + esc(DB.nations[p[2][0]][0]) : "", clubs.map(esc).join(", ")]);
     wiRender();
   }
   // ----- Menü -----
@@ -7829,9 +8378,9 @@
     $("bmenu-help").innerHTML = [
       "6 Hinweise, vom Groben zum Genauen: Generation und Anzahl Vereine, Nation, Titel, Ligen, Vereine, zuletzt Jahrgang und Initialen",
       "Punkte: erkannt bei Hinweis 1 = 6 Punkte, bei Hinweis 6 = 1 Punkt. Falscher Tipp, Passen oder Zeitablauf decken den nächsten Hinweis auf",
-      wiSolo() ? `Solo: ${wi.rounds} Runden, sammle so viele Punkte wie möglich` : `2 Spieler: ihr ratet abwechselnd, nach jedem Fehlversuch ist der andere dran. ${wi.rounds} Runden, mehr Punkte gewinnt`,
+      wiSolo() ? tr(`Solo: {0} Runden, sammle so viele Punkte wie möglich`, [wi.rounds]) : tr(`2 Spieler: ihr ratet abwechselnd, nach jedem Fehlversuch ist der andere dran. {0} Runden, mehr Punkte gewinnt`, [wi.rounds]),
       WD_LEVEL_TXT[wi.level]().replace("der Geheimspieler ist", "gesucht wird").replace("der Geheimspieler", "gesucht wird"),
-      wi.time ? `Zugzeit: ${wi.time === 60 ? "1 Minute" : wi.time + " Sekunden"} pro Hinweis` : "Zugzeit: ohne Zeitlimit",
+      wi.time ? tr(`Zugzeit: {0} pro Hinweis`, [wi.time === 60 ? "1 Minute" : wi.time + " Sekunden"]) : "Zugzeit: ohne Zeitlimit",
     ].map(t => `<li>${esc(t)}</li>`).join("");
   }
   function wiSummary() {
@@ -7923,13 +8472,13 @@
     $("zs-mid").textContent = `${zs.line.length}/${ZS_N}`;
     syncBig();
     setTurnChip("zs-turn-chip", solo ? "X" : zs.turn);
-    $("zs-turn-text").innerHTML = zs.over ? "Spiel beendet" : `${solo ? "" : `<span class="who">${esc(zsWho(zs.turn))}</span> · `}Kriterium: <span class="who">${esc(C.short)}</span>`;
+    $("zs-turn-text").innerHTML = zs.over ? "Spiel beendet" : tr(`{0}Kriterium: <span class="who">{1}</span>`, [solo ? "" : `<span class="who">${esc(zsWho(zs.turn))}</span> · `, esc(C.short)]);
     $("zs-lives").innerHTML = (solo ? ["X"] : ["X", "O"]).map(s => `<span class="g3-life ${s === "X" ? "x" : "o"}">${esc(zsWho(s))} ${livesHTML(zs.lives[s], ZS_LIVES)}</span>`).join("");
     const cur = zs.cur >= 0 ? DB.players[zs.cur] : null;
     $("zs-cur").hidden = !cur || zs.over;
     if (cur) {
       const extra = zs.critNow === "year" ? (cur[2].length ? DB.nations[cur[2][0]][0] : "") : (cur[1] ? "Jg. " + cur[1] : "");
-      $("zs-cur").innerHTML = `<small>Wohin gehört er? · ${esc(C.name)}</small><b>${esc(cur[0])}</b><span class="meta">${esc(extra)} · noch ${zs.deck.length} danach</span>`;
+      $("zs-cur").innerHTML = tr(`<small>Wohin gehört er? · {0}</small><b>{1}</b><span class="meta">{2} · noch {3} danach</span>`, [esc(C.name), esc(cur[0]), esc(extra), zs.deck.length]);
     }
     const can = !zs.over && zs.cur >= 0;
     const slot = s => can ? `<button type="button" class="zs-slot" data-s="${s}" aria-label="Hier einsortieren (Position ${s + 1})">＋ hier</button>` : `<div class="zs-gap"></div>`;
@@ -7937,7 +8486,7 @@
     zs.line.forEach((i, k) => {
       const p = DB.players[i], L = zs.last && zs.last.p === i ? zs.last : null;
       const cls = L ? (L.ok ? " ok" : " bad") : "";
-      const jg = zs.critNow !== "year" && p[1] ? ` <small>Jg. ${p[1]}</small>` : "";
+      const jg = zs.critNow !== "year" && p[1] ? tr(` <small>Jg. {0}</small>`, [p[1]]) : "";
       parts.push(`<div class="zs-card${cls}"><span class="zs-name">${esc(p[0])}${jg}</span><span class="zs-val">${esc(C.fmt(C.val(i)))}</span></div>`);
       parts.push(slot(k + 1));
     });
@@ -7952,7 +8501,7 @@
     const cards = zsDraw(zs.critNow);
     Object.assign(zs, { line: [cards[0]], deck: cards.slice(1), cur: -1, turn: "X", lives: { X: ZS_LIVES, O: ZS_LIVES }, right: { X: 0, O: 0 }, over: false, note: "", last: null, matchOver: false });
     $("zs-result-banner").classList.remove("show");
-    tickerItems = []; tick_log(`Anpfiff – Zeitstrahl nach ${ZS_CRIT[zs.critNow].short}`);
+    tickerItems = []; tick_log(tr(`Anpfiff – Zeitstrahl nach {0}`, [ZS_CRIT[zs.critNow].short]));
     SFX.play("kickoff");
     zsNextCard();
   }
@@ -7981,8 +8530,8 @@
     } else {
       zs.lives[by]--;
       if (s < 0) { SFX.play("time"); vibrate(120); } else { SFX.play("wrong"); vibrate(80); }
-      zs.note = `<span style="color:var(--bad)">${s < 0 ? "Zeit abgelaufen" : "Falsch"} – ${esc(name)} (${esc(val)}) gehört an die markierte Stelle. −1 Leben.</span>`;
-      tick_log(`${zsWho(by)}: ${name} falsch einsortiert (${val}) – ein Leben weg`);
+      zs.note = tr(`<span style="color:var(--bad)">{0} – {1} ({2}) gehört an die markierte Stelle. −1 Leben.</span>`, [s < 0 ? "Zeit abgelaufen" : "Falsch", esc(name), esc(val)]);
+      tick_log(tr(`{0}: {1} falsch einsortiert ({2}) – ein Leben weg`, [zsWho(by), name, val]));
     }
     if (zs.lives[by] <= 0) { zsEnd(zsSolo() ? "lost" : "out", by); return; }
     if (!zs.deck.length) { zsEnd("done", by); return; }
@@ -7995,17 +8544,17 @@
     const n = ZS_N - 1;
     let txt, win = null;
     if (zsSolo()) {
-      if (kind === "done") { txt = `Zeitstrahl komplett! ${zs.right.X} von ${n} richtig einsortiert, ${zs.lives.X} ${zs.lives.X === 1 ? "Leben" : "Leben"} übrig.`; win = "X"; }
-      else txt = `Keine Leben mehr – ${zs.right.X} Spieler richtig einsortiert.`;
+      if (kind === "done") { txt = tr(`Zeitstrahl komplett! {0} von {1} richtig einsortiert, {2} {3} übrig.`, [zs.right.X, n, zs.lives.X, zs.lives.X === 1 ? "Leben" : "Leben"]); win = "X"; }
+      else txt = tr(`Keine Leben mehr – {0} Spieler richtig einsortiert.`, [zs.right.X]);
     } else if (kind === "out") {
       win = other(by);
-      txt = `${zsWho(by)} hat keine Leben mehr – ${zsWho(win)} gewinnt (${zs.right[win]}:${zs.right[by]} richtig)!`;
+      txt = tr(`{0} hat keine Leben mehr – {1} gewinnt ({2}:{3} richtig)!`, [zsWho(by), zsWho(win), zs.right[win], zs.right[by]]);
     } else {
       const d = zs.right.X - zs.right.O || zs.lives.X - zs.lives.O;
       if (d === 0) txt = `Zeitstrahl komplett – unentschieden (${zs.right.X}:${zs.right.O} richtig)!`;
-      else { win = d > 0 ? "X" : "O"; txt = `Zeitstrahl komplett – ${zsWho(win)} gewinnt mit ${zs.right[win]}:${zs.right[other(win)]} richtig${zs.right.X === zs.right.O ? " und mehr Leben" : ""}!`; }
+      else { win = d > 0 ? "X" : "O"; txt = tr(`Zeitstrahl komplett – {0} gewinnt mit {1}:{2} richtig{3}!`, [zsWho(win), zs.right[win], zs.right[other(win)], zs.right.X === zs.right.O ? " und mehr Leben" : ""]); }
     }
-    if (win) { SFX.play("goal"); vibrate([60, 40, 60, 40, 120]); playGoal("zs-", zsDu() ? "Tor für dich!" : `Tor für ${zsWho(win)}!`, win); setTimeout(() => SFX.play("final"), 1500); }
+    if (win) { SFX.play("goal"); vibrate([60, 40, 60, 40, 120]); playGoal("zs-", zsDu() ? "Tor für dich!" : tr(`Tor für {0}!`, [zsWho(win)]), win); setTimeout(() => SFX.play("final"), 1500); }
     else SFX.play(zsSolo() ? "lose" : "draw");
     tick_log(txt.replace(/!$/, ""));
     zs.note = zs.note || "";
@@ -8031,15 +8580,15 @@
         : "Titel: wie viele der fünf großen Titel gewonnen wurden (WM, EM, CL, EL, Conference League) – jeder Titel zählt einmal",
       games: "Ligaspiele: alle Ligaspiele der Karriere laut Wikipedia (ohne Pokal und Europapokal)",
       goals: "Ligatore: alle Ligatore der Karriere laut Wikipedia (ohne Pokal und Europapokal)",
-      mixed: `Gemischt: jedes Spiel wird eines der ${STATS ? "fünf" : "drei"} Kriterien ausgelost`,
+      mixed: tr(`Gemischt: jedes Spiel wird eines der {0} Kriterien ausgelost`, [STATS ? "fünf" : "drei"]),
     }[zs.crit];
     $("zmenu-help").innerHTML = [
-      `${ZS_N} Spieler: einer liegt schon, die anderen ${ZS_N - 1} sortierst du nacheinander ein. Jeder hat ${ZS_LIVES} Leben`,
+      tr(`{0} Spieler: einer liegt schon, die anderen {1} sortierst du nacheinander ein. Jeder hat {2} Leben`, [ZS_N, ZS_N - 1, ZS_LIVES]),
       crit,
       "Falsch einsortiert kostet ein Leben, der Spieler rutscht dann an seinen richtigen Platz. Bei gleichem Wert ist jede Reihenfolge richtig",
       zsSolo() ? "Solo: schaffst du den ganzen Zeitstrahl?" : "2 Spieler: ihr sortiert abwechselnd. Wer keine Leben mehr hat, verliert; sonst gewinnt, wer mehr richtig hat",
       WD_LEVEL_TXT[zs.level]().replace("der Geheimspieler ist einer der", "die Spieler sind die").replace("der Geheimspieler ist ein bekannter Name", "bekannte Namen"),
-      zs.time ? `Zugzeit: ${zs.time === 60 ? "1 Minute" : zs.time + " Sekunden"} pro Spieler` : "Zugzeit: ohne Zeitlimit",
+      zs.time ? tr(`Zugzeit: {0} pro Spieler`, [zs.time === 60 ? "1 Minute" : zs.time + " Sekunden"]) : "Zugzeit: ohne Zeitlimit",
     ].map(t => `<li>${esc(t)}</li>`).join("");
   }
   function zsSummary() {
@@ -8096,6 +8645,19 @@
     card.insertAdjacentHTML("afterbegin", `<span class="g-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">${look[1]}</svg></span>${NEW_GAMES.has(g) ? '<span class="g-new">NEU</span>' : ""}${SOON_GAMES.has(g) ? '<span class="g-soon" aria-hidden="true">Coming soon</span>' : ""}`);
     if (SOON_GAMES.has(g)) { card.disabled = true; card.classList.add("soon"); card.setAttribute("aria-disabled", "true"); card.setAttribute("aria-label", card.querySelector(".g-title").textContent + " – kommt bald"); }
   });
+  // Zahlen und Hinweise auf der Spielmodus-Seite (in der gewählten Sprache)
+  let VCOUNT = {};
+  function variantTexts() {
+    for (const v in VCOUNT) $("v-count-" + v).textContent = tr("{n} Spieler", { n: VCOUNT[v].toLocaleString(LOC()) });
+    $("v-desc-oldies").textContent = tr("Nur Spieler, die mindestens 40 Jahre alt sind (Jahrgang {y} und früher).", { y: OLDIES_MAX_YEAR });
+    $("datanote").textContent = tr("{n} Spieler mit mindestens einer Station in Bundesliga, Premier League (inkl. alter First Division), La Liga, Serie A oder Ligue 1. Als Vereins-Kategorien kommen nur die {c} Vereine vor, die in den letzten 5 Saisons erstklassig waren. Die Schwierigkeitsstufen beruhen auf einer Schätzung der Bekanntheit (Vereine, Titel, Generation), nicht auf Aufrufzahlen. Quelle: {s}.",
+      { n: REACH.reduce((s, x) => s + x, 0).toLocaleString(LOC()), c: DB.clubs.filter(c => c[4] === 1).length, s: DB.source });
+  }
+  // Sprache: Schalter oben rechts, Seite beim Start in der gewählten Sprache
+  document.querySelectorAll("[data-lang]").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  i18nHead();
+  if (LANG === "en") { i18nNode(document.body); setMasthead(curMast); buildSoundList(); renderSoundSettings(); }
+  i18nWatch();
   // ---------- Start ----------
   // Erst mit Versionsanhang (umgeht alte Kopien im Browser-Cache), sonst ohne – manche Hosts kennen keine Anhänge
   // no-cache: der Browser fragt nach, ob es eine neuere players.json gibt (z. B. nach einem Daten-Update)
@@ -8112,13 +8674,10 @@
         document.querySelectorAll(".needs-stats").forEach(b => b.hidden = false);
         $("stats-credit").hidden = false;
       }
-      for (const v of Object.keys(VARIANT_NAME)) {
-        let n = 0; for (let i = 0; i < NP; i++) if (inVariant(v, i)) n++;
-        $("v-count-" + v).textContent = `${n.toLocaleString("de-DE")} Spieler`;
-      }
-      $("v-desc-oldies").textContent = `Nur Spieler, die mindestens 40 Jahre alt sind (Jahrgang ${OLDIES_MAX_YEAR} und früher).`;
+      VCOUNT = {};
+      for (const v of Object.keys(VARIANT_NAME)) { let n = 0; for (let i = 0; i < NP; i++) if (inVariant(v, i)) n++; VCOUNT[v] = n; }
+      variantTexts();
       document.querySelectorAll("[data-variant]").forEach(b => b.disabled = false);
-      $("datanote").textContent = `${REACH.reduce((s, x) => s + x, 0).toLocaleString("de-DE")} Spieler mit mindestens einer Station in Bundesliga, Premier League (inkl. alter First Division), La Liga, Serie A oder Ligue 1. Als Vereins-Kategorien kommen nur die ${db.clubs.filter(c => c[4] === 1).length} Vereine vor, die in den letzten 5 Saisons erstklassig waren. Die Schwierigkeitsstufen beruhen auf einer Schätzung der Bekanntheit (Vereine, Titel, Generation), nicht auf Aufrufzahlen. Quelle: ${db.source}.`;
       try {
         // Gespeicherte Stufen aus der alten Version (Leicht/Mittel/Schwer) auf die neuen übertragen
         const OLD_LVL = { normal: "advanced", hard: "pro" };
@@ -8166,7 +8725,7 @@
     })
     .catch(err => {
       document.querySelectorAll(".v-meta").forEach(e => e.textContent = "Spielerdatenbank fehlt");
-      $("datanote").textContent = "Die Spielerdatenbank (players.json) konnte nicht geladen werden. Liegt sie im selben Ordner wie diese Seite? (" + err.message + ")";
+      $("datanote").textContent = tr("Die Spielerdatenbank (players.json) konnte nicht geladen werden. Liegt sie im selben Ordner wie diese Seite? ({e})", { e: err.message });
     });
 })();
 </script>
