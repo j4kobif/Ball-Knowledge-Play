@@ -1851,7 +1851,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 02.10.2026-6</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 02.10.2026-7</footer>
 </div>
 
 <script>
@@ -6303,7 +6303,23 @@
       return { hp: L3(a.hp, b.hp, u), hq, q };
     }
     // Knochen in Weltkoordinaten (Hüfte nie unter dem Rasen: notfalls anheben)
-    function mixBones(P, mirror) {
+    // Drehung aus Matrix (Spalten normiert), Drehung von Richtung a nach b
+    function m2q(m) {
+      const sx = Math.hypot(m[0], m[1], m[2]) || 1, sy = Math.hypot(m[4], m[5], m[6]) || 1, sz = Math.hypot(m[8], m[9], m[10]) || 1;
+      const a = m[0] / sx, b = m[4] / sy, c = m[8] / sz, d = m[1] / sx, e = m[5] / sy, f = m[9] / sz, g = m[2] / sx, h = m[6] / sy, i = m[10] / sz, tr = a + e + i;
+      let q;
+      if (tr > 0) { const s = .5 / Math.sqrt(tr + 1); q = [(h - f) * s, (c - g) * s, (d - b) * s, .25 / s]; }
+      else if (a > e && a > i) { const s = 2 * Math.sqrt(1 + a - e - i); q = [.25 * s, (b + d) / s, (c + g) / s, (h - f) / s]; }
+      else if (e > i) { const s = 2 * Math.sqrt(1 + e - a - i); q = [(b + d) / s, .25 * s, (f + h) / s, (c - g) / s]; }
+      else { const s = 2 * Math.sqrt(1 + i - a - e); q = [(c + g) / s, (f + h) / s, .25 * s, (d - b) / s]; }
+      return q;
+    }
+    function qFromTo(a, b) {
+      const d = dot(a, b);
+      if (d < -.9999) { const ax = nrm(Math.abs(a[0]) < .9 ? crs(a, [1, 0, 0]) : crs(a, [0, 1, 0])); return [ax[0], ax[1], ax[2], 0]; }
+      const c = crs(a, b), q = [c[0], c[1], c[2], 1 + d], l = Math.hypot(...q); return q.map(v => v / l);
+    }
+    function mixBones(P, mirror, reach) {
       const D = MX.D, H = D.H, nb = D.nb;
       const run = hp => {
         const W = new Array(nb);
@@ -6311,9 +6327,21 @@
         for (let b = 1; b < nb; b++) { const t = H.restT[b], q = P.q; W[b] = M.mul(W[H.parent[b]], qm(q[b * 4], q[b * 4 + 1], q[b * 4 + 2], q[b * 4 + 3], t[0], t[1], t[2], 1)); }
         return W;
       };
-      let W = run(P.hp), lo = 1e9;
+      let hp = P.hp, W = run(hp), lo = 1e9;
       for (const b of [0, 5, 9, 13, 16, 17, 20, 21]) lo = Math.min(lo, W[b][13] - (b === 5 ? .12 : b === 0 ? .14 : .035));
-      if (lo < 0) W = run([P.hp[0], P.hp[1] - lo, P.hp[2]]);
+      if (lo < 0) { hp = [P.hp[0], P.hp[1] - lo, P.hp[2]]; W = run(hp); }
+      // Arme zum Ball strecken (Sprung nach oben): Oberarm, dann Unterarm auf den Zielpunkt drehen
+      if (reach && reach.w > 0) {
+        for (const pass of [0, 1]) {
+          for (const [b0, dx] of [[7, .11], [11, -.11]]) {
+            const b = b0 + pass, c = b + 1, p = H.parent[b];
+            const bp = [W[b][12], W[b][13], W[b][14]], cur = nrm(sub([W[c][12], W[c][13], W[c][14]], bp)), des = nrm(sub([reach.pt[0] + dx, reach.pt[1], reach.pt[2]], bp));
+            const dq = qFromTo(cur, des), wq = qmul(dq, m2q(W[b])), pq = m2q(W[p]), lq = qmul([-pq[0], -pq[1], -pq[2], pq[3]], wq);
+            const tmp = new Float32Array(lq); nlerpQ(P.q, b * 4, tmp, 0, reach.w, P.q, b * 4);
+          }
+          W = run(hp);
+        }
+      }
       if (mirror) { const Mi = M.S(-1, 1, 1); for (let b = 0; b < nb; b++) W[b] = M.mul(Mi, W[b]); }
       return W;
     }
@@ -6352,6 +6380,20 @@
       const fps = H.fps;
       // Zielpunkt der Hände (gespiegelt rechnen)
       const tg = [sh.hand[0] * (mir ? -1 : 1), sh.hand[1], sh.hand[2]];
+      const save = sh.o.kind === "save", goal = sh.o.kind === "goal";
+      if (dir === 0 && dv[1] === 0) {
+        // Ball oben in die Mitte: aus der Grundstellung hochspringen, beide Arme zum Ball strecken
+        const j0 = ARR - 430, j1 = ARR + 350;
+        let P = idleAt(it); P = { hp: P.hp.slice(), hq: P.hq, q: P.q };
+        P.hp[1] += Math.sin(Math.PI * cl(t, j0, j1)) * .3 - .12 * Math.sin(Math.PI * cl(t, j0 - 180, j0 + 40));
+        const wr = sm(cl(t, j0 - 60, ARR - 120)) * (1 - sm(cl(t, ARR + 250, ARR + 650)));
+        if ((save && t > ARR + 1100) || (goal && t > ARR + 1300)) {
+          const t1 = save ? ARR + 1100 : ARR + 1300, rc = save ? "win" : "lose", at = idleAt(sh._t0 + t1);
+          const r0 = D.clips[rc].hp, R = mixLayer(rc, (t - t1) / 1000, save, [at.hp[0] - r0[0], 0, at.hp[2] - r0[2]], 0);
+          P = mixBlend(P, R, sm(cl(t, t1, t1 + 600)));
+        }
+        return { P, mir: false, reach: { pt: [tg[0], tg[1] + .12, tg[2]], w: wr } };
+      }
       let clip, fS, fR, ref;
       if (dir !== 0) {
         clip = "dive"; const L = D.lead, n = D.clips.dive.nF, x0 = D.clips.dive.hp[0];
@@ -6371,7 +6413,6 @@
       const wD = sm(cl(cd, fS / fps - .02, fS / fps + .16));
       if (wD > 0) P = mixBlend(P, mixLayer(clip, Math.max(0, cd), false, pos, 0), wD);
       // Danach: Jubel nach Parade, Enttäuschung nach Gegentor
-      const save = sh.o.kind === "save", goal = sh.o.kind === "goal";
       if ((save && t > ARR + 1100) || (goal && t > ARR + 1300)) {
         const t1 = save ? ARR + 1100 : ARR + 1300, rc = save ? "win" : "lose";
         const cdT = fR / fps + (t1 - ARR) / 1000 * spd, at = mixLayer(clip, cdT, false, pos, 0);
@@ -7078,7 +7119,7 @@
         try {
           mxS = { P: mixShooter(sh, tA, now), mir: false }; mxK = mixKeeper(sh, tA, now);
           if (fin) { if (fin.hero === "shooter") mxS = { P: mixHero(shP, tf, fin), mir: false }; else mxK = { P: mixHero(kpP, tf, fin), mir: false }; }
-          mxS.W = mixBones(mxS.P, false); mxK.W = mixBones(mxK.P, mxK.mir);
+          mxS.W = mixBones(mxS.P, false); mxK.W = mixBones(mxK.P, mxK.mir, mxK.reach);
           shP.root = [mxS.W[0][12], mxS.W[0][13], mxS.W[0][14]]; kpP.root = [mxK.W[0][12], mxK.W[0][13], mxK.W[0][14]];
         } catch (e) { MX.state = "fail"; mxS = mxK = null; if (window.console) console.warn("Spielerfigur: Fehler", e); }
       }
