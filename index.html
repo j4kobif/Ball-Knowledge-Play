@@ -1341,7 +1341,7 @@
 
   <div class="panel" id="pmenu" hidden>
     <div class="menu-top">
-      <button type="button" class="ghost-btn" id="pback-home">← Spielmodus</button>
+      <button type="button" class="ghost-btn" id="pback-home">← Games</button>
       <span class="variant-tag" id="pvariant-tag"></span>
     </div>
     <div class="home-tabs" role="tablist" aria-label="Elfmeter-Menü">
@@ -1851,7 +1851,7 @@
       <button type="button" class="ghost-btn" id="leave-go">Spiel verlassen</button>
     </div>
   </dialog>
-  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 02.10.2026-2</footer>
+  <footer>Spielerdaten: <a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a> (CC0). Vereins- und Ländernamen dienen nur der Beschreibung, keine Logos oder Wappen.<span id="stats-credit" hidden> Ligaspiele, Ligatore und Titelanzahl: <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a> (<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.de" target="_blank" rel="noopener">CC BY-SA 4.0</a>).</span> · Version 02.10.2026-3</footer>
 </div>
 
 <script>
@@ -3684,7 +3684,7 @@
   $("start-btn").addEventListener("click", startGame);
   document.querySelectorAll("[data-variant]").forEach(b => b.addEventListener("click", () => chooseVariant(b.dataset.variant)));
   // Elfmeterschießen braucht keinen Spielmodus (die Spielerdaten ändern nichts am Spiel) – direkt ins Menü
-  const NO_VARIANT = new Set();                // Elfmeter nutzt den Spielmodus für die Quizfragen
+  const NO_VARIANT = new Set(["pen"]);         // Elfmeterschießen startet direkt (Quizfragen aus allen Spielern)
   document.querySelectorAll("[data-game]").forEach(b => b.addEventListener("click", () => {
     setGame(b.dataset.game);
     if (NO_VARIANT.has(b.dataset.game) && DB) { chooseVariant("alltime"); $("pvariant-tag").textContent = ""; }
@@ -6413,7 +6413,7 @@
       add(cyl(.06, 2.5), post, M.T(-3.72, 2.5, 0)); add(cyl(.06, 2.5), post, M.T(3.72, 2.5, 0));
       add(cyl(.06, 7.56), post, M.mul(M.T(-3.78, 2.5, 0), M.Rz(Math.PI / 2)));
       const bar = { c: [.75, .78, .82], sp: .4 };
-      for (const sx of [-3.72, 3.72]) { add(cyl(.025, 2.1), bar, M.ch(M.T(sx, 2.44, 0), M.Rx(-Math.PI / 2 + .1))); add(cyl(.025, 2.2), bar, M.T(sx, 2.2, -2.08)); add(cyl(.025, 2.1), bar, M.ch(M.T(sx, .03, 0), M.Rx(Math.PI / 2))); }
+      for (const sx of [-3.72, 3.72]) { add(cyl(.025, 2.1), bar, M.ch(M.T(sx, 2.44, 0), M.Rx(Math.PI / 2 - .1))); add(cyl(.025, 2.2), bar, M.T(sx, 2.2, -2.08)); add(cyl(.025, 2.1), bar, M.ch(M.T(sx, .03, 0), M.Rx(Math.PI / 2))); }
       add(cyl(.025, 7.44), bar, M.ch(M.T(-3.72, 2.2, -2.08), M.Rz(Math.PI / 2)));
       // Netz: Rückwand und Dach dynamisch (Ausbeulen), Seiten fest
       const netM = { tex: texNet(), c: [.95, .96, .98], blend: "a", dw: false, a: .9, sp: .2 };
@@ -6522,7 +6522,7 @@
       if (st === "cheer") {
         const run = (i % 3 === 0) ? eo(cl(tR, 0, 900)) * 2.2 : 0, jump = Math.max(0, Math.sin(tR / 160 + ph)) * (.28 + (i % 2) * .08);
         const P = pose({ root: [bx + Math.sin(ph) * .3 * eo(cl(tR, 0, 600)), 1.0 + jump, bz - run], yaw: Math.sin(ph) * .4, sp: [-.08, 0, 0], nk: [-.25, 0],
-          lS: [.25, 2.7 + Math.sin(tr / 140 + ph) * .15, 0], rS: [.25, 2.7 + Math.cos(tr / 150 + ph) * .15, 0], lE: .35, rE: .35, lH: [.15 * jump * 3, .06], rH: [.1, .06], lK: .25 + jump, rK: .3 + jump * .6 });
+          lS: [.25, 2.7 + Math.sin(tR / 140 + ph) * .15, 0], rS: [.25, 2.7 + Math.cos(tR / 150 + ph) * .15, 0], lE: .35, rE: .35, lH: [.15 * jump * 3, .06], rH: [.1, .06], lK: .25 + jump, rK: .3 + jump * .6 });
         return blend(teamPose(team, i, "tense", 0, now), P, eio(cl(tR, 0, 260)));
       }
       if (st === "sad") {
@@ -7869,7 +7869,7 @@
   }
   kbSyncMenu();
   try { const r = PK3.goalRect(), z = $("pk-zones").style; z.left = r.left.toFixed(2) + "%"; z.top = r.top.toFixed(2) + "%"; z.width = r.width.toFixed(2) + "%"; z.height = r.height.toFixed(2) + "%"; } catch (e) {}
-  $("pback-home").addEventListener("click", toVariants);
+  $("pback-home").addEventListener("click", toHome);
   $("pk-menu-btn").addEventListener("click", pkAskLeave);
   $("pk-menu-btn-2").addEventListener("click", pkAskLeave);
   $("pk-play-again").addEventListener("click", pkPlayAgain);
@@ -8678,6 +8678,7 @@
       for (const v of Object.keys(VARIANT_NAME)) { let n = 0; for (let i = 0; i < NP; i++) if (inVariant(v, i)) n++; VCOUNT[v] = n; }
       variantTexts();
       document.querySelectorAll("[data-variant]").forEach(b => b.disabled = false);
+      if (NO_VARIANT.has(activeGame) && !$("vpick").hidden) { chooseVariant("alltime"); $("pvariant-tag").textContent = ""; }
       try {
         // Gespeicherte Stufen aus der alten Version (Leicht/Mittel/Schwer) auf die neuen übertragen
         const OLD_LVL = { normal: "advanced", hard: "pro" };
